@@ -1,56 +1,54 @@
-# Welcome to D
+# D言語を始めよう
 
-Welcome to the interactive tour of the *D Programming language*.
+**プログラミング言語D**のインタラクティブツアーにようこそ。
 
 {{#dmanmobile}}
 
-This tour gives an overview of this __powerful__ and __expressive__
-language which compiles directly to __efficient__, __native__ machine code.
+このツアーは直接**効率的**で**ネイティブ**なマシンコードにコンパイルされる、
+**パワフル**で**表現力の高い**D言語について概要を説明します。
 
 {{/dmanmobile}}
 
-### What is D?
+### Dって何?
 
-D is the culmination of _decades of experience implementing compilers_
-for many diverse languages and has a large number of
-[unique features](http://dlang.org/overview.html):
+Dは、様々な言語のコンパイラを実装してきた数十年の経験の集大成であり、数多くの
+[ユニークな特徴](http://dlang.org/overview.html)があります:
 
 {{#dmandesktop}}
 
 - _high level_ constructs for great modeling power
-- _high performance_, compiled language
-- static typing
-- evolution of C++ (without the mistakes)
-- direct interface to the operating system API's and hardware
-- blazingly fast compile-times
-- allow memory-safe programming (SafeD)
-- _maintainable_, _easy to understand_ code
-- short learning curve (C-like syntax, similar to Java and others)
-- compatible with C application binary interface
-- multi-paradigm (imperative, structured, object oriented, generic, functional programming purity, and even assembly)
-- built-in error prevention (contracts, unittests)
+- **ハイパフォーマンス**なコンパイル言語
+- 静的型付け
+- C++からの進化 (欠点は除く)
+- オペレーティングシステムAPIやハードウェアへの直接的なインターフェース
+- 驚くほど早いコンパイル
+- メモリセーフなプログラミングを可能にする (SafeD)
+- **保守性が高く**、**理解しやすい**コード
+- 短い学習曲線 (C風のシンタックス、Javaなどと似ている)
+- Cアプリとのバイナリインターフェース互換性の保持
+- マルチパラダイム (手続き型、構造化、オブジェクト指向、ジェネリック、純粋関数型プログラミング、そしてアセンブリさえも)
+- ビルトインの誤り防止機能 (契約、ユニットテスト)
 
-... and many more [features](http://dlang.org/overview.html).
+... その他にもたくさんの [特徴](http://dlang.org/overview.html).
 
 {{/dmandesktop}}
 
-### About the tour
+### このツアーについて
 
-Each section comes with a source code example that can be modified and used
-to experiment with D's language features.
-Click the run button (or `Ctrl-enter`) to compile and run it.
+各セクションにはDの特徴を試すために修正して実行できるサンプルコードが付属しています。
+runボタンをクリック (または `Ctrl-enter`) してコンパイル・実行してみましょう。
 
-### Contributing
+### コントリビューティング
 
-This tour is [open source](https://github.com/stonemaster/dlang-tour)
-and we are glad about pull requests making this tour even better.
+このツアーは [オープンソース](https://github.com/stonemaster/dlang-tour)
+で、われわれはこのツアーをより良くするプルリクエストを待っています。
 
 ## {SourceCode}
 
 ```d
 import std.stdio;
 
-// Let's get going!
+// さあ、始めましょう!
 void main()
 {
     writeln("Hello World!");
