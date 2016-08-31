@@ -40,7 +40,7 @@ runボタンをクリック (または `Ctrl-enter`) してコンパイル・実
 
 ### コントリビューティング
 
-このツアーは [オープンソース](https://github.com/stonemaster/dlang-tour)
+このツアーは [オープンソース](https://github.com/dlang-tour)
 で、われわれはこのツアーをより良くするプルリクエストを待っています。
 
 ## {SourceCode}
