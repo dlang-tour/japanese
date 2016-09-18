@@ -18,7 +18,7 @@ D言語のウェブサイト [dlang.org](https://dlang.org)
 
 ### Linux / FreeBSD / macOS
 
-ユーザディレクトリにDMDを素早くインストールするなら、, 以下を実行してください: `curl -fsS https://dlang.org/install.sh | bash -s dmd`
+ユーザディレクトリにDMDを素早くインストールするなら、以下を実行してください: `curl -fsS https://dlang.org/install.sh | bash -s dmd`
 
 様々なディストリビューションに向けてパッケージが提供されています:
 
