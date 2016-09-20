@@ -10,6 +10,6 @@
 
 ### Help
 
-* freenodeのIRCチャンネルで質問をする[#d](irc://irc.freenode.net/d) Ask questions in the IRC channel on freenode ([web インターフェース](https://kiwiirc.com/client/irc.freenode.net/d))
+* freenodeのIRCチャンネルで質問をする[#d](irc://irc.freenode.net/d) ([web インターフェース](https://kiwiirc.com/client/irc.freenode.net/d))
 * [D.learn](http://forum.dlang.org/group/learn)でヘルプを得る
 * issueを立てる [at the D bugtracker](https://issues.dlang.org)
