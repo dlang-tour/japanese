@@ -62,7 +62,7 @@ Dにおいてインデックスは通常、アドレスを取ることが可能�
 - [Floating Point](http://ddili.org/ders/d.en/floating_point.html)
 - [Fundamental types in _Programming in D_](http://ddili.org/ders/d.en/types.html)
 
-#### アドバンスド・リファレンス
+#### アドバンスト・リファレンス
 
 - [Overview of all basic data types in D](https://dlang.org/spec/type.html)
 - [`auto` and `typeof` in _Programming in D_](http://ddili.org/ders/d.en/auto_and_typeof.html)
