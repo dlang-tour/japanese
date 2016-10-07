@@ -1,57 +1,52 @@
-# Storage classes
+# ストレージクラス
 
-D is a statically typed language: once a variable has been declared,
-its type can't be changed from that point onwards. This allows
-the compiler to prevent bugs early and enforce restrictions
-at compile time.  Good type-safety gives the support one needs
-to make large programs safer and more maintainable.
+Dは静的型付け言語です: 一度変数が宣言されたあと、
+それ以降その型は変更できません。これはコンパイラに早期にバグを防止させ、
+コンパイル時に制限を実施します。巨大なプログラムをより安全に、
+より保守性を高く作るときに必要なサポートを、優れた型安全性は提供します。
 
 ### `immutable`
 
-In addition to a static type system, D provides
-storage classes that enforce additional
-constraints on certain objects. For example an
-`immutable` object can just
-be initialized once and then isn't
-allowed to change.
+静的型付けシステムに加えて、Dは特定のオブジェクトに追加の
+制約を適用するストレージクラスを提供します。たとえば
+`immutable`なオブジェクトは一度だけ初期化でき、
+その後変更できません。
 
     immutable int err = 5;
-    // or: immutable err = 5 and int is inferred.
-    err = 5; // won't compile
+    // または: immutable err = 5 でintが推論されます。
+    err = 5; // コンパイルされない
 
-`immutable` objects can thus safely be shared among different threads
-because they never change by design. This implies that `immutable`
-objects can be cached perfectly.
+`immutable`なオブジェクトは設計によって変更されないので、
+例えば異なるスレッド間で安全に共有できます。これは、`immutable`
+なオブジェクトが完全にキャッシュされることを意味します。
 
 ### `const`
 
-`const` objects can't be modified, too. This
-restriction is just valid for the current scope. A `const`
-pointer can be created from either a *mutable* or
-`immutable` object. This means that the object
-is `const` for your current scope, but someone
-else might modify it in future. Just with an `immutable`
-you will be sure that an object's value will never
-change. It is common for APIs to accept `const` objects
-to ensure they don't modify the input.
+`const`なオブジェクトは変更が、できません。この制限はカレントスコープでのみ有効です。
+`const`なポインタは**ミュータブル**または`immutable`なオブジェクトから作ることができます。
+これは、カレントスコープでオブジェクトが`const`でも、
+将来誰かが変更するかもしれない、ということを意味します。`immutable`
+とあればオブジェクトの値が永久に変わらないことを確信するでしょう。
+APIが入力を変更しないことを保証するために`const`
+なオブジェクトを受け入れるのは一般的なことです。
 
     immutable a = 10;
     int b = 5;
     const int* pa = &a;
     const int* pb = &b;
-    *pa = 7; // disallowed
+    *pa = 7; // 認められない
 
-Both `immutable` and `const` are _transitive_ which ensures that once
-`const` is applied to a type, it applies recursively to every sub-component of that type.
+`immutable`と`const`どちらも**推移的**です。つまり、一度`const`が型に適用されると、
+その型のすべてのサブコンポーネントにも再帰的にそれが適用されます。
 
-### In-depth
+### 掘り下げる
 
-#### Basic references
+#### ベーシック・リファレンス
 
 - [Immutable in _Programming in D_](http://ddili.org/ders/d.en/const_and_immutable.html)
 - [Scopes in _Programming in D_](http://ddili.org/ders/d.en/name_space.html)
 
-#### Advanced references
+#### アドバンスト・リファレンス
 
 - [const(FAQ)](https://dlang.org/const-faq.html)
 - [Type qualifiers D](https://dlang.org/spec/const3.html)
@@ -64,13 +59,13 @@ import std.stdio;
 void main()
 {
     immutable forever = 100;
-    // ERROR:
+    // エラー:
     // forever = 5;
     writeln("forever: ",
         typeof(forever).stringof);
 
     const int* cForever = &forever;
-    // ERROR:
+    // エラー:
     // *cForever = 10;
     writeln("const* forever: ",
         typeof(cForever).stringof);
@@ -78,14 +73,14 @@ void main()
     int mutable = 100;
     writeln("mutable: ",
         typeof(mutable).stringof);
-    mutable = 10; // Fine
-    const int* cMutable = &mutable; // Fine
-    // ERROR:
+    mutable = 10; // 良い
+    const int* cMutable = &mutable; // 良い
+    // エラー:
     // *cMutable = 100;
     writeln("cMutable: ",
         typeof(cMutable).stringof);
 
-    // ERROR:
+    // エラー:
     // immutable int* imMutable = &mutable;
 }
 ```
