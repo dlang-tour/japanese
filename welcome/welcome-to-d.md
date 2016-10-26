@@ -16,7 +16,7 @@ Dは、様々な言語のコンパイラを実装してきた数十年の経験�
 
 {{#dmandesktop}}
 
-- _high level_ constructs for great modeling power
+- 強力な表現を可能にする高級な構文
 - **ハイパフォーマンス**なコンパイル言語
 - 静的型付け
 - C++からの進化 (欠点は除く)
