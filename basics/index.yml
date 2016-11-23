@@ -1,0 +1,8 @@
+title: D's Basics
+ordering:
+- imports-and-modules
+- basic-types
+- memory
+- storage-classes
+- controlling-flow
+- functions
