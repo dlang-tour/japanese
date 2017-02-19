@@ -6,3 +6,17 @@ ordering:
 - storage-classes
 - controlling-flow
 - functions
+#- structs
+#- arrays
+#- slices
+#- alias-strings
+#- loops
+#- foreach
+#- ranges
+#- associative-arrays
+#- classes
+#- interfaces
+#- templates
+- delegates
+#- exceptions
+#- further-reading
