@@ -3,3 +3,4 @@ start: welcome/welcome-to-d
 repo: dlang-tour/japanese
 ordering:
 - welcome
+- basics
