@@ -19,7 +19,7 @@ Dにはいくつか型修飾子がありますが、もっとも一般的に使�
     // or: immutable err = 5 and int is inferred.
     err = 5; // won't compile
 
-`immutable`なオブジェクトは設計によって変更されないので、
+`immutable`なオブジェクトは定義上変更されないので、
 例えば異なるスレッド間で同期なしで安全に共有できます。これは、`immutable`
 なオブジェクトが完全にキャッシュされることも意味します。
 
