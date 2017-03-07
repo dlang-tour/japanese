@@ -7,7 +7,7 @@ ordering:
 - controlling-flow
 - functions
 #- structs
-#- arrays
+- arrays
 #- slices
 #- alias-strings
 #- loops
