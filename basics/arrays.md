@@ -85,7 +85,7 @@ char[] encrypt(char[] input, char shift)
 
 void main()
 {
-    // シーザー暗号でメッセージを暗号化し、係数１６でシフトします!
+    // シーザー暗号でメッセージを暗号化し、
     // 係数１６でシフトします!
     char[] toBeEncrypted = [ 'w','e','l','c',
       'o','m','e','t','o','d',
