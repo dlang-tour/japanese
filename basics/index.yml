@@ -9,7 +9,7 @@ ordering:
 #- structs
 #- arrays
 #- slices
-#- alias-strings
+- alias-strings
 #- loops
 #- foreach
 #- ranges
