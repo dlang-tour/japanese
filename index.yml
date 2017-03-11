@@ -4,3 +4,4 @@ repo: dlang-tour/japanese
 ordering:
 - welcome
 - basics
+- gems
