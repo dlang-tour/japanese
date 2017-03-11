@@ -10,7 +10,7 @@ ordering:
 #- arrays
 #- slices
 #- alias-strings
-#- loops
+- loops
 #- foreach
 #- ranges
 #- associative-arrays
