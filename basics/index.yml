@@ -6,7 +6,7 @@ ordering:
 - storage-classes
 - controlling-flow
 - functions
-#- structs
+- structs
 #- arrays
 #- slices
 #- alias-strings
