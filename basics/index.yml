@@ -1,12 +1,12 @@
-title: D's Basics
+title: Dの基礎
 ordering:
 - imports-and-modules
 - basic-types
 - memory
-- storage-classes
+- type-qualifiers
 - controlling-flow
 - functions
-#- structs
+- structs
 - arrays
 #- slices
 #- alias-strings
