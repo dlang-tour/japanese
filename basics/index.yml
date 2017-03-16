@@ -11,7 +11,7 @@ ordering:
 #- slices
 #- alias-strings
 #- loops
-#- foreach
+- foreach
 #- ranges
 #- associative-arrays
 #- classes
