@@ -1,17 +1,16 @@
-# Ranges
+# レンジ
 
-If a `foreach` is encountered by the compiler
+コンパイラが`foreach`に遭遇した時、
 
     foreach(element; range) {
 
-it's internally rewritten similar to the following:
+内部で下のものと同じように書き換えられます:
 
     for (; !range.empty; range.popFront()) {
         auto element = range.front;
         ...
 
-Any object which fulfills the above interface is called a **range**
-and is thus a type that can be iterated over:
+上記のインターフェースを満たすオブジェクトは**レンジ**と呼ばれ、反復処理ができる型です:
 
     struct Range {
         @property empty() const;
@@ -19,23 +18,20 @@ and is thus a type that can be iterated over:
         T front();
     }
 
-The functions in `std.range` and `std.algorithm` provide
-building blocks that make use of this interface. Ranges allow
-to compose complex algorithms behind an object that
-can be iterated with ease. Furthermore ranges allow to create **lazy**
-objects that only perform a calculation when it's really needed
-in an iteration e.g. when the next range's element is accessed.
-Special range algorithm will be presented later in the
-[D's Gems](gems/range-algorithms) section.
+`std.range`と`std.algorithm`の関数はこのインターフェースに使う構成要素を提供します。
+レンジは簡単に反復処理可能なオブジェクトを背景とした複雑なアルゴリズムを
+組み合わせることを可能にします。さらにレンジは例えば次の要素にアクセスされた時など、
+反復処理内で本当に必要なときだけ計算を行う**遅延**オブジェクトを作ります。
+特殊なレンジのアルゴリズムは後ほど[D's Gems](gems/range-algorithms)
+セクションで提示されます。
 
-### Exercise
+### エクササイズ
 
-Complete the source code to create the `FibonacciRange` range
-that returns numbers of the
-[Fibonacci sequence](https://en.wikipedia.org/wiki/Fibonacci_number).
-Don't fool yourself into deleting the `assert`ions!
+[フィボナッチ数列](https://en.wikipedia.org/wiki/Fibonacci_number)
+の数を返す`FibonacciRange`を作りソースコードを完成させましょう。
+`assert`を削除してごまかさないでくださいよ!
 
-### In-depth
+### 掘り下げる
 
 - [`std.algorithm`](http://dlang.org/phobos/std_algorithm.html)
 - [`std.range`](http://dlang.org/phobos/std_range.html)
@@ -49,8 +45,7 @@ struct FibonacciRange
 {
     bool empty() const @property
     {
-        // So when does the Fibonacci sequence
-        // end?!
+        // フィボナッチ数列が終わる時がありますか?!
     }
 
     void popFront()
@@ -68,15 +63,13 @@ void main() {
 
     FibonacciRange fib;
 
-    // `take` creates another range which
-    // will return N elements at maximum.
-    // This range is _lazy_ and just
-    // touches the original range
-    // if actually needed
+    // `take`は最大N個の要素を返す別のレンジを作ります。
+    // このレンジは_遅延評価_され、本当に必要な時しか
+    // オリジナルのレンジにさわりません
     auto fib10 = take(fib, 10);
 
-    // But we do want to touch all elements and
-    // convert the range to array of integers.
+    // しかし我々はすべての要素に触れて
+    // レンジを整数の配列に変換したいです。
     int[] the10Fibs = array(fib10);
 
     writeln("The 10 first Fibonacci numbers: ",
