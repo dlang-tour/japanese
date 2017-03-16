@@ -1,38 +1,34 @@
-# Associative Arrays
+# 連想配列
 
-D has built-in *associative arrays* also known as hash maps.
-An associative array with a key type of `string` and a value type
-of `int` is declared as follows:
+Dにはハッシュマップとしても知られる組み込みの**連想配列**があります。
+キーの型が`string`で値の方が`int`である連想配列は下記のように宣言されます:
 
     int[string] arr;
 
-The value can be accessed by its key and thus be set:
+値はそのキーによってアクセスでき、したがって設定できます:
 
     arr["key1"] = 10;
 
-To test whether a key is located in the associative array, the
-`in` expression can be used:
+キーが連想配列内にあるかどうかをテストするのに、`in`式が使えます:
 
     if ("key1" in arr)
         writeln("Yes");
 
-The `in` expression returns a pointer to the value if it
-can be found or a `null` pointer otherwise. Thus existence check
-and writes can be conveniently combined:
+`in`式は値が見つかった時はそのポインタを、そうでなければ`null`ポインタを返します。
+したがって存在チェックと書き込みは便利に組み合わせることができます:
 
     if (auto val = "key1" in arr)
         *val = 20;
 
-Access to a key which doesn't exist yields an `RangeError`
-that immediately aborts the application. For a safe access
-with a default value, `get(key, defaultValue)` can be used.
+存在しないキーへのアクセスは即座にアプリケーションを停止させる
+`RangeError`を発生させます。デフォルト値による安全なアクセスには、
+`get(key, defaultValue)`が使えます。
 
-AA's have the `.length` property like arrays and provide
-a `.remove(val)` member to remove entries by their key.
-It is left as an exercise to the reader to explore
-the special `.byKey` and `.byValue` ranges.
+連想配列は配列のような`.length`プロパティを持ち、キーによって項目を
+削除する`.remove(val)`メンバを持ちます。
+特殊な`.byKey`と`.byValue`レンジを探索することは読者への練習問題とします。
 
-### In-depth
+### 掘り下げる
 
 - [Associative arrays in _Programming in D_](http://ddili.org/ders/d.en/aa.html)
 - [Associative arrays specification](https://dlang.org/spec/hash-map.html)
@@ -44,28 +40,25 @@ the special `.byKey` and `.byValue` ranges.
 import std.stdio : writeln;
 
 /**
-Splits the given text into words and returns
-an associative array that maps words to their
-respective word counts.
+与えられたテキストを単語で分割し
+それぞれの単語数をマップした連想配列を返します。
 
 Params:
-    text = text to be splitted
+    text = 分割されるテキスト
 */
 int[string] wordCount(string text)
 {
-    // The function splitter lazily splits the
-    // input into a range
+    // 関数splitterは入力をlazyにレンジに分割します
     import std.algorithm.iteration : splitter;
     import std.string : toLower;
 
-    // Indexed by words and returning the count
+    // 単語でインデックスされ個数を返します
     int[string] words;
 
     foreach(word; splitter(text.toLower(), " "))
     {
-        // Increment word count if word
-        // has been found.
-        // Integers are by default 0.
+        // 単語が見つかったら単語数をインクリメントします。
+        // 整数はデフォルトで0です。
         words[word]++;
     }
 
@@ -79,7 +72,7 @@ void main()
     auto wc = wordCount(text);
     writeln("Word counts: ", wc);
 
-    // possible iterations:
+    // 反復処理可能:
     // byKey, byValue, byKeyValue
     foreach (word; wc.byValue)
         writeln(word);
