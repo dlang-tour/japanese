@@ -8,7 +8,7 @@ ordering:
 - functions
 - structs
 #- arrays
-#- slices
+- slices
 #- alias-strings
 - loops
 - foreach
