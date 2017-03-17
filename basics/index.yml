@@ -10,8 +10,8 @@ ordering:
 #- arrays
 #- slices
 #- alias-strings
-#- loops
-#- foreach
+- loops
+- foreach
 #- ranges
 #- associative-arrays
 #- classes
