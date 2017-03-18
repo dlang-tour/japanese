@@ -8,10 +8,10 @@ ordering:
 - functions
 - structs
 - arrays
-#- slices
+- slices
 #- alias-strings
-#- loops
-#- foreach
+- loops
+- foreach
 #- ranges
 #- associative-arrays
 #- classes
