@@ -13,7 +13,7 @@ ordering:
 - loops
 - foreach
 #- ranges
-#- associative-arrays
+- associative-arrays
 #- classes
 #- interfaces
 #- templates
