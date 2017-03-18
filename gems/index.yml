@@ -15,4 +15,4 @@ ordering:
 #- traits
 #- template-meta-programming
 #- bit-manipulation
-#- unicode
+- unicode
