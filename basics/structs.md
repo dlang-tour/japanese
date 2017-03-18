@@ -31,10 +31,9 @@ Dでは`struct`で複合型またはカスタム型を定義します:
     p = Person(30, 180);  // 新しいインスタンスを代入
 
 `struct`には任意の数のメンバ関数が含まれます。それらはデフォルトでは
-`public`で、外部からアクセス可能です。They might
-as well be `private` and thus only be callable by other
-member functions of the same `struct` or other code in the same
-module.
+`public`で、外部からアクセス可能です。それは`private`にすることで、
+同じ`struct`のメンバ関数や同じモジュールの他のコードからのみ
+呼べるようにした方がいいでしょう。
 
     struct Person {
         void doStuff() {
