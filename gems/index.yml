@@ -2,7 +2,7 @@ title: D's Gems
 ordering:
 #- uniform-function-call-syntax-ufcs
 #- scope-guards
-#- range-algorithms
+- range-algorithms
 #- unittesting
 #- string-mixins
 #- compile-time-function-evaluation-ctfe

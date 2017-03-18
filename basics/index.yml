@@ -12,7 +12,7 @@ ordering:
 - alias-strings
 - loops
 - foreach
-#- ranges
+- ranges
 - associative-arrays
 #- classes
 #- interfaces
