@@ -53,7 +53,7 @@ void main()
       .filter!(a => a % 2 == 0)
       .writeln(); // 標準出力にそれらを出力
 
-    // Traditional style:
+    // 伝統的なスタイル:
     writeln(filter!(a => a % 2 == 0)
     			   (iota(10)));
 }
