@@ -1,27 +1,22 @@
-# Scope guards
+# スコープガード
 
-Scope guards allow executing statements at certain conditions
-if the current block is left:
+スコープガードでカレントブロックから出た時に一定の条件で文を実行することができます:
 
-* `scope(exit)` will always call the statements
-* `scope(success)` statements are called when no exceptions
-  have been thrown
-* `scope(failure)` denotes statements that will be called when
-  an exception has been thrown before the block's end
+* `scope(exit)`は常に文を呼び出します
+* `scope(success)`文は例外が何も投げられなかった時に呼ばれます
+* `scope(failure)`はブロックの終わりの前に例外が投げられた時に呼ばれる文を表します
 
-Using scope guards makes code much cleaner and allows to place
-resource allocation and clean up code next to each other.
-These little helpers also improve safety because they make sure
-certain cleanup code is *always* called independent of which paths
-are actually taken at runtime.
+スコープガードを使うとコードをとてもわかり易くし、
+リソース割り当てとクリーンアップコードを並べて配置することができます。
+これらのちょっとしたヘルパは実行時にどのようなパスを通ったかに関係なく
+クリーンアップコードが**常に**呼ばれることを確実にするため、安全性を改善することができます。
 
-The D `scope` feature effectively replaces the RAII idiom
-used in C++ which often leads to special scope guards objects
-for special resources.
+Dの`scope`機能はC++で使われる、しばしば特殊なリソースのために特殊な
+スコープガードオブジェクトを導入するRAIIイディオムを効率的に置き換えます。
 
-Scope guards are called in the reverse order they are defined.
+スコープガードはそれらが定義されたのと逆順に呼ばれます。
 
-### In-depth
+### 掘り下げる
 
 - [`scope` in _Programming in D_](http://ddili.org/ders/d.en/scope.html)
 
@@ -39,17 +34,15 @@ void main()
         writeln("\t<head>");
         scope(exit) writeln("\t</head>");
         "\t<title>%s</title>".writefln("Hello");
-    } // the scope(exit) on the previous line
-      // is executed here
+    } // 前の行のscope(exit)はここで実行されます
 
     writeln("\t<body>");
     scope(exit) writeln("\t</body>");
 
     writeln("\t\t<h1>Hello World!</h1>");
 
-    // scope guards allow placing allocations
-    // and their clean up code next to each
-    // other
+    // スコープガードは割り当てと
+    // そのクリーンアップコードを並べて配置できます
     import core.stdc.stdlib : free, malloc;
     int* p = cast(int*) malloc(int.sizeof);
     scope(exit) free(p);
