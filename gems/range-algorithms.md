@@ -1,62 +1,52 @@
-# Range algorithms
+# レンジアルゴリズム
 
-The standard modules [std.range](http://dlang.org/phobos/std_range.html)
-and [std.algorithm](http://dlang.org/phobos/std_algorithm.html)
-provide a multitude of great functions that can be
-composed to express complex operations in a still
-readable way - based on *ranges* as building blocks.
+標準モジュール[std.range](http://dlang.org/phobos/std_range.html)
+と[std.algorithm](http://dlang.org/phobos/std_algorithm.html)
+はより読みやすい方法で - 構成要素として**レンジ**を基本にしています - 複雑な
+操作を表現することができる多くの優れた関数を提供します。
 
-The great thing with these algorithms is that you just
-have to define your own range and you will directly
-be able to profit from what already is in the standard
-library.
+これらのアルゴリズムの素晴らしい点はあなたはレンジを定義するだけで
+すでにある標準ライブラリから直接利益を受けられるところです。
 
 ### std.algorithm
 
-`filter` - Given a lambda as template parameter,
- generate a new range that filters elements:
+`filter` - テンプレート引数としてラムダを取り、要素をフィルタした新しいレンジを生成します:
 
     filter!"a > 20"(range);
     filter!(a => a > 20)(range);
 
-`map` - Generate a new range using the predicate
- defined as template parameter:
+`map` - テンプレートパラメータとして定義された述語を使って新しいレンジを生成します:
 
     [1, 2, 3].map!(x => to!string(x));
 
-`each` - Poor man's `foreach` as a range crunching
-function:
+`each` - レンジを噛み砕く関数としての手軽な`foreach`です:
 
     [1, 2, 3].each!(a => writeln(a));
 
 ### std.range
-`take` - Limit to *N* elements:
+`take` - **N**個の要素へ制限します:
 
     theBigBigRange.take(10);
 
-`zip` - iterates over two ranges
-in parallel returning a tuple from both
-ranges during iteration:
+`zip` - 2つのレンジを同時に処理しその2つからタプルを返します:
 
     assert(zip([1,2], ["hello","world"]).front
       == tuple(1, "hello"));
 
-`generate` - takes a function and creates a range
-which in turn calls it on each iteration, for example:
+`generate` - 関数を取り各反復処理でそれを呼びレンジを生成します、たとえば:
 
     alias RandomRange = generate!(x => uniform(1, 1000));
 
-`cycle` - returns a range that repeats the given input range
-forever.
+`cycle` - 与えられた入力のレンジを永遠に繰り返すレンジを返します。
 
     auto c = cycle([1]);
-    // range will never be empty!
+    // レンジは空になりません!
     assert(!c.empty);
 
-### The documentation is awaiting your visit!
+### ドキュメントはあなたの訪問を待っています!
 
 
-### In-depth
+### 掘り下げる
 
 - [Ranges in _Programming in D_](http://ddili.org/ders/d.en/ranges.html)
 - [More Ranges in _Programming in D_](http://ddili.org/ders/d.en/ranges_more.html)
@@ -64,7 +54,7 @@ forever.
 ## {SourceCode}
 
 ```d
-// Hey come on, just get the whole army!
+// さあ、全軍あつまれ!
 import std.algorithm : canFind, map,
   filter, sort, uniq, joiner, chunkBy, splitter;
 import std.array : array, empty;
@@ -79,43 +69,39 @@ overview of this powerful and expressive systems
 programming language which compiles directly
 to efficient, *native* machine code.};
 
-    // splitting predicate
+    // 区切る述語
     alias pred = c => canFind(" ,.\n", c);
-    // as a good algorithm it just works
-    // lazily without allocating memory!
+    // 優れたアルゴリズムとして
+    // メモリ割り当てなしで遅延して動作します!
     auto words = text.splitter!pred
       .filter!(a => !a.empty);
 
     auto wordCharCounts = words
       .map!"a.count";
 
-    // Output the character count
-    // per word in a nice way
-    // beginning with least chars!
+    // 単語あたり文字数を優れた方法で
+    // 最初から出力します!
     zip(wordCharCounts, words)
-      // convert to array for sorting
+      // ソートのため配列に変換します
       .array()
       .sort()
-      // we don't need duplication, right?
+      // 複製は必要ない、そうですね?
       .uniq()
-      // put all in one row that have the
-      // same char count. chunkBy helps
-      // us here by generating ranges
-      // of range that are chunked by the length
+      // 同じ文字数を持つ行をすべて出力します。
+      // chunkByは長さでチャンクされた
+      // レンジのレンジを返すことでここで役立ちます
       .chunkBy!(a => a[0])
-      // those elments will be joined
-      // on one line
+      // これらの要素は一行にまとめられます
       .map!(chunk => format("%d -> %s",
           chunk[0],
-          // just the words
+          // 単語たち
           chunk[1]
             .map!(a => a[1])
             .joiner(", ")))
-      // joiner joins, but lazily!
-      // and now the lines with the line
-      // feed
+      // joinerは結合します、ただし遅延して!
+      // そして改行付きのラインです
       .joiner("\n")
-      // pipe to stdout
+      // 標準出力にパイプします
       .writeln();
 }
 ```
