@@ -1,25 +1,19 @@
-# String Mixins
+# 文字列Mixin
 
-The `mixin` expression takes an arbitrary string and
-compiles it and generates instructions accordingly. It
-is purely a **compile-time** mechanism and can only work
-on strings available during compilation - a comparison
-with the evil JavaScript `eval` would be highly unfair.
+`mixin`式は任意の式を取りコンパイルし、それに応じて命令を生成します。
+これは純粋に**コンパイル時**の機構であり、コンパイル中に利用できる
+文字列でのみ働きます。邪悪なJavaScriptの`eval`との比較はかなりアンフェアです。
 
     mixin("int b = 5");
-    assert(b == 5); // compiles just fine
+    assert(b == 5); // 正しくコンパイルされる
 
-`mixin` also works with strings that are constructed
-dynamically as long as the available information doesn't
-depend on runtime values.
+`mixin`は実行時の値に依存せず利用できる限り動的に構築された文字列でも動作します。
 
-`mixin` together with **CTFE** from the next section allows
-writing impressive libraries like [Pegged](https://github.com/PhilippeSigaud/Pegged)
-which generates
-a grammar parser from a grammar defined as a string
-in the source code.
+`mixin`とともに次のセクションの**CTFE**はソースコード中の文字列として定義された
+文法から文法解析器を生成する[Pegged](https://github.com/PhilippeSigaud/Pegged)
+のような印象的なライブラリを書くことを可能にします。
 
-### In-depth
+### 掘り下げる
 
 - [Mixins in D](https://dlang.org/spec/template-mixin.html)
 
@@ -35,11 +29,10 @@ auto calculate(string op, T)(T lhs, T rhs)
 
 void main()
 {
-    // A whole new approach to Hello World!
+    // これまでにない新しいHello Worldのアプローチ!
     mixin(`writeln("Hello World");`);
 
-    // pass the operation to perform as a
-    // template parameter.
+    // テンプレートパラメータとして動作する操作を渡す
     writeln("5 + 12 = ", calculate!"+"(5,12));
     writeln("10 - 8 = ", calculate!"-"(10,8));
     writeln("8 * 8 = ", calculate!"*"(8,8));
