@@ -1,47 +1,39 @@
-# Compile Time Function Evaluation (CTFE)
+# コンパイル時間数実行 (CTFE)
 
-CTFE is a mechanism which allows the compiler to execute
-functions at **compile time**. There is no special set of the D
-language necessary to use this feature - whenever
-a function just depends on compile time known values
-the D compiler might decide to interpret
-it during compilation.
+CTFEはコンパイラに関数を**コンパイル時**に実行することを可能にさせる機構です。
+この機能を使うのに必要なD言語の特殊なセットはありません - 関数がコンパイル時に
+わかる値のみに依存するときはいつでもDコンパイラは
+コンパイル中にそれを解釈する可能性があります。
 
-    // result will be calculated at compile
-    // time. Check the machine code, it won't
-    // contain a function call!
+    // 結果はコンパイル時に計算されます。
+    // マシンコードをチェックしてください、
+    // 関数呼び出しは含まれないことでしょう!
     static val = sqrt(50);
 
-Keywords like `static`, `immutable` or `enum`
-instruct the compiler to use CTFE whenever possible.
-The great thing about this technique is that
-functions don't need to be rewritten to use
-it, and the same code can perfectly be shared:
+`static`、`immutable`、または`enum`のようなキーワードは出来る限り
+CTFEを使うようコンパイラに命令します。このテクニックの素晴らしいところは、
+関数はそれを使うために書き換えることを必要とせず、
+同じコードは完璧に共有されるところです:
 
     int n = doSomeRuntimeStuff();
-    // same function as above but this
-    // time it is just called the classical
-    // run-time way.
+    // 上と同じ関数ですがこの時は
+    // 古典的に実行時に呼ばれます。
     auto val = sqrt(n);
 
-One prominent example in D is the [std.regex](https://dlang.org/phobos/std_regex.html)
-library. It provides at type `ctRegex` type which uses
-*string mixins* and CTFE to generate a highly optimized
-regular expression automaton that is generated during
-compilation. The same code base is re-used for
-the run-time version `regex` that allows to compile
-regular expressions only available at run-time.
+Dにおける顕著な例は[std.regex](https://dlang.org/phobos/std_regex.html)
+ライブラリです。それは**文字列Mixin**とCTFEをとても最適化された正規表現オートマトンを
+コンパイル時に生成するために使う`ctRegex`型を提供します。同じコードベースは実行時のみ
+利用できる正規表現をコンパイルすることを可能にする実行時バージョンの`regex`に再利用されます。
 
     auto ctr = ctRegex!(`^.*/([^/]+)/?$`);
     auto tr = regex(`^.*/([^/]+)/?$`);
-    // ctr and tr can be used interchangely
-    // but ctr will be faster!
+    // ctrとtrは互換的に使うことができますが
+    // ctrのほうが速いでしょう!
 
-Not all language features are available
-during CTFE but the supported feature set is increased
-with every release of the compiler.
+CTFEではすべての言語機能は使えませんが、サポートされる機能セットは
+コンパイラのリリースとともに増えています。
 
-### In-depth
+### 掘り下げる
 
 - [Introduction to regular expressions in D](https://dlang.org/regular-expression.html)
 - [std.regex](https://dlang.org/phobos/std_regex.html)
@@ -53,21 +45,19 @@ with every release of the compiler.
 import std.stdio : writeln;
 
 /**
-Calculate the square root of a number
-using Newton's approximation scheme.
+ニュートン近似法を使い数値の平方根を計算します。
 
 Params:
-    x = number to be squared
+    x = 平方根にされる数値
     
-Returns: square root of x 
+Returns: xの平方根
 */
 auto sqrt(T)(T x) {
-    // our epsilon when to stop the
-    // approximation because we think the change
-    // isn't worth another iteration.
+    // これ以上の反復の価値がないと判断して
+    // 近似を停止するときのイプシロンです。
     enum GoodEnough = 0.01;
     import std.math : abs;
-    // choose a good starting value.
+    // 良い開始値を選びます
     T z = x*x, old = 0;
     int iter;
     while (abs(z - old) > GoodEnough) {
