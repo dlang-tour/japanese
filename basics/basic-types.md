@@ -1,60 +1,78 @@
-# 基本型
+# Basic types
 
-Dはプラットフォームに**関係なく**いつも同じサイズの多くの基本型を提供します。 - 
-唯一の例外は可能な限り最高の精度を提供する`real`型です。
-アプリケーションが32-bitシステム用にコンパイルされたか、
-64-bitシステム用かと整数型のサイズは関係ありません。
+D provides a number of basic types which always have the same
+size **regardless** of the platform - the only exception
+is the `real` type which provides the highest possible floating point
+precision. There is no difference
+between the size of an integer regardless of whether the application
+is compiled for 32-bit or 64-bit systems.
 
-<table class="table table-hover">
-<tr><td width="250px"><code class="prettyprint">bool</code></td> <td>8-bit</td></tr>
-<tr><td><code class="prettyprint">byte, ubyte, char</code></td> <td>8-bit</td></tr>
-<tr><td><code class="prettyprint">short, ushort, wchar</code></td> <td>16-bit</td></tr>
-<tr><td><code class="prettyprint">int, uint, dchar</code></td> <td>32-bit</td></tr>
-<tr><td><code class="prettyprint">long, ulong</code></td> <td>64-bit</td></tr>
-</table>
+| type                          | size
+|-------------------------------|------------
+|`bool`                         | 8-bit
+|`bool`, `ubyte`, `char`        | 8-bit
+|`short`, `ushort`, `wchar`     | 16-bit
+|`int`, `uint`, `dchar`         | 32-bit
+|`long`, `ulong`                | 64-bit
 
-#### 浮動小数点型:
+#### Floating point types:
 
-<table class="table table-hover">
-<tr><td width="250px"><code class="prettyprint">float</code></td> <td>32-bit</td></tr>
-<tr><td><code class="prettyprint">double</code></td> <td>64-bit</td></tr>
-<tr><td><code class="prettyprint">real</code></td> <td>プラットフォームに依存、Intel x86 32-bitでは80-bit</td></tr>
-</table>
+| type    | size
+|---------|--------------------------------------------------
+|`float`  | 32-bit
+|`double` | 64-bit
+|`real`   | >= 64-bit (generally 64-bit, but 80-bit on Intel x86 32-bit)
 
-`u`プレフィックスは**符号なし型**を示します。`char`はUTF-8 文字に変換され、
-`wchar`はUTF-16 文字列で使われ、`dchar`はUTF-32 文字で使われます。
+The prefix `u` denotes *unsigned* types. `char` translates to
+UTF-8 characters, `wchar` is used in UTF-16 strings and `dchar`
+in UTF-32 strings.
 
-異なる型の変数間の変換はその精度が失われない場合のみコンパイラに許可されます。
-浮動小数点間の変換(例えば`double`から`float`)は許可されます。
+A conversion between variables of different types is only
+allowed by the compiler if no precision is lost. However,
+a conversion between floating point types
+(e.g `double` to `float`) is allowed.
 
-異なる型への変換を`cast(型) myVar`式を使って強制することもできます。
-`cast`式は型システムを壊しうるものとして、細心の注意を払って使用する必要があります。
+A conversion to another type may be forced by using the
+`cast(TYPE) myVar` expression. It needs to be used with great care though,
+as the `cast` expression is allowed to break the type system.
 
-特別なキーワード`auto`は変数を作成し、式の右辺からその型を推定します。
-`auto myVar = 7`では`myVar`の型を`int`と推測します。
-明示的に指定された型を持つ他の変数と同様、推測された型は
-コンパイル時に設定され、以降変更されないことに注意してください。
+The special keyword `auto` creates a variable and infers its
+type from the right hand side of the expression. `auto myVar = 7`
+will deduce the type `int` for `myVar`. Note that the type is still
+set at compile-time and can't be changed - just like with any other
+variable with an explicitly given type.
 
-### 型のプロパティ
+### Type properties
 
-すべてのデータ型はそれが初期化された`.init`プロパティを持ちます。
-これはすべての整数型で`0`、浮動小数点数で`nan`(**数値でない**)です。
-整数と浮動小数点数型は、表現できる最低値と最大値である`.min`と`.max`プロパティを持ちます。
-浮動小数点値はさらに複数のプロパティ
-`.nan` (NaN値)、`.infinity` (無限値)、`.dig` (精度の10進桁数)、`.mant_dig` (仮数部のビット数)などを持ちます。
+All data types have a property `.init` to which they are initialized.
+For all integers this is `0` and for floating points it is `nan` (*not a number*).
 
-また、すべての型はその型の名前の文字列を得る`.stringof`プロパティを持ちます。
+Integral and floating point types have a `.max` property for the highest value
+they can represent. Integral types also have a `.min` property for the lowest value
+they can represent, whereas floating point types have a `.min_normal` property
+which is defined to the smallest representable normalized value that's not 0.
 
-### Dでのインデックス
+Floating point types also have properties `.nan` (NaN-value), `.infinity`
+(infinity value), `.dig` (number of decimal digits of precisions), `.mant_dig`
+(number of bits in mantissa) and more.
 
-Dにおいてインデックスは通常、アドレスを取ることが可能なメモリのオフセットを表現するのに十分なサイズを持つ型のエイリアスとして`size_t`があります - 
-32-bitなら`uint`、64-bit アーキテクチャなら`ulong`です。
+Every type also has a `.stringof` property which yields its name as a string.
 
-`assert`とはデバッグモードで条件式を検証し、失敗した時は`AssertionError`で中断するという組み込み機能です。
+### Indexes in D
 
-### 掘り下げる
+In D, indexes usually have the alias type `size_t`, as it is a type that
+is large enough to represent an offset into all addressable memory - this is
+`uint` for 32-bit and `ulong` for 64-bit architectures.
 
-#### ベーシック・リファレンス
+### Assert expression
+
+`assert` is an expression which verifies conditions in debug mode and aborts
+with an `AssertionError` if it fails.
+`assert(0)` is thus used to mark unreachable code.
+
+### In-depth
+
+#### Basic references
 
 - [Assignment](http://ddili.org/ders/d.en/assignment.html)
 - [Variables](http://ddili.org/ders/d.en/variables.html)
@@ -62,37 +80,40 @@ Dにおいてインデックスは通常、アドレスを取ることが可能�
 - [Floating Point](http://ddili.org/ders/d.en/floating_point.html)
 - [Fundamental types in _Programming in D_](http://ddili.org/ders/d.en/types.html)
 
-#### アドバンスト・リファレンス
+#### Advanced references
 
 - [Overview of all basic data types in D](https://dlang.org/spec/type.html)
 - [`auto` and `typeof` in _Programming in D_](http://ddili.org/ders/d.en/auto_and_typeof.html)
 - [Type properties](https://dlang.org/spec/property.html)
+- [Assert expression](https://dlang.org/spec/expression.html#AssertExpression)
 
 ## {SourceCode}
 
 ```d
-import std.stdio;
+import std.stdio : writeln;
 
 void main()
 {
-    // 大きな数字は可読性を高めるために
-    // アンダースコア"_"で区切ることができます。
+    // Big numbers can be separated
+    // with an underscore "_"
+    // to enhance readability.
     int b = 7_000_000;
-    short c = cast(short) b; // キャストが必要
-    uint d = b; // 良い
+    short c = cast(short) b; // cast needed
+    uint d = b; // fine
     int g;
     assert(g == 0);
 
-    auto f = 3.1415f; // fはfloatを表す
+    auto f = 3.1415f; // f denotes a float
 
-    // typeid(変数)は式の型情報を返します。
+    // typeid(VAR) returns the type information
+    // of an expression.
     writeln("type of f is ", typeid(f));
-    double pi = f; // 良い
-    // 浮動小数点数型は
-    // 暗黙のダウンキャスティングができます。
+    double pi = f; // fine
+    // for floating-point types
+    // implicit down-casting is allowed
     float demoted = pi;
 
-    // 型の情報にアクセス
+    // access to type properties
     assert(int.init == 0);
     assert(int.sizeof == 4);
     assert(bool.max == 1);
