@@ -1,27 +1,24 @@
-# Contract programming
+# 契約プログラミング
 
-Contract programming in D includes a set of language constructs
-that allow increasing the code quality by implementing
-sanity checks that make sure that the code base
-behaves as intended. Contracts are only available in
-**debug** mode and won't be run in release mode.
-Therefore they shouldn't be used to validate user input.
+Dの契約プログラミングはコードベースが期待通りに振る舞うことを確実にする
+サニティ・チェックを反映させることによりコードの質を向上させることができる
+言語構成体群を含みます。契約は**デバッグ**モードでのみ利用でき、
+リリースモードでは実行されません。したがってユーザの入力を
+検証するのに使われてはいけません。
 
 ### `assert`
 
-The simplest form of contract programming in D is
-the `assert(...)` expression that checks that a certain
-condition is met - and aborts the program with
-an `AssertionError` otherwise.
+Dの最も単純な契約プログラミングの形は`assert(...)`式で、
+これは一定の条件を満たすかをチェックし、
+そうでない場合は`AssertionError`でプログラムを中断します。
 
     assert(sqrt(4) == 2);
-    // optional custom assertion error message
+    // 任意のカスタムアサーションエラーメッセージ
     assert(sqrt(16) == 4, "sqrt is broken!");
 
-### Function contracts
+### 関数の契約
 
-`in` and `out` allow to formalize contracts for input
-parameters and return values of functions.
+`in`と`out`で入力パラメータと関数の返値の契約を形式化することができます。
 
     long square_root(long x)
     in {
@@ -33,33 +30,27 @@ parameters and return values of functions.
         return cast(long)std.math.sqrt(cast(real)x);
     }
 
-The content in the `in` block could also be expressed
-within the function's body but the intent is much clearer
-this way. In the `out` block the function's return
-value can be captured with `out(result)` and
-verified accordingly.
+`in`ブロックの中のコンテンツは関数の本文中に表現することもできますが、
+この方法のほうが意図が明確です。`out`ブロックの中で関数の返値は
+`out(result)`でキャプチャしそこで検証されます。
 
-### Invariant checking
+### 不変条件のチェック
 
-`invariant()` is a special member function of `struct`
-and `class` types that allows sanity checking an object's
-state during its whole lifetime:
+`invariant()`は`struct`や`class`型の特殊なメンバ関数で、
+オブジェクトのライフタイム全体におけるその状態のサニティ・チェックを行うものです:
 
-* It's called after the constructor has run and before
-  the destructor is called.
-* It's called before entering a member function
-* `invariant()` is called after exiting a member
-  function.
+* それはコンストラクタが実行された後とデストラクタが呼ばれる前に呼ばれます
+* それはメンバ関数に入る前に呼ばれます
+* `invariant()`はメンバ関数を抜けたあとに呼ばれます。
 
-### Validating user input
+### ユーザ入力を検証する
 
-As all contracts will be removed in the release build, user input should not
-be checked using contracts. Moreover `assert`s can still be used be in
-`nothrow` functions, because they throw fatal `Errors`.
-The runtime analog to `assert` is [`std.exception.enforce`](https://dlang.org/phobos/std_exception.html#.enforce),
-which will throw catchable `Exceptions`.
+すべての契約はリリースビルドで削除されるため、ユーザ入力は契約を使って検証されるべきではありません。
+加えて(訳注:例外ではなく)致命的な`Errors`を投げるため、`assert`は`nothrow`関数で使うことができます。
+実行時の`assert`の類似物は[`std.exception.enforce`](https://dlang.org/phobos/std_exception.html#.enforce)で、
+これはキャッチできる`Exceptions`を投げます。
 
-### In-depth
+### 掘り下げる
 
 - [`assert` and `enforce` in _Programming in D_](http://ddili.org/ders/d.en/assert.html)
 - [Contract programming in _Programming in D_](http://ddili.org/ders/d.en/contracts.html)
@@ -73,8 +64,8 @@ which will throw catchable `Exceptions`.
 import std.stdio: writeln;
 
 /**
-Simplified Date type
-Use std.datetime instead
+単純化されたDate型
+std.datetimeの代わりに使います
 */
 struct Date {
     private {
@@ -96,13 +87,12 @@ struct Date {
     }
 
     /**
-    Serializes Date object from a
-    YYYY-MM-DD string.
+    DateオブジェクトをYYYY-MM-DDという文字列からシリアライズします。
     
     Params:
-        date = string to be serialized
+        date = シリアライズされる文字列
         
-    Returns: Date object.
+    Returns: Dateオブジェクト。
     /*
     void fromString(string date)
     in {
@@ -110,9 +100,8 @@ struct Date {
     }
     body {
         import std.format: formattedRead;
-        // formattedRead parses the format
-        // given and writes the result to the
-        // given variables
+        // formattedReadは与えられたフォーマットで
+        // パースし与えられた変数に結果を書き込みます
         formattedRead(date, "%d-%d-%d",
             &this.year,
             &this.month,
@@ -120,9 +109,9 @@ struct Date {
     }
 
     /**
-    Serializes Date object to YYYY-MM-DD
+    YYYY-MM-DDの形へDateオブジェクトをシリアライズします
 
-    Returns: String representation of the Date
+    Returns: Dateの文字列表現
     /*
     string toString() const
     out (result) {
@@ -131,7 +120,7 @@ struct Date {
         import std.string: isNumeric;
         import std.array: split;
 
-        // verify we return YYYY-MM-DD
+        // YYYY-MM-DDの形を返すことを検証
         assert(result.count("-") == 2);
         auto parts = result.split("-");
         assert(parts.map!`a.length`
@@ -148,9 +137,9 @@ struct Date {
 void main() {
     auto date = Date(2016, 2, 7);
 
-    // This will make invariant fail.
-    // Don't validate user input with contracts,
-    // throw exceptions instead.
+    // これはinvariant failを引き起こします。
+    // 契約でユーザ入力を検証しないで、
+    // かわりに例外を投げてください。
     date.fromString("2016-13-7");
 
     date.writeln;
