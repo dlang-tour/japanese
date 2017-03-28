@@ -1,29 +1,25 @@
-# Subtyping
+# サブタイピング
 
-`struct` can't inherit from other `struct`s. But
-for those poor `struct`s D provides another great
-means to extend their functionality: **subtyping**.
+`struct`は他の`struct`から継承することはできません。
+しかしDは`struct`のために、その機能を拡張する別の
+素晴らしい方法を提供します: **サブタイピング**です。
 
-A struct type can define one of its members as
-`alias this`:
+構造体型は`alias this`としてそのメンバの1つを定義できます:
 
     struct SafeInt {
         private int theInt;
         alias theInt this;
     }
 
-Any function or operation on `SafeInt` that can't
-be handled by the type itself will be forwarded
-to the `alias this`ed member. From the outside
-`SafeInt` then looks like a normal integer.
+それ自身型にハンドルされない`SafeInt`の任意の関数や操作は
+`alias this`したメンバに転送されます。
+外部から`SafeInt`は普通の整数のように見えます。
 
-This allows extending other types
-with new functionality but with zero overhead
-in terms of memory or runtime. The compiler
-makes sure to do the right thing when
-accessing the `alias this` member.
+これは他の型を新しい機能で拡張することを可能にし、
+それでいて実行時のメモリの面でゼロ・オーバーヘッドです。
+コンパイラは`alias this`メンバにアクセスした時にするべきことをします。
 
-`alias this` work with classes too.
+`alias this`はクラスにも動作します。
 
 ## {SourceCode}
 
@@ -43,15 +39,13 @@ struct Vector3 {
 void main()
 {
     Vector3 vec;
-    // we're basically talking with
-    // double[] here.
+    // ここでは基本的にdouble[]として対話をします。
     vec = [ 0.0, 1.0, 0.0 ];
     assert(vec.length == 3);
     assert(vec[$ - 1] == 0.0);
 
     auto vec2 = Vector3([1.0,0.0,0.0]);
-    // but this functionality has been
-    // extended!
+    // しかしこの機能は拡張されたものです!
     writeln("vec dot vec2 = ", vec.dot(vec2));
 }
 ```
