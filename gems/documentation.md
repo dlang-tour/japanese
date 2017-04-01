@@ -1,31 +1,24 @@
-# Documentation
+# ドキュメント
 
-D tries to integrate important parts of modern
-software engineering directly into the language.
-Besides *contract programming* and *unittesting*
-D allows to natively generate [documentation](https://dlang.org/phobos/std_variant.html)
-out of your source code.
+Dは言語にモダンなソフトウェアエンジニアリングの重要なパーツを統合することを試みます。
+**契約プログラミング**や**ユニットテスト**以外にDはソースコードの外にネイティブに
+[ドキュメント](https://dlang.org/phobos/std_variant.html)を生成します。
 
-Using a standard schema for documenting types
-and functions the command `dmd -D` conveniently
-generates HTML documentation based on the source
-files passed on command line.
-In fact the whole [Phobos library documentation](https://dlang.org/phobos)
-has been generated with *DDoc*.
+型や関数をドキュメント化するための標準スキーマであるコマンド`dmd -D`
+を使うことで便利にコマンドラインでソースファイルをもとにした
+HTMLドキュメントを生成します。
+実際、[Phobosライブラリドキュメント](https://dlang.org/phobos)
+のすべては**DDoc**で生成されています。
 
-The following comment styles are considered
-by DDoc for inclusion into the source code
-documentation:
+下記のコメントスタイルはソースコードのドキュメントに含まれるものとDDocにみなされます:
 
-* `/// Three slashes before type or function`
-* `/++ Multiline comment with two +  +/`
-* `/** Multiline comment with two *  */`
+* `/// 型もしくは関数の前の3つのスラッシュ`
+* `/++ 2つの + で複数行コメント +/`
+* `/** 2つの * で複数行コメント */`
 
-Have a look at the source code example
-to see some standardized documentation
-sections.
+標準化されたドキュメントセクションについての詳細はソースコードサンプルを見てください。
 
-### In-depth
+### 掘り下げる
 
 - [DDoc design](https://dlang.org/spec/ddoc.html)
 - [Phobos standard library documentation](https://dlang.org/phobos)
@@ -34,7 +27,7 @@ sections.
 
 ```d
 /**
-  Calculates the square root of a number.
+  数の平方根を計算します。
 
   Here could be a longer paragraph that
   elaborates on the great win for
@@ -47,12 +40,11 @@ sections.
   double sq = sqrt(4);
   -------------------
   Params:
-    number = the number the square root should
-             be calculated from.
+    number = 平方根を計算する数。
 
-  License: use freely for any purpose
-  Throws: throws nothing.
-  Returns: the squrare root of the input.
+  License: 任意の用途に自由に使ってください
+  Throws: 何も投げません。
+  Returns: 入力の平方根。
 */
 T sqrt(T)(T number) {
 }
