@@ -1,30 +1,30 @@
-# Traits
+# トレイト
 
-One of D's powers is its compile-time function evaluation (CTFE) system.
-Combined with introspection, generic programs can be written and
-heavy optimizations can be achieved.
+Dの武器の1つにコンパイル時間数実行(CTFE)というものがあります。
+内省と組み合わせることで、ジェネリックなプログラムを書くことができ、
+強力な最適化を受けることができます。
 
-## Explicit contracts
+## 明示的契約
 
-Traits allow to specify explicitly what input is accepted.
-For example `splitIntoWords` can operate on any arbitrary string type:
+トレイトはどのような入力が許されるか明示的に示すことを可能にします。
+たとえば`splitIntoWords`は任意の文字列型を操作できます:
 
 ```d
 S[] splitIntoWord(S)(S input)
 if (isSomeString!S)
 ```
 
-This applies to template parameters as well and `myWrapper` can ensure that the
-passed-in symbol is a callable function:
+これはテンプレートパラメータにも反映され、`myWrapper`に渡される
+シンボルが呼び出し可能な関数であることは保証されます:
 
 ```d
 void myWrapper(alias f)
 if (isCallable!f)
 ```
 
-As a simple example, [`commonPrefix`](https://dlang.org/phobos/std_algorithm_searching.html#.commonPrefix)
-from `std.algorithm.searching`, which returns the common prefix of two ranges,
-will be analyzed:
+シンプルな例として、2つのレンジの共通接頭辞を返す`std.algorithm.searching`の
+[`commonPrefix`](https://dlang.org/phobos/std_algorithm_searching.html#.commonPrefix)
+を分析します:
 
 ```d
 auto commonPrefix(alias pred = "a == b", R1, R2)(R1 r1, R2 r2)
@@ -34,24 +34,22 @@ if (isForwardRange!R1
     !isNarrowString!R1)
 ```
 
-This means that the function is only callable and thus compiles if:
+これはこの関数が以下の条件でのみ呼び出せることを意味します:
 
-- `r1` is save-able (guaranteed by `isForwardRange`)
-- `r2` is iterable (guaranteed by `isInputRange`)
-- `pred` is callable with element types of `r1` and `r2`
-- `r1` isn't a narrow string (`char[]`, `string`, `wchar` or `wstring`) - for simplicity, otherwise decoding might be needed
+- `r1`は保存可能(`isForwardRange`で保証される)
+- `r2`は反復処理可能(`isInputRange`で保証される)
+- `pred`は`r1`と`r2`の要素の型で呼び出せる
+- `r1`はナロー文字列でない(`char[]`、 `string`、 `wchar` または `wstring`) - 簡単に言うと、他のデコーディングが必要
 
-### Specialization
+### 専門化
 
-Many APIs aim to be general-purpose, however they don't want to pay with extra
-runtime for this generalization.
-With the power of introspection and CTFE, it is possible to specialize a method
-on compile-time to achieve the best performance given the input types.
+多くのAPIは汎用を目指します、しかし一般化のために余計な実行時間を使いたくはありません。
+内省とCTFEの力で、コンパイル時に与えられた型に対して最高のパフォーマンスを得るために
+メソッドを専門化することが可能になります。
 
-A common problem is that in contrast to arrays you might not know the exact length
-of a stream or list before walking through it.
-Hence a simple implementation of the `std.range` method `walkLength`
-which generalizes for any iterable type would be:
+よくある問題として、配列とは異なりたどってみないとストリームやリストの正確な長さがわからないことがあります。
+そのため任意の反復処理可能な型に対して一般化したシンプルな実装の`std.range`
+のメソッド`walkLength`でこのようにします:
 
 ```d
 static if (hasMember!(r, "length"))
@@ -62,24 +60,23 @@ else
 
 #### `commonPrefix`
 
-The use of compile-time introspection is ubiquitous in Phobos. For example
-`commonPrefix` differentiates between `RandomAccessRange`s
-and linear iterable ranges because in `RandomAccessRange` it's possible to jump
-between positions and thus speed-up the algorithm.
+Phobosにおいてコンパイル時の内省の使用は普遍的です。たとえば`RandomAccessRange`
+では場所を飛び越えることができ、アルゴリズムを高速化できるため`commonPrefix`は
+`RandomAccessRange`と線形反復処理可能なレンジで異なります。
 
-#### More CTFE magic
+#### さらなるCTFEマジック
 
-[std.traits](https://dlang.org/phobos/std_traits.html) wraps most of
-D's [traits](https://dlang.org/spec/traits.html) except for some like
-`compiles` that can't be wrapped as it would lead to an immediate compile error:
+[std.traits](https://dlang.org/phobos/std_traits.html)は`compiles`
+のような即座にコンパイルエラーを引き起こすことがあるためラップできないものを除きDの
+[traits](https://dlang.org/spec/traits.html)をラップします:
 
 ```d
 __traits(compiles, obvious error - $%42); // false
 ```
 
-#### Special keywords
+#### 特殊なキーワード
 
-Additionally for debugging purposes D provides a couple of special keywords:
+更にデバッグ用途にDは特殊なキーワードの組を提供します:
 
 ```d
 void test(string file = __FILE__, size_t line = __LINE__, string mod = __MODULE__,
@@ -90,13 +87,13 @@ void test(string file = __FILE__, size_t line = __LINE__, string mod = __MODULE_
 }
 ```
 
-With D's CLI evaluation one doesn't even need `time` - CTFE can be used!
+DのCLI実行では`time`は必要ありません - CTFEが使えます!
 
 ```d
 rdmd --force --eval='pragma(msg, __TIMESTAMP__);'
 ```
 
-## In-depth
+## 掘り下げる
 
 - [std.range.primitives](https://dlang.org/phobos/std_range_primitives.html)
 - [std.traits](https://dlang.org/phobos/std_traits.html)
@@ -118,17 +115,16 @@ import std.stdio : writeln;
 import std.traits : isNarrowString;
 
 /**
-Returns the common prefix of two ranges
-without the auto-decoding special case.
+特殊なケースの自動デコーディング無しで
+2つのレンジの共通接頭辞を返します。
 
 Params:
-    pred = Predicate for commonality comparison
-    r1 = A forward range of elements.
-    r2 = An input range of elements.
+    pred = 共通性の比較のための述語
+    r1 = 要素のforwardレンジ。
+    r2 = 要素のinputレンジ。
 
 Returns:
-A slice of r1 which contains the characters
-that both ranges start with.
+両方のレンジのはじめの文字列を含むr1のスライス。
  */
 auto commonPrefix(alias pred = "a == b", R1, R2)
                  (R1 r1, R2 r2)
