@@ -1,72 +1,63 @@
-# Template meta programming
+# テンプレートメタプログラミング
 
-If you ever got in touch with *template meta programming*
-in C++ you will be relieved what tools D offers to make
-your life easier. Template meta programming is a technique
-that enables decision-making depending on template type properties
-and thus allows to make generic types even more flexible
-based on the type they are going to be instantiated with.
+C++の**テンプレートメタプログラミング**に触れたことがあるなら、
+Dの提供するあなたの生活をより簡単にするツールに安心できるでしょう。
+テンプレートメタプログラミングは意思決定をテンプレート型プロパティに依存するようにする技術で、
+それがインスタンス化される時の型をもとにジェネリック型をより一層フレキシブルにします。
 
 ### `static if` & `is`
 
-Like the normal `if`, `static if` conditionally
-compiles a code block based on a condition that can
-be evaluated at compile time:
+普通の`if`のように、`static if`はコンパイル時に計算できる条件をもとに
+条件付きでコードブロックをコンパイルします:
 
     static if(is(T == int))
         writeln("T is an int");
     static if (is(typeof(x) :  int))
         writeln("Variable x implicitely converts to int");
 
-The [`is` expression](http://wiki.dlang.org/Is_expression) is
-a generic helper that evaluates conditions at compile time.
+[`is`式](http://wiki.dlang.org/Is_expression)は条件をコンパイル時に計算する
+ジェネリックヘルパです。
 
-    static if(is(T == int)) { // T is template parameter
+    static if(is(T == int)) { // Tはテンプレートパラメータ
         int x = 10;
     }
 
-Braces are omitted if the condition is `true` - no new scope is created.
-`{ {` and `} }` explicitely create a new block.
+条件が`true`の場合中括弧は無視されます - 新しいスコープは作られません。
+`{ {`と`} }`は新しいブロックを明示的に作ります。
 
-`static if` can be used anywhere in the code - in functions,
-at global scope or within type definitions.
+`static if`はコード中のどこででも使えます - 関数内で、グローバルスコープで、型定義の中で。
 
 ### `mixin template`
 
-Anywhere you see *boiler plate*, `mixin template`
-is your friend:
+**定型文**を見るところどこでも、`mixin template`はあなたの友達です:
 
     mixin template Foo(T) {
         T foo;
     }
     ...
-    mixin Foo!int; // int foo available from here on.
+    mixin Foo!int; // int fooをここで利用できます。
 
-`mixin template` might contain any number of
-complex expressions that are inserted at the instantiation
-point. Say good-bye to the
-pre-processor if you're coming from C!
+`mixin template`は初期化点に挿入される任意の数の
+複雑な式を含むことがあります。あなたがCから来たなら、
+プリプロセッサとはサヨナラしましょう!
 
-### Template constraints
+### テンプレート制約
 
-A template might be defined with any number of
-constraints that enforce what properties
-a type must have:
+テンプレートは型が持つ必要があるプロパティを強制する
+任意の数の制約とともに定義されることがあります:
 
     void foo(T)(T value)
-      if (is(T : int)) { // foo!T only valid if T
-                         // converts to int
+      if (is(T : int)) { // foo!T はTがintに
+                         // 変換される場合のみ有効
     }
 
-Constraints can be combined in boolean expression
-and might even contain function calls that can be evaluated
-at compile-time. For example `std.range.primitives.isRandomAccessRange`
-checks whether a type is a range that supports
-the `[]` operator.
+制約はブール式と組み合わせることができ、コンパイル時に計算できる
+関数呼び出しを含むことがあります。たとえば`std.range.primitives.isRandomAccessRange`
+は型が`[]`オペレータをサポートするレンジかどうかチェックします。
 
-### In-depth
+### 掘り下げる
 
-### Basics references
+### ベーシック・リファレンス
 
 - [Tutorial to D Templates](https://github.com/PhilippeSigaud/D-templates-tutorial)
 - [Conditional compilation](http://ddili.org/ders/d.en/cond_comp.html)
@@ -74,7 +65,7 @@ the `[]` operator.
 - [More templates  _Programming in D_](http://ddili.org/ders/d.en/templates_more.html)
 - [Mixins in  _Programming in D_](http://ddili.org/ders/d.en/mixin.html)
 
-### Advanced references
+### アドバンスト・リファレンス
 
 - [Conditional compilation](https://dlang.org/spec/version.html)
 - [Traits](https://dlang.org/spec/traits.html)
@@ -90,8 +81,8 @@ import std.string : format;
 import std.stdio : writeln;
 
 /*
-A Vector that just works for
-numbers, integers or floating points.
+数値、整数または浮動少数点数
+でのみ動作するベクトルです。
 */
 struct Vector3(T)
   if (is(T: real))
@@ -100,14 +91,13 @@ private:
     T x,y,z;
 
     /*
-    Generator for getter and setter because
-    we really hate boiler plate!
+    getterとsetterのジェネレータです、
+    定型文は大嫌いなので!
     
     var -> T getVAR() and void setVAR(T)
     */
     mixin template GetterSetter(string var) {
-        // Use mixin to construct function
-        // names
+        // 関数名を構築するためにmixinを使用します
         mixin("T get%s() const { return %s; }"
           .format(var.toUpper, var));
 
@@ -116,8 +106,8 @@ private:
     }
 
     /*
-    Easily generate getX, setX etc.
-    functions with a mixin template.
+    getX、 setXなどを簡単に生成します。
+    mixinテンプレートにより機能します。
     */
     mixin GetterSetter!"x";
     mixin GetterSetter!"y";
@@ -125,8 +115,7 @@ private:
 
 public:
     /*
-    The dot function is only available
-    for floating points types
+    ドット関数は浮動小数点数型でのみ利用可能です
     */
     static if (isFloatingPoint!T) {
         T dot(Vector3!T rhs) {
@@ -139,19 +128,18 @@ public:
 void main()
 {
     auto vec = Vector3!double(3,3,3);
-    // That doesn't work because of the template
-    // constraint!
-    // Vector3!string illegal;
+    // テンプレート制約のためにこれは動きません!
+    // Vector3!string は違法です;
 
     auto vec2 = Vector3!double(4,4,4);
     writeln("vec dot vec2 = ", vec.dot(vec2));
 
     auto vecInt = Vector3!int(1,2,3);
-    // doesn't have the function dot because
-    // we statically enabled it only for float's
+    // floatの場合のみ静的に
+    // 有効化されるためdot関数はありません。
     // vecInt.dot(Vector3!int(0,0,0));
 
-    // generated getter and setters!
+    // getterとsetterが生成されます!
     vecInt.setX(3);
     vecInt.setZ(1);
     writeln(vecInt.getX, ",",
