@@ -1,24 +1,23 @@
-# Bit manipulation
+# ビット操作
 
-An excellent example of D's ability to generate code on compile-time with mixins,
-is bit manipulation.
+mixinによりコンパイル時にコードを生成するDの能力の好例がビット操作です。
 
-### Simple bit manipulation
+### シンプルなビット操作
 
-D offers the following operators for bit manipulation:
+Dはビット操作のために以下の演算子を提供します:
 
-- `&` bitwise and
-- `|` bitwise or
-- `~` bitwise negative
-- `<<`  bitwise signed   left-shift
-- `>>`  bitwise signed   right-shift (preserves the sign of the high-order bit)
-- `>>>` bitwise unsigned right-shift
+- `&` ビットand
+- `|` ビットor
+- `~` ビット反転
+- `<<`  ビット符号あり左シフト
+- `>>`  ビット符号あり右シフト (上位ビットの符号が保持されます)
+- `>>>` ビット符号なし右シフト
 
-### A practical example
+### 実践例
 
-A common example for bit manipulation is to read the value of a bit.
-D provides `core.bitop.bt` for most common tasks, however to get used to bit
-manipulation, let's start with a verbose implementation of testing a bit:
+ビット操作の一般的な例はビットの値を読むことです。Dは最も一般的なタスクのために
+`core.bitop.bt`を提供しますが、ビット操作に慣れ親しむためには、
+ビットのテストの冗長な実装をしてみましょう。:
 
 ```d
 enum posA = 1;
@@ -29,9 +28,8 @@ bool getFieldA()
 }
 ```
 
-A generalization is to test for blocks that are longer than 1. Hence
-a special read mask with the length of the block is needed
-and the data block is shifted accordingly before applying the mask:
+一般化は1より長いブロックのテストをすることです。そのためブロックの長さの特殊な
+リードマスクが必要で、データブロックはマスクが適用される前にシフトされます:
 
 ```d
 enum posA = 1;
@@ -43,8 +41,7 @@ uint getFieldA()
 }
 ```
 
-Setting such a block can equivalently be defined by negating the mask and thus
-only allowing writes within the specified block:
+そのようなブロックの設定は等しくマスクの否定によって定義し、特定のブロック内のみに書込みできます:
 
 ```d
 void setFieldA(bool b);
@@ -53,19 +50,18 @@ void setFieldA(bool b);
 }
 ```
 
-## `std.bitmanip` to the rescue
+## 助けになる`std.bitmanip`
 
-It's a lot of fun to write ones' custom bit manipulation code and
-D provides the full toolbox to do so. However in most cases one doesn't want to
-copy&paste such bit manipulation code as this is very error-prone and hard to maintain.
-Hence in D `std.bitmanip` helps you to write maintainable, easy-to-read bit manipulations
-with `std.bitmanip` and the power of mixins - without sacrificing performance.
+カスタムビット操作コードを書くことは非常に面白く、Dはそのための完全なツールボックスを提供します。
+しかし非常にエラーを引き起こしやすく保守がしづらいため大抵の場合そのようなビット操作はコピー&ペーストはしたくありません。
+したがってDでは`std.bitmanip`が保守性のあり、読みやすいビット操作を書くことを`std.bitmanip`とmixinの力で
+助けます - パフォーマンスは犠牲になりません。
 
-Have a look at the exercise section. A `BitVector` is defined, but it still uses
-just X bits and is nearly indistinguishable from a regular struct.
+エクササイズのセクションをご覧ください。`BitVector`は定義されていますが、まだXビットを使い、
+普通の構造体とほとんど見分けがつきません。
 
-`std.bitmanip` and `core.bitop` contain more helpers that are greatly helpful
-for applications that require low-memory consumption.
+`std.bitmanip`と`core.bitop`少ないメモリ消費を必要とする
+アプリケーションのための非常に有用な更に多くのヘルパがあります。
 
 ### Padding and alignment
 
@@ -73,7 +69,7 @@ As the compiler will add padding for variables with a size lower than the curren
 OS memory layout (`size_t.sizeof`) e.g. `bool`, `byte`, `char`, it is recommended
 to start with fields of high alignments.
 
-## In-depth
+## 掘り下げる
 
 - [std.bitmanip](http://dlang.org/phobos/std_bitmanip.html) - Bit-level manipulation facilities
 - [_Bit Packing like a Madman_](http://dconf.org/2016/talks/sechet.html)
@@ -84,8 +80,8 @@ to start with fields of high alignments.
 struct BitVector
 {
     import std.bitmanip : bitfields;
-    // creates a private field with the
-    // following proxies
+    // 下記のプロキシで
+    // プライベートフィールドを作成します
     mixin(bitfields!(
         uint, "x",    2,
         int,  "y",    3,
@@ -103,11 +99,11 @@ void main()
     writefln("x: %d, y: %d, z: %d",
               vec.x, vec.y, vec.z);
 
-    // only 8 bit - 1 byte are used
+    // たった8ビット - 1バイトが使われます
     writeln(BitVector.sizeof);
 
     struct Vector { int x, y, z; }
-    // 4 bytes (int) per variable
+    // 変数あたり4バイト(int)
     writeln(Vector.sizeof);
 
 	struct BadVector
@@ -116,8 +112,8 @@ void main()
 		int x, y, z;
 		bool b;
 	}
-	// due to padding,
-	// 4 bytes are used for each field
+	// パディングのため、それぞれの
+	// フィールドに4バイトが使われます
 	writeln(BadVector.sizeof);
 }
 ```
