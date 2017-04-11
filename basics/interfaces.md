@@ -1,17 +1,16 @@
-# Interfaces
+# インターフェース
 
-D allows defining `interface`s which are technically like
-`class` types, but whose member functions must be implemented
-by any class inheriting from the `interface`.
+Dは`interface`という、技術的には`class`に似ていますが、
+そのメンバ関数は`interface`から継承したクラスに
+実装されなければならないものを定義できます。
 
     interface Animal {
         void makeNoise();
     }
 
-The `makeNoise` member function has to be implemented
-by `Dog` because it inherits from the `Animal` interface.
-Essentially `makeNoise` behaves like an `abstract` member
-function in a base class.
+`makeNoise`メンバ関数は、`Dog`が`Animal`インターフェースを継承しているために
+`Dog`に実装されなければいけません。
+本質的に`makeNoise`は基底クラスの`abstract`メンバ関数のように振る舞います。
 
     class Dog: Animal {
         override makeNoise() {
@@ -20,11 +19,10 @@ function in a base class.
     }
 
     auto dog = new Animal;
-    Animal animal = dog; // implicit cast to interface
+    Animal animal = dog; // インターフェースへの明示的なキャスト
     dog.makeNoise();
 
-The number of `interface`s a `class` can implement isn't limited,
-but it can inherit from only *one* base class.
+`class`が実装できる`interface`の数は無制限ですが、継承は**1つの**基底クラスからのみできます。
 
 ### NVI (non virtual interface) pattern
 
@@ -46,7 +44,7 @@ functions.
         }
     }
 
-### In-depth
+### 掘り下げる
 
 - [Interfaces in _Programming in D_](http://ddili.org/ders/d.en/interface.html)
 - [Interfaces in D](https://dlang.org/spec/interface.html)
@@ -58,18 +56,16 @@ import std.stdio : writeln;
 
 interface Animal {
     /*
-    Virtual function
-    which needs to be overridden!
+    オーバーライドの必要な仮想関数です!
     */
     void makeNoise();
 
     /*
-    NVI pattern. Uses makeNoise internally
-    to customize behaviour inheriting
-    classes.
+    NVIパターンです。makeNoiseを継承先クラスの
+    振る舞いをカスタマイズするため内部で使います。
     
     Params: 
-        n =  number of repetitions
+        n =  繰り返し回数
     */
     final void multipleNoise(int n) {
         for(int i = 0; i < n; ++i) {
