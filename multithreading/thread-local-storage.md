@@ -1,48 +1,35 @@
-# Thread local storage
+# スレッド局所記憶
 
-The storage class `static` allows declaring objects
-which are initialized only once. If the same
-line is executed a second time, the initialization
-will be omitted.
-Every thread will get its own
-`static` object (*TLS - thread local storage*)
-and won't be able to read or modify another thread's
-`static` object - although the variable name
-stays the same. Thus `static` allows declaring an
-object that holds state that is
-is global for the *current* thread.
+ストレージクラス`static`は一度だけ初期化されるオブジェクトの宣言を
+可能にします。同じ行が二回実行されたら、初期化は省略されます。
+各スレッドは自分の`static`オブジェクト(**TLS - スレッド局所記憶**)を得て、
+他のスレッドの`static`オブジェクトを読みこんだり変更したりできなくなります - 変数名は
+同じままで。従って`static`は**現在の**スレッドのグローバルの状態を保つ
+オブジェクトの宣言を可能にします。
 
-This is different to
-e.g. C/C++ and Java where `static` indeed means global
-for the application, entailing synchronization issues
-in multi-threaded applications.
+これは`static`が実際にアプリケーションでグローバルであることを意味する、
+マルチスレッドアプリケーションでの同期の問題を有するC/C++やJavaなどの例とは異なります。
 
-The value assigned to a `static` variable must
-be evaluable at compile-time. It mustn't have
-runtime dependencies! It's possible to initialize
-`static` variables at runtime using a `static this()`
-one-time constructor for structs, classes, and modules.
+`static`変数に割り当てられる値はコンパイル時に計算可能でなければなりません。
+実行時依存は持てません!これは`static`変数を実行時に構造体、クラス、モジュールの
+`static this()`ワンタイムコンストラクタを使って初期化することを可能にします。
 
     static int b = 42;
-    // b is just intialized once!
-    // When run from different threads
-    // each b will have see its
-    // "own" b without interference from
-    // other threds.
+    // bは一度だけ初期化されます!
+    // 異なるスレッドで実行するとき各bは
+    // 他のスレッドへのインターフェース
+    // のない"自分の"bを見ます
 
-Moreover for declaration of a "classic" global variable that
-every thread can see and modify,
-use the storage class `__gshared` which is equivalent
-to C's `static`.
-Its ugly name is a friendly reminder to use it rarely.
+さらにすべてのスレッドが閲覧と修正をできる"クラシックな"グローバル変数の宣言には、
+Cの`static`と等価の`__gshared`ストレージクラスを使います。
+醜い名前は頻繁に使わないためのフレンドリーな念押しです。
 
     __gshared int b = 50;
-    // Also intialized just once!
-    // A truly global b which every thread
-    // can read - and making it dangerous -
-    // modify!
+    // これも一度だけ初期化されます!
+    // すべてのスレッドが読み込め、
+    // それを危険にする変更ができる真にグローバルなbです。
 
-### In-depth
+### 掘り下げる
 
 - [Thread-local storage on Wikipedia](https://en.wikipedia.org/wiki/Thread-local_storage)
 
@@ -54,11 +41,10 @@ import std.concurrency : spawn, thisTid;
 void worker(bool firstTime)
 {
     import std.stdio : writeln;
-    // theStatic is global to the current
-    // thread only. No other thread will be
-    // able to access it. Note that it
-    // is initialized only the first time
-    // the line is executed.
+    // theStaticは現在のスレッドでのみグローバルです。
+    // 他のスレッドはアクセスできません。
+    // なお、これは最初にその行が実行された時
+    // のみ初期化されます。
     static int threadState = 0;
     writeln("Thread ", thisTid,
         ": My state = ", threadState++);
@@ -68,8 +54,8 @@ void worker(bool firstTime)
 
 void main()
 {
-    // Create 5 threads that call
-    // worker(true,i) each.
+    // それぞれworker(true,i)を呼ぶ
+    // 5つのスレッドを作ります。
     for (size_t i = 0; i < 5; ++i) {
         spawn(&worker, true);
     }
