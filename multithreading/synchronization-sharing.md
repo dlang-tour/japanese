@@ -1,52 +1,39 @@
-# Synchronization & Sharing
+# 同期と共有
 
-Although the preferred way in D to do multi-threading
-is to rely on `immutable` data and synchronize threads
-using message passing, the language has built-in
-support for *synchronization* primitives as well as
-type system support with `shared` to mark objects
-that are accessed from multiple threads.
+`immutable`データを信頼して、メッセージパッシングを使ってスレッドを同期するのが
+Dでのマルチスレッディングの好ましいやり方ですが、この言語は型システムサポートと同じように、
+オブジェクトにマークすることにより複数のスレッドからアクセスされる`shared`による
+プリミティブな**同期**の組み込みサポートを持ちます。
 
-The `shared` type identifier allows to mark variables
-that are shared among different threads:
+`shared`型識別子は変数が異なるスレッド間で共有されるとマークします:
 
     shared(int)* p = new int;
-    int* t = p; // ERROR
+    int* t = p; // エラー
 
-For example `std.concurrency.send` just allows to send either
-`immutable` or `shared` data and copying the message
-to be sent. `shared` is transitive so if a `class` or `struct`
-is marked `shared` all its members will be too.
-Note that `static` variables aren't `shared` by
-default because they are implemented using
-*thread local storage* (TLS) and each thread gets
-its own variable.
+たとえば`std.concurrency.send`は`immutable`または`shared`のデータ
+のみを送り、送られるメッセージをコピーします。`shared`は推移的で、従って`class`または`struct`
+が`shared`マークされた時、そのすべてのメンバもマークされます。`static`変数は**スレッド局所記憶**
+(TLS)を使って実装されており、各スレッドは自分専用の変数を得るためデフォルトでは
+`shared`ではないことに注意してください。
 
-`synchronized` blocks allow to instruct the compiler
-to create  a critical section that can only be entered
-by one thread at a time.
+`synchronized`ブロックでコンパイラに、一度に1つのスレッドのみが入れる
+クリティカルセクションを作るよう指示できます。
 
     synchronized {
         importStuff();
     }
 
-Within `class` member functions these blocks might be
-limited to different member objects *mutexes*
-with `synchronized(member1, member2)` to reduce
-contention. The D compiler inserts *critical
-sections* automatically. A whole class can be marked
-as `synchronized` as well and the compiler will
-make sure that just one thread accesses a concrete
-instance of it at a time.
+`class`メンバ関数の中でこれらのブロックは競合を減らすために`synchronized(member1, member2)`
+によって異なるメンバオブジェクト**ミューテックス**に制限されることがあります。Dコンパイラは自動的に
+**クリティカルセクション**を挿入します。クラス全体も同じように`synchronized`としてマークされ、
+コンパイラは一度に1スレッドのみがその実際のインスタンスにアクセスするようにします。
 
-Atomic operations on `shared` variables can be
-performed using the `core.atomic.atomicOp`
-helper:
+`shared`変数の不可分操作は`core.atomic.atomicOp`ヘルパを使って行うことができます:
 
     shared int test = 5;
     test.atomicOp!"+="(4);
 
-### In-depth
+### 掘り下げる
 
 - [Data Sharing Concurrency in _Programming in D_](http://ddili.org/ders/d.en/concurrency_shared.html)
 - [`shared` type qualifier](http://www.informit.com/articles/article.aspx?p=1609144&seqNum=11)
@@ -63,22 +50,22 @@ import std.concurrency : receiveOnly, send,
 import core.atomic : atomicOp, atomicLoad;
 
 /*
-Queue that can be used safely among
-different threads. All access to an
-instance is automatically locked thanks to
-synchronized keyword.
+異なるスレッド間で安全に使えるキューです。
+インスタンスへのすべてのアクセスは
+synchronizedキーワードにより自動的に
+ロックされます。
 */
 synchronized class SafeQueue(T)
 {
-    // Note: must be private in synchronized
-    // classes otherwise D complains.
+    // 注意: synchronizedクラス内では
+    // privateでなければDは文句を言います。
     private T[] elements;
 
     void push(T value) {
         elements ~= value;
     }
 
-    /// Return T.init if queue empty
+    /// キューが空ならT.initを返します
     T pop() {
         import std.array : empty;
         T value;
@@ -91,15 +78,13 @@ synchronized class SafeQueue(T)
 }
 
 /*
-Safely print messages independent of
-number of concurrent threads.
-Note that variadic parameters are used
-for args! That is args might be 0 .. N
-parameters.
+並行するスレッドの数に関係なく安全にメッセージを
+プリントします。可変引数がargsとして使われていることに
+注意してください!argsは0 .. N個の引数になります。
 */
 void safePrint(T...)(T args)
 {
-    // Just executed by one concurrently
+    // 同時に1つしか実行されません
     synchronized {
         import std.stdio : writeln;
         writeln(args);
@@ -110,7 +95,7 @@ void threadProducer(shared(SafeQueue!int) queue,
     shared(int)* queueCounter)
 {
     import std.range : iota;
-    // Push values 1 to 11
+    // 1から11の値をプッシュ
     foreach (i; iota(1,11)) {
         queue.push(i);
         safePrint("Pushed ", i);
@@ -128,14 +113,14 @@ void threadConsumer(Tid owner,
         if (i == int.init)
             continue;
         ++popped;
-        // safely fetch current value of
-        // queueCounter using atomicLoad
+        // queueCounterの現在の値をatomicLoadを
+        // 使って安全に取得します
         safePrint("Popped ", i,
             " (Consumer pushed ",
             atomicLoad(*queueCounter), ")");
     }
 
-    // I'm done!
+    // 終わりです!
     owner.send(true);
 }
 
