@@ -1,75 +1,67 @@
 # std.parallelism
 
-The module `std.parallelism` implements
-high level primitives for convenient concurrent programming.
+モジュール`std.parallelism`は便利な並行プログラミングのための高いレベルのプリミティブを実装します。
 
 ### parallel
 
-[`std.parallelism.parallel`](http://dlang.org/phobos/std_parallelism.html#.parallel) allows to automatically distribute
-a `foreach`'s body to different threads:
+[`std.parallelism.parallel`](http://dlang.org/phobos/std_parallelism.html#.parallel)
+は`foreach`本文を自動的に異なるスレッドに分配します:
 
-    // parallel squaring of arr
+    // 並列にarrを二乗
     auto arr = iota(1,100).array;
     foreach(ref i; parallel(arr)) {
         i = i*i;
     }
 
-`parallel` uses the `opApply` operator internally.
-The global `parallel`  is a shortcut to `taskPool.parallel`
-which is a `TaskPool` that uses *total number of cpus - 1*
-working threads. Creating your own instance allows
-to control the degree of parallelism.
+`parallel`は内部で`opApply`オペレータを使用します。
+グローバルの`parallel`は**CPUの合計数**を使うワーキングスレッドである`TaskPool`である
+`taskPool.parallel`へのショートカットです。
+自分独自のインスタンスを作ると並列度をコントロールできます。
 
-Beware that the body of a `parallel` iteration must
-make sure that it doesn't modify items that another
-working unit might have access to.
+`parallel`な反復処理の本文は別のワーキングユニットがアクセスするかもしれない要素にアクセスしないことが
+確実でなければならないことを覚えておいてください。
 
-The optional `workingUnitSize` specifies the number of elements processed
-per worker thread.
+任意の`workingUnitSize`はワーカースレッドあたり処理される要素の数を決めます。
 
 ### reduce
 
-The function
-[`std.algorithm.iteration.reduce`](http://dlang.org/phobos/std_algorithm_iteration.html#reduce) -
-known from other functional contexts as *accumulate* or *foldl* -
-calls a function `fun(acc, x)` for each element `x`
-where `acc` is the previous result:
+関数
+[`std.algorithm.iteration.reduce`](http://dlang.org/phobos/std_algorithm_iteration.html#reduce)は、
+他の関数型の文脈では**accumulate**または**foldl**として知られるもので、
+各要素`x`で関数`fun(acc, x)`を呼びます。ここで`acc`は前の結果です:
 
-    // 0 is the "seed"
+    // 0は"シード"です
     auto sum = reduce!"a + b"(0, elements);
 
 [`Taskpool.reduce`](http://dlang.org/phobos/std_parallelism.html#.TaskPool.reduce)
-is the parallel analog to `reduce`:
+は`reduce`と似たものです:
 
-    // Find the sum of a range in parallel, using the first
-    // element of each work unit as the seed.
+    // 各ワークユニットのシードとして最初の要素を使い、
+    // レンジの合計を並列に求めます。
     auto sum = taskPool.reduce!"a + b"(nums);
 
-`TaskPool.reduce` splits the range into
-sub ranges that are reduced in parallel. Once these
-results have been calculated, the results are reduced
-themselves.
+`TaskPool.reduce`はレンジを並列にreduceされるサブレンジに分割します。
+それらの結果が計算されると、その結果をreduceします。
 
 ### `task()`
 
-[`task`](http://dlang.org/phobos/std_parallelism.html#.task) is a wrapper for a function
-that might take longer or should be executed in
-its own working thread. It can either be enqueued
-in a taskpool:
+[`task`](http://dlang.org/phobos/std_parallelism.html#.task)
+は時間が長くかかったり、専用のワーキングスレッドで実行されるべき関数のラッパーです。
+それはタスクプールのキューに追加されるか:
 
     auto t = task!read("foo.txt");
     taskPool.put(t);
 
-Or directly be executed in its own, new thread:
+または直接専用の新しいスレッドで実行されます:
 
     t.executeInNewThread();
 
-To get a task's result call `yieldForce`
-on it. It will block until the result is available.
+タスクの結果を得るにはその`yieldForce`を呼びます。
+それは結果が利用可能になるまでブロックします。
 
     auto fileData = t.yieldForce;
 
-### In-depth
+### 掘り下げる
 
 - [Parallelism in _Programming in D_](http://ddili.org/ders/d.en/parallelism.html)
 - [std.parallelism](http://dlang.org/phobos/std_parallelism.html)
@@ -92,14 +84,13 @@ string theTask()
 
 void main()
 {
-    // taskpool with two threads
+    // 2つのスレッドのタスクプールです
     auto myTaskPool = new TaskPool(2);
-    // Stopping the task pool is important!
+    // タスクプールを停止させることは重要です!
     scope(exit) myTaskPool.stop();
 
-    // Start long running task
-    // and do some other stuff in the mean
-    // time..
+    // 長時間かかるタスクを実行し
+    // その間に他の作業をします……
     auto task = task!theTask;
     myTaskPool.put(task);
 
@@ -112,14 +103,13 @@ void main()
 
     import std.algorithm.iteration : map;
 
-    // Use reduce to calculate the sum
-    // of all squares in parallel.
+    // すべての二乗の和を並列に
+    // 計算するためにreduceを使います。
     auto result = taskPool.reduce!"a+b"(
         0.0, iota(100).map!"a*a");
     writeln("Sum of squares: ", result);
 
-    // Get our result we sent to background
-    // earlier.
+    // 前にバックグラウンドに送った結果を取得します
     writeln(task.yieldForce);
 }
 ```
