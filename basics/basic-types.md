@@ -3,29 +3,29 @@
 Dはプラットフォームに**関係なく**いつも同じサイズの多くの基本型を提供します。 - 
 唯一の例外は可能な限り最高の精度を提供する`real`型です。
 アプリケーションが32-bitシステム用にコンパイルされたか、
-64-bitシステム用かと整数型のサイズは関係ありません。
+64-bitシステム用かで整数型のサイズに違いはありません。
 
-<table class="table table-hover">
-<tr><td width="250px"><code class="prettyprint">bool</code></td> <td>8-bit</td></tr>
-<tr><td><code class="prettyprint">byte, ubyte, char</code></td> <td>8-bit</td></tr>
-<tr><td><code class="prettyprint">short, ushort, wchar</code></td> <td>16-bit</td></tr>
-<tr><td><code class="prettyprint">int, uint, dchar</code></td> <td>32-bit</td></tr>
-<tr><td><code class="prettyprint">long, ulong</code></td> <td>64-bit</td></tr>
-</table>
+| type                          | size
+|-------------------------------|------------
+|`bool`                         | 8-bit
+|`bool`, `ubyte`, `char`        | 8-bit
+|`short`, `ushort`, `wchar`     | 16-bit
+|`int`, `uint`, `dchar`         | 32-bit
+|`long`, `ulong`                | 64-bit
 
-#### 浮動小数点型:
+#### Floating point types:
 
-<table class="table table-hover">
-<tr><td width="250px"><code class="prettyprint">float</code></td> <td>32-bit</td></tr>
-<tr><td><code class="prettyprint">double</code></td> <td>64-bit</td></tr>
-<tr><td><code class="prettyprint">real</code></td> <td>プラットフォームに依存、Intel x86 32-bitでは80-bit</td></tr>
-</table>
+| type    | size
+|---------|--------------------------------------------------
+|`float`  | 32-bit
+|`double` | 64-bit
+|`real`   | >= 64-bit (一般的に64-bitしかしIntel x86 32-bit上では80-bit)
 
 `u`プレフィックスは**符号なし型**を示します。`char`はUTF-8 文字に変換され、
 `wchar`はUTF-16 文字列で使われ、`dchar`はUTF-32 文字で使われます。
 
 異なる型の変数間の変換はその精度が失われない場合のみコンパイラに許可されます。
-浮動小数点間の変換(例えば`double`から`float`)は許可されます。
+ただし、浮動小数点数型間での変換(例えば`double`から`float`)は可能です。
 
 異なる型への変換を`cast(型) myVar`式を使って強制することもできます。
 `cast`式は型システムを壊しうるものとして、細心の注意を払って使用する必要があります。
@@ -33,24 +33,32 @@ Dはプラットフォームに**関係なく**いつも同じサイズの多く
 特別なキーワード`auto`は変数を作成し、式の右辺からその型を推定します。
 `auto myVar = 7`では`myVar`の型を`int`と推測します。
 明示的に指定された型を持つ他の変数と同様、推測された型は
-コンパイル時に設定され、以降変更されないことに注意してください。
+コンパイル時に設定され、明示的に型を与えられた他の変数と同じように、
+以降変更できないことに注意してください。
 
 ### 型のプロパティ
 
 すべてのデータ型はそれが初期化された`.init`プロパティを持ちます。
 これはすべての整数型で`0`、浮動小数点数で`nan`(**数値でない**)です。
-整数と浮動小数点数型は、表現できる最低値と最大値である`.min`と`.max`プロパティを持ちます。
-浮動小数点値はさらに複数のプロパティ
-`.nan` (NaN値)、`.infinity` (無限値)、`.dig` (精度の10進桁数)、`.mant_dig` (仮数部のビット数)などを持ちます。
 
-また、すべての型はその型の名前の文字列を得る`.stringof`プロパティを持ちます。
+整数と浮動小数点数型は、表現できる最大値である`.max`プロパティを持ちます。
+整数型は表現できる最小値である`.min`プロパティも持ち、一方で浮動小数点数型は最も小さい
+正規化された0でない数として定義された`.min_normal`プロパティを持ちます。
+
+浮動小数点数はプロパティ`.nan` (NaN値)、`.infinity` (無限値)、
+`.dig` (精度の10進桁数)、`.mant_dig` (仮数部のビット数)なども持ちます。
+
+どの型も文字列としてその名前を生成する`.stringof`プロパティを持ちます。
 
 ### Dでのインデックス
 
-Dにおいてインデックスは通常、アドレスを取ることが可能なメモリのオフセットを表現するのに十分なサイズを持つ型のエイリアスとして`size_t`があります - 
-32-bitなら`uint`、64-bit アーキテクチャなら`ulong`です。
+Dでは、インデックスは普通、すべてのアドレス可能なメモリへのオフセットを表現するのに十分大きい型として
+エイリアス型`size_t`を持ち、これは32-bitアーキテクチャで`uint`、64-bitで`ulong`です。
 
-`assert`とはデバッグモードで条件式を検証し、失敗した時は`AssertionError`で中断するという組み込み機能です。
+### Assert式
+
+`assert`はデバッグモードで条件を検証し、それが失敗したら`AssertionError`で中止する式です。
+このため`assert(0)`は到達不能コードを示すのに使われます。
 
 ### 掘り下げる
 
@@ -67,15 +75,16 @@ Dにおいてインデックスは通常、アドレスを取ることが可能�
 - [Overview of all basic data types in D](https://dlang.org/spec/type.html)
 - [`auto` and `typeof` in _Programming in D_](http://ddili.org/ders/d.en/auto_and_typeof.html)
 - [Type properties](https://dlang.org/spec/property.html)
+- [Assert expression](https://dlang.org/spec/expression.html#AssertExpression)
 
 ## {SourceCode}
 
 ```d
-import std.stdio;
+import std.stdio : writeln;
 
 void main()
 {
-    // 大きな数字は可読性を高めるために
+    // 可読性を高めるために大きな数字は
     // アンダースコア"_"で区切ることができます。
     int b = 7_000_000;
     short c = cast(short) b; // キャストが必要
@@ -85,14 +94,14 @@ void main()
 
     auto f = 3.1415f; // fはfloatを表す
 
-    // typeid(変数)は式の型情報を返します。
+    // typeid(VAR)は式の型の情報を返します。
     writeln("type of f is ", typeid(f));
     double pi = f; // 良い
-    // 浮動小数点数型は
-    // 暗黙のダウンキャスティングができます。
+    // 浮動小数点数型では暗黙的な
+    // ダウンキャスティングができます
     float demoted = pi;
 
-    // 型の情報にアクセス
+    // 型のプロパティにアクセス
     assert(int.init == 0);
     assert(int.sizeof == 4);
     assert(bool.max == 1);
