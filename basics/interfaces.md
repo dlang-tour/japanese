@@ -18,7 +18,7 @@ Dは`interface`という、技術的には`class`に似ていますが、
         }
     }
 
-    auto dog = new Animal;
+    auto dog = new Dog;
     Animal animal = dog; // インターフェースへの明示的なキャスト
     dog.makeNoise();
 
