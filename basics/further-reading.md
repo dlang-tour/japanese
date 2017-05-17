@@ -1,32 +1,32 @@
-# Further Reading
+# 参考文献
 
-Now that you've finished the basics, you can move on to some more advanced sections of this tour. Or, you can check out some of the following resources:
+基礎を修了した今、あなたはこのツアーのさらに高度なセクションに進むことができます。または、以下のリソースを調べることができます:
 
-### Basic resources
+### 基礎のリソース
 
-* New to programming? [This book](http://ddili.org/ders/d.en/index.html) is a great starting place for beginners
-* [Coming form another language?](http://wiki.dlang.org/Coming_From)
-* Looking for a book to read? [Discover books about D](https://wiki.dlang.org/Books)
-* Read [articles about D](http://dlang.org/articles.html)
-* Explore more [D Tutorials](https://wiki.dlang.org/Tutorials)
-* Browse the [D Wiki](https://wiki.dlang.org/), which contains a lot of information and links
-* See [frequently asked questions about D](http://dlang.org/faq.html)
+* プログラミングに慣れていない?[こちらの本](http://ddili.org/ders/d.en/index.html)は初心者の良い開始地点です
+* [他の言語からやってきましたか?](http://wiki.dlang.org/Coming_From)
+* 読み物を探していますか? [Dについての本を見つける](https://wiki.dlang.org/Books)
+* [Dに関する記事](http://dlang.org/articles.html)を読む
+* さらなる[Dのチュートリアル](https://wiki.dlang.org/Tutorials)をさがす
+* [D Wiki](https://wiki.dlang.org/)を閲覧しましょう、多くの情報とリンクがあります
+* [Dについてよくある質問](http://dlang.org/faq.html)を見る
 
-### In-depth resources
+### 掘り下げたリソース
 
-* Get familiar with the API of the standard library [Phobos](https://dlang.org/phobos)
-* Read the [language reference](https://dlang.org/spec/)
-* Watch [_d.announce_](http://forum.dlang.org/group/announce) for new annoucements
-* Share your ideas in the [Forum](https://forum.dlang.org/) or scan very active discussions
-* Browse the [Dub Repository](https://code.dlang.org), hosting an ever growing list of 3rd-party D programs and libraries.
-* Dive into the source code on github ([dmd compiler](https://github.com/dlang/dmd), [Phobos standard library](https://github.com/dlang/phobos), [druntime](https://github.com/dlang/druntime))
-* Follow the [DStyle](http://dlang.org/dstyle.html)
-* See the D Language on [Rosetta code](http://rosettacode.org/wiki/Category:D)
-* Explore [awesome-d](https://github.com/zhaopuming/awesome-d/blob/master/README.md) - A curated list of awesome D frameworks, libraries and software
-* Get inspired by [Idioms for the D Programming Language](https://p0nce.github.io/d-idioms/)
+* 標準ライブラリ[Phobos](https://dlang.org/phobos)のAPIに親しむ
+* [言語リファレンス](https://dlang.org/spec/)を読む
+* 新しいお知らせについては[_d.announce_](http://forum.dlang.org/group/announce)を見てください
+* あなたのアイデアを[Forum](https://forum.dlang.org/)で共有、または活発な議論を読み流す
+* [Dubリポジトリ](https://code.dlang.org)を閲覧しましょう、増加し続けるサードパーティのDプログラムやライブラリのリストをホストしています
+* github上のソースコードに飛び込む ([dmd compiler](https://github.com/dlang/dmd), [Phobos standard library](https://github.com/dlang/phobos), [druntime](https://github.com/dlang/druntime))
+* [DStyle](http://dlang.org/dstyle.html)に従う
+* [Rosetta code](http://rosettacode.org/wiki/Category:D)でD言語を見る
+* [awesome-d](https://github.com/zhaopuming/awesome-d/blob/master/README.md)を見る - Dの素晴らしいフレームワーク、ライブラリ、ソフトウェアのキュレーションリスト
+* [Dプログラミング言語のイディオム](https://p0nce.github.io/d-idioms/)からヒントを得る
 
-### Help
+### ヘルプ
 
-* Ask questions in the [#d](irc://irc.freenode.net/d) IRC channel on freenode ([web interface](https://kiwiirc.com/client/irc.freenode.net/d))
-* Get help at [D.learn](http://forum.dlang.org/group/learn)
-* Open an issue [at the D bugtracker](https://issues.dlang.org)
+* freenodeの[#d](irc://irc.freenode.net/d)IRCチャンネルで質問をする ([web インターフェース](https://kiwiirc.com/client/irc.freenode.net/d))
+* [D.learn](http://forum.dlang.org/group/learn)で助けを得る
+* [Dのバグトラッカー](https://issues.dlang.org)でイシューを開く
