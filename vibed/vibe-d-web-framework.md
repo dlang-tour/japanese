@@ -1,38 +1,26 @@
-# Vibe.d web framework
+# Vibe.d ウェブ フレームワーク
 
-[Vibe.d](http://vibed.org) is a very powerful web
-framework which this tour for example has been written
-with. Here are some highlights of vibe.d:
+[Vibe.d](http://vibed.org)は非常にパワフルなウェブフレームワークで、
+例としてこのツアーはそれで書かれています。こちらがvibe.dの目玉です:
 
-* Based on a fiber based approach for *asynchronous I/O*
-  vibe.d allows to write high-performance HTTP(S) web servers
-  and web services. Write code which looks synchronous
-  but actually does the ugly asynchronous handling
-  of thousands of connections in the background
-  for you! See the next section for a thorough
-  example.
-* An easy to use JSON and web interface generator
-* Out-of-the-box
-  support for Redis and MongoDB make it easy to
-  write backend systems that have a good performance
-* Generic TCP or UDP clients and servers can be
-  written as well using this framework
+* **非同期I/O**のアプローチをもとにしたファイバーに基づき、
+  vibe.dは高パフォーマンスのHTTP(S)ウェブサーバとウェブサービスを書くことができます。
+  あなたが同期的に見えるコードを書いても、
+  実際には裏で大量のコネクションの醜い非同期ハンドリングをします!
+  次のセクションで十分なサンプルを見てください。
+* 使いやすいJSONとウェブインターフェースのジェネレータ
+* RedisやMongoDBのすぐに使えるサポートは優れたパフォーマンスを持ったバックエンドシステムを書くのを簡単にします
+* ジェネリックなTCPやUDPクライアントとサーバもこのフレームワークを使い書くことができます
 
-Note that the examples in this chapter
-can't be run online because they
-would require network support which is disabled
-for obvious security reasons.
+このチャプターのサンプルはネットワークサポートを必要とし、
+明らかなセキュリティ上の理由のためオンラインで実行できないことに注意してください。
 
-The easiest way to create a vibe.d project is to install
-`dub` and create a new project with *vibe.d* specified
-as template:
+vibe.dプロジェクトを作る最も簡単な方法は`dub`をインストールし、
+こちらのテンプレートのように**vibe.d**指定で新しいプロジェクトを作ることです:
 
     dub init <project-name> -t vibe.d
 
-`dub` will make sure that vibe.d is downloaded and
-available for building your vibe.d based project.
+`dub`はvibe.dをダウンロードしあなたのvibe.dベースのプロジェクトを利用可能にするでしょう。
 
-The book [D Web development](https://www.packtpub.com/web-development/d-web-development)
-gives a thorough introduction into this great
-framework.
-
+本[D Web development](https://www.packtpub.com/web-development/d-web-development)
+はこの素晴らしいフレームワークの徹底的な紹介をしています。
