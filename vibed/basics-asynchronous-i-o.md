@@ -1,48 +1,40 @@
-# Basics & Asynchronous I/O
+# 基礎と非同期I/O
 
-Using the default build parameters the `main()`
-function of a vibe.d application is specified
-by a special `shared static this()` module
-constructor:
+デフォルトのビルドパラメータを使って、特殊な`shared static this()`
+モジュールコンストラクタによってvibe.dアプリケーションの
+`main()`関数は指定されます:
 
     import vibe.d;
     shared static this() {
-        // Vibe.d code here
+        // ここにVibe.dのコード
     }
 
-A module constructor is executed
-before `main()` and just run once. Vibe.d provides
-its own `main()` and hides all the event loop and
-housekeeping stuff from the user code.
+モジュールコンストラクタは`main()`の前に一度だけ実行されます。
+Vibe.dは独自の`main()`を提供してすべてのイベントループと
+維持管理をユーザーコードから隠蔽します。
 
-Vibe.d uses *fibers* to implement asynchronous I/O:
-every time a call to socket would block - because we don't
-have any data for reading for example - the currently
-running fiber `yield`s its current execution
-context and leaves the field for another
-operation. When the data is available we just
-resume execution:
+Vibe.dは**ファイバー**を非同期I/Oを実装するために利用しています:
+例えば読み込むデータがないなどの理由でソケットの呼び出しがブロックされるたびに、
+現在実行中のファイバーは現在の実行コンテキストを`yield`し、
+別の操作のためにフィールドを離れます。データが利用可能になれば実行を再開します:
 
-    // Might block but this is transparent.
-    // If socket is ready vibe.d makes sure
-    // we return here.
+    // ブロックするかもしれませんが透過的です。
+    // ソケットの準備ができているならvibe.dは
+    // ここに戻るようにします。
     line = connection.readLine();
-    // Might block too
+    // ここもブロックするかもしれません
     connection.write(line);
 
-Also the code looks like it is *synchronous* and
-would block the current thread, but it doesn't!
-The code looks clean and concise but it still
-uses the power of asynchronous I/O allowing
-thousands of connections on a single core.
+このコードは**同期的**で現在のスレッドをブロックするように見えますが、
+そうではありません!
+コードは綺麗で簡潔ですが、その上で、
+1つのコアで何千もの接続を可能にする非同期I/Oの力を利用しています。
 
-All vibe.d features make use of fiber based
-asynchronous socket operations so you don't have
-to worry about that one single slow MongoDB server connection
-blocks your whole application.
+すべてのvibe.dの機能はファイバーを基にした非同期ソケット操作利用しており、
+あなたはひとつの遅いMongoDBサーバーの接続がアプリケーション全体を
+ブロックすることについて心配する必要はありません。
 
-Make sure to check the example which shows how
-to implement a simple TCP based echo server.
+シンプルなTCPベースのechoサーバを実装する方法についての例を確認してください。
 
 ## {SourceCode:disabled}
 
@@ -51,12 +43,11 @@ import vibe.d;
 
 shared static this()
 {
-    // Listen on port 8080 (TCP).
-    // Each time a new connection arrives
-    // it is handled by the delegate
-    // specified as 2nd parameter. conn
-    // is the TCP connection object to the
-    // client.
+    // 8080ポート(TCP)をListenします。
+    // 新しい接続が到着するたびに、
+    // 2番めの引数で指定されたデリゲートによって
+    // 処理されます。connはクライアントへの
+    // TCP接続オブジェクトです。
     listenTCP(8080, (TCPConnection conn) {
         string line;
         conn.write("ECHO server says Hi!\r\n");
@@ -67,8 +58,8 @@ shared static this()
               ~ "\r\n");
         }
 
-        // Just exiting the delegate here
-        // will close the client's connection.
+        // デリゲートがここを出るとそのクライアントの
+        // 接続が閉じられます。
     });
 }
 ```
