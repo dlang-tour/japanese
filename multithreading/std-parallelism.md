@@ -56,8 +56,8 @@
 
     t.executeInNewThread();
 
-タスクの結果を得るにはその`yieldForce`を呼びます。
-それは結果が利用可能になるまでブロックします。
+タスクの結果を得るには`yieldForce`を呼びます。
+それは結果が取得できるようになるまでブロックします。
 
     auto fileData = t.yieldForce;
 
