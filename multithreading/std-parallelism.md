@@ -14,7 +14,7 @@
     }
 
 `parallel`は内部で`opApply`オペレータを使用します。
-グローバルの`parallel`は**CPUの合計数**を使うワーキングスレッドである`TaskPool`である
+グローバルの`parallel`は**CPUの合計数 - 1**のワーキングスレッドを使う`TaskPool`である
 `taskPool.parallel`へのショートカットです。
 自分独自のインスタンスを作ると並列度をコントロールできます。
 
