@@ -63,7 +63,7 @@ void setFieldA(bool b);
 `std.bitmanip`と`core.bitop`少ないメモリ消費を必要とする
 アプリケーションのための非常に有用な更に多くのヘルパがあります。
 
-### Padding and alignment
+### パディングとアライメント
 
 As the compiler will add padding for variables with a size lower than the current
 OS memory layout (`size_t.sizeof`) e.g. `bool`, `byte`, `char`, it is recommended
