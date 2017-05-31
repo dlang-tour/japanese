@@ -2,7 +2,7 @@
 
 デフォルトのビルドパラメータを使って、特殊な`shared static this()`
 モジュールコンストラクタによってvibe.dアプリケーションの
-`main()`関数は指定されます:
+`main()`関数は定義されます:
 
     import vibe.d;
     shared static this() {
