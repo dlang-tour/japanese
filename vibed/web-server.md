@@ -1,51 +1,42 @@
-# Web server
+# ウェブサーバ
 
-Vibe.d allows writing HTTP(S) web servers in no
-time:
+Vibe.dはHTTP(S)ウェブサーバを一瞬のうちに書くことを可能にします:
 
     auto settings = new HTTPServerSettings;
     settings.port = 8080;
     listenHTTP(settings, &foo);
 
-This starts a web server on port 8080 where all
-requests are handled by a `foo` function:
+これはすべてのリクエストが`foo`関数によりハンドルされるウェブサーバをポート8080で開始します:
 
     void foo(HTTPServerRequest req,
         HTTPServerResponse res) { ... }
 
-To ease typical usage patterns and the configuration
-of different paths, a `URLRouter` class is provided
-which either allows registering `GET`, `POST` etc.
-handlers using the `.get("path", handler)`
-and `.post("path", handler)` member functions, or
-registering a custom *web interface* class which implements
-web server paths as member functions:
+典型的な使用パターンと、異なるパスの設定を簡単にするために、
+`URLRouter`クラスは`GET`、`POST`などを登録できる`.get("path", handler)`
+や`.post("path", handler)`メンバ関数を使う、
+またはメンバ関数としてウェブサーバーパスを実装したカスタム**ウェブインターフェース**
+クラスを登録するハンドラを提供します:
 
     auto router = new URLRouter;
     router.registerWebInterface(new WebService);
     listenHTTP(settings, router);
 
-The paths of the custom web interface `WebService`'s member functions
-will automatically be deduced using a simple scheme:
-* `index()` will handle`/index`
-* `getName()` will handle the `GET` request `/name`
-* `postUsername()` will handle to `POST` request
-  to `/username`
+カスタムウェブインターフェース`WebService`
+のメンバ関数のパスはシンプルな仕組みを用いて自動的に決定されます:
+* `index()`は`/index`にハンドルされます
+* `getName()`は`GET`リクエスト`/name`にハンドルされます
+* `postUsername()`は`/username`への`POST`リクエストにハンドルされます
 
-Custom paths can be set by attributing a member
-function with a `@path("/hello/world")` attribute.
-Parameters for `POST` requests will be made available
-to the function using `_` prefixed variable names. It is
-also possible to specify parameters directly
-in the path itself:
+メンバ関数に`@path("/hello/world")`
+属性を属性付けすることによってカスタムパスを設定できます。
+`POST`リクエストのパラメータは`_`プレフィックスのついた変数名を使い、
+関数で利用できるようになります。そのパスから直接パラメータを明記することもできます:
 
     @path("/my/api/:id")
     void foo(int _id)
 
-You don't need to pass `HTTPServerResponse` and
-`HTTPServerRequest` as parameter to each function.
-Vibe.d statically checks whether it is in a function's parameter list
-and just passes it if needed.
+各関数にパラメータとして`HTTPServerResponse`や`HTTPServerRequest`を渡す必要はありません。
+Vibe.dはそれが関数のパラメータリストにあるかどうか静的にチェックし、必要なら渡します。
 
 ## {SourceCode:disabled}
 
@@ -55,17 +46,14 @@ import vibe.d;
 class WebService
 {
     /*
-    Using session variables such as this one,
-    information associated with individual users
-    can be persisted throughout all requests
-    for the duration of each user's session.
+    このようにセッション変数を使うと、個々のユーザに関連する情報は
+    各ユーザのセッションの間すべてのリクエストを通して持続します。
     */
     private SessionVar!(string, "username")
         username_;
 
     /*
-    By default requests to the root path ("/")
-    are routed to the index method.
+    デフォルトではルートパス("/")へのリクエストはindexメソッドにルーティングされます。
     */
     void index(HTTPServerResponse res)
     {
@@ -85,9 +73,8 @@ class WebService
     }
 
     /*
-    The @path attribute can be used to customize
-    url routing. Here requests to "/name"
-    will be mapped to the getName method.
+    @path属性はurlルーティングのカスタマイズに使えます。
+    こちらの"/name"へのリクエストはgetNameメソッドへとマップされます.
     */
     @path("/name")
     void getName(HTTPServerRequest req,
@@ -95,9 +82,8 @@ class WebService
     {
         import std.string : format;
 
-        // Generate header info <li>
-        // tags by inspecting the request's
-        // headers property.
+        // ヘッダ情報<li>タグをリクエストの
+        // ヘッダのプロパティを調べて生成します
         string[] headers;
         foreach(key, value; req.headers) {
             headers ~=
@@ -149,7 +135,7 @@ shared static this()
     router.get("/hello", &helloWorld);
 
     auto settings = new HTTPServerSettings;
-    // Needed for SessionVar usage.
+    // SessionVarを使うのに必要です
     settings.sessionStore =
         new MemorySessionStore;
     settings.port = 8080;
