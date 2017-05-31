@@ -1,17 +1,17 @@
-# DIET Templates
+# DIETテンプレート
 
-To make writing web pages easier vibe.d supports
-[DIET templates](https://vibed.org/templates/diet)
-which is a simplified syntax to write HTML pages.
-DIET is based on
-[Jade templates](http://jade-lang.com/).
+ウェブページを簡単に書くために、
+vibe.dはHTMLページを書くための簡略化された構文の
+[DIETテンプレート](https://vibed.org/templates/diet)
+をサポートしています。
+DIETは[Jade templates](http://jade-lang.com/)をもとにしています。
 
     doctype html
     html(lang="en")
       head
-        // D code is evaluated
+        // Dのコードが評価されます
         title #{pageTitle}
-        // attributes
+        // 属性
         script(type='text/javascript')
           if (foo) bar(1 + 5)
         // ID = body-id
@@ -19,29 +19,23 @@ DIET is based on
         body#body-id.the-style
           h1 DIET template
 
-The syntax is indentation-aware and the closing
-tags don't have to be inserted.
+構文はインデントを認識し、閉じタグを挿入する必要はありません。
 
-All DIET templates are compiled and are held
-in memory for maximum performance.
-DIET templates allows using D code which is evaluated
-when rendering the page. Single expressions
-are enclosed in `#{ 1 + 1 }` and can be used anywhere
-in the template. Whole D code lines are
-prefixed with `-` on their own line:
+すべてのDIETテンプレートはコンパイルされ、パフォーマンスを最大に高めるためメモリに保持されます。
+DIETテンプレートではページがレンダリングされる時に評価されるDのコードを使うことができます。
+単体の式は`#{ 1 + 1 }`のように囲まれ、テンプレート内のどこででも使うことができます。
+Dのコードライン全体はその行に`-`接頭辞がつけられます:
 
     - foreach(title; titles)
       h1 #{title}
 
-Complex expressions can be used that way, and
-even functions may be defined that are used to
-output final HTML.
+複雑な式はこのような方法で使うこともでき、
+最終的なHTMLを出力するために使われる関数が定義されることもあります。
 
-DIET templates are compiled using **CTFE**
-and have to reside in the `views` folder
-in a standard vibe.d project. To actually render
-a DIET template use the `render` function within
-an URL handler:
+DIETテンプレートは**CTFE**を用いてコンパイルされ、
+標準的なvibe.dプロジェクトの`view`フォルダになければなりません。
+実際にDIETテンプレートをレンダリングするためには、URLハンドラの中で
+`render`関数を使います:
 
     void foo(HTTPServerResponse res) {
         string pageTitle = "Hello";
@@ -49,8 +43,8 @@ an URL handler:
         res.render!("my-template.dt", pageTitle, test);
     }
 
-All D variables available to a DIET template
-are passed as template parameters to `render`.
+すべてのDIETテンプレートで利用できるDの変数は
+`render`へのテンプレートパラメータとして渡されます。
 
 ## {SourceCode:disabled}
 
