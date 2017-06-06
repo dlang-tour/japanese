@@ -1,18 +1,15 @@
-# Database connectivity
+# データベース接続
 
-Vibe.d makes it easy to access databases
-in your backend services. **MongoDB** and **Redis**
-support come directly with vibe.d, other database
-adaptors can be found on [code.dlang.org](https://code.dlang.org).
+Vibe.dで簡単にあなたのバックエンドサービスのデータベースにアクセスできます。
+**MongoDB**や**Redis**のサポートはvibe.dに直接あり、
+他のデータベースアダプタは[code.dlang.org](https://code.dlang.org)
+で見つけることができます。
 
 ### MongoDB
 
-Access to MongoDB is modelled around the class
-[`MongoClient`](http://vibed.org/api/vibe.db.mongo.client/MongoClient).
-The implementation doesn't have external dependencies
-and is implemented using vibe.d's asynchronous
-sockets - no need to block if the connection
-has some latency.
+MongoDBへのアクセスはクラス[`MongoClient`](http://vibed.org/api/vibe.db.mongo.client/MongoClient)
+で設計されています。実装は外部依存を持たず、vibe.dの非同期ソケットを使って実装されています。
+接続にレイテンシがあった場合でもブロックは必要ありません。
 
     auto client = connectMongoDB("127.0.0.1");
     auto users = client.getCollection("users");
@@ -20,36 +17,26 @@ has some latency.
 
 ### Redis
 
-Redis support is implemented with vibe.d sockets as well
-and doesn't have external dependencies. Central
-to the implementation is the
-[`RedisDatabase`](http://vibed.org/api/vibe.db.redis.redis/RedisDatabase)
-class which allows to run commands against a Redis
-server. There are also convenience wrappers available, like
-[`RedisList`](http://vibed.org/api/vibe.db.redis.types/RedisList)
-which allows to transparently access a list
-stored in Redis.
+Redisサポートもvibe.dソケットで実装されており外部依存を持ちません。
+実装の中枢はRedisサーバに対してコマンドを実行できる
+[`RedisDatabase`](http://vibed.org/api/vibe.db.redis.redis/RedisDatabase)クラスです。
+Redisに保存されているリストに透過的にアクセスできる
+[`RedisList`](http://vibed.org/api/vibe.db.redis.types/RedisList)のような
+便利なラッパもあります。
 
 ### MySQL
 
-MySQL support without external dependencies
-to the official MySQL library can be
-added using the
-[mysql-native](http://code.dlang.org/packages/mysql-native)
-project. It supports vibe.d non-blocking sockets
-too.
+外部依存のない公式MySQLライブラリへのサポートが
+[mysql-native](http://code.dlang.org/packages/mysql-native)プロジェクト
+を使って追加できます。これもvibe.dのノンブロッキングソケットをサポートしています。
 
 ### Postgresql
 
-A full-featured Postgresql client is implemented
-with the external module [dpq2](http://code.dlang.org/packages/dpq2)
-that is based on the official *libpq* library.
-It uses vibe.d's event system to implement
-asynchronous behaviour.
+フル機能のPostgresqlクライアントは公式**libpq**ライブラリを基にした外部モジュール
+[dpq2](http://code.dlang.org/packages/dpq2)で実装されています。
+これはvibe.dのイベントシステムを非同期的振る舞いを実装するのに使っています。
 
-Another alternative for Postgresql is
-[ddb](http://code.dlang.org/packages/ddb)
-which implements a Postgresql client with
-vibe.d sockets and no external dependencies.
-
-
+Postgresqlの他の代替品に、
+vibe.dソケットで実装したPostgresqlクライアントで、
+外部依存がない[ddb](http://code.dlang.org/packages/ddb)
+があります。
