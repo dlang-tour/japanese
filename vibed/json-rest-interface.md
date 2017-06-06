@@ -1,8 +1,8 @@
-# JSON REST Interface
+# JSON RESTインターフェース
 
-Vibe.d allows to quickly implement a JSON webservice.
-If we want to implement the following JSON output for
-a HTTP request to `/api/v1/chapters`:
+Vibe.dによってJSONウェブサービスの素早い実装ができます。
+`/api/v1/chapters`
+へのHTTPリクエストに対する下記のJSON出力を実装したいときは:
 
     [
       {
@@ -22,9 +22,8 @@ a HTTP request to `/api/v1/chapters`:
       }
     ]
 
-First define an interface that implements the
-according functions and D `struct`s that are
-serialized **1:1**:
+まず対応する関数を実装するインターフェースと、
+**1対1**にシリアライズされるDの`struct`を定義します:
 
     interface IRest
     {
@@ -41,35 +40,30 @@ serialized **1:1**:
         Chapter[] getChapters();
     }
 
-To actual fill the data structures, we have to inherit
-from the interface and implement the business logic:
+実際にデータ構造体を埋めるには、インターフェースから継承し、
+ビジネスロジックを実装する必要があります:
 
     class Rest: IRest {
         Chapter[] getChapters() {
-          // fill
+          // 埋める
         }
     }
 
-Given an `URLRouter` instance we register
-an instance of the `Rest` class and we're done!
+`Rest`クラスのインスタンスを登録する`URLRouter`インスタンスで終わりです!
 
     auto router = new URLRouter;
     router.registerRestInterface(new Rest);
 
-Vibe.d *REST interface generator* also supports
-POST request where the children of the posted
-JSON object are mapped to the member function's
-parameters.
+Vibe.d **RESTインターフェースジェネレータ**はpostされたJSONオブジェクトの子要素が
+メンバ関数のパラメータにマップされたPOSTリクエストもサポートしています。
 
-The REST interface can be used to generate a REST
-client instance which transparently sends JSON requests
-to the given server, using the same member functions
-used on the backend side. This is useful when code
-is shared between client and server.
+RESTインターフェースは定められたサーバに、バックエンド側で使うのと同じメンバ関数を使って、
+透過的にJSONリクエストを送るRESTクライアントインスタンスを生成するのに使えます。
+これはコードがクライアントとサーバーで共有される時に便利です。
 
     auto api = new RestInterfaceClient!IRest("http://127.0.0.1:8080/");
-    // sends GET /api/v1/chapters and deserializes
-    // response to IRest.Chapter[]
+    // GET /api/v1/chapters を送りデシリアライズする
+    // IRest.Chapter[] へのレスポンス
     auto chapters = api.getChapters();
 
 ## {SourceCode:disabled}
@@ -96,7 +90,7 @@ interface IRest
     Chapter[] getChapters();
 
     /*
-    Post data as:
+    このようなpostデータ:
         { "title": "D Language" }
     */
     @path("/api/v1/add-chapter")
@@ -123,7 +117,7 @@ class Rest: IRest
     int addChapter(string title)
     {
         import std.algorithm : map, max, reduce;
-        // Generate the next highest ID
+        // 次の最も大きいIDを生成
         auto newId = chapters_.map!(x => x.id)
                             .reduce!max + 1;
         chapters_ ~= Chapter(title, newId);
