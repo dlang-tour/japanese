@@ -26,7 +26,7 @@ Redisに保存されているリストに透過的にアクセスできる
 
 ### MySQL
 
-公式MySQLライブラリへの外部依存のないサポートが
+公式MySQLライブラリへの外部依存なしにサポートが
 [mysql-native](http://code.dlang.org/packages/mysql-native)プロジェクト
 を使って追加できます。これもvibe.dのノンブロッキングソケットをサポートしています。
 
