@@ -12,7 +12,7 @@ Dは`interface`という、技術的には`class`に似ていますが、
 `Dog`に実装されなければいけません。
 本質的に`makeNoise`は基底クラスの`abstract`メンバ関数のように振る舞います。
 
-    class Dog: Animal {
+    class Dog : Animal {
         override makeNoise() {
             ...
         }
@@ -20,7 +20,7 @@ Dは`interface`という、技術的には`class`に似ていますが、
 
     auto dog = new Dog;
     Animal animal = dog; // インターフェースへの明示的なキャスト
-    dog.makeNoise();
+    animal.makeNoise();
 
 `class`が実装できる`interface`の数は無制限ですが、継承は**1つの**基底クラスからのみできます。
 
