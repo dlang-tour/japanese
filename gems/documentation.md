@@ -29,11 +29,9 @@ HTMLドキュメントを生成します。
 /**
   数の平方根を計算します。
 
-  Here could be a longer paragraph that
-  elaborates on the great win for
-  society for having a function that is actually
-  able to calculate a square root of a given
-  number.
+  ここには実際に与えられた数の平方根を
+  求める関数の社会的な価値について
+  細かく説明する長いパラグラフが入ります。
 
   Example:
   -------------------
