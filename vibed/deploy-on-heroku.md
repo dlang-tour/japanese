@@ -1,55 +1,53 @@
-# Deploy on Heroku
+# Herokuにデプロイ
 
-### Pre-requirements
+### 事前要件
 
-- Heroku [account](https://signup.heroku.com/login)
-- [Git](https://git-scm.com/) installed
-- Your application should compile without error using dmd (`dub build`).
+- Heroku[アカウント](https://signup.heroku.com/login)
+- [Git](https://git-scm.com/)がインストールされていること
+- アプリケーションがdmd(`dub build`)を使ってエラー無くコンパイルできること
 
-### 1 : Setup the app
+### 1 : Appのセットアップ
 
-Heroku needs to know how to communicate with a deployed application.
-Hence a global `PORT` environment variable is provided which needs to be injected into an application and
-it should bind and listen to this port.
-For development a default port (here __8080__) should be set:
+Herokuはデプロイされたアプリケーションと通信する方法を知る必要があります。
+従ってアプリケーションに注入され、ポートにバインドしリッスンする必要があるグローバル`PORT`環境変数が提供されます。
+開発のためにデフォルトのポート(ここで__8080__)を設定する必要があります:
 
 ```d
 shared static this() {
   // ...
   auto settings = new HTTPServerSettings;
-  // Provide a default port in case of the $PORT variable isn't set.
+  // $PORT変数が設定されていない場合デフォルトのポートを提供します。
   settings.port = environment.get("PORT", "8080").to!ushort;
   listenHTTP(settings, router);
 }
 ```
 
-Additionally create a `Procfile`, which is a text file in the root directory of the application, which explicitly declares what command
-should be executed to start the app.
+さらに、Appを開始する時にどのコマンドを実行するかを明示的に宣言する、アプリケーションのルートディレクトリのテキストファイルである`Procfile`を作成しましょう。
 
-The `Procfile` in the example app looks like this:
+このサンプルの`Procfile`は以下のようになります:
 
 ```
 web: ./hello-world
 ```
 
-### 2 : Prepare the app
+### 2 : Appの準備
 
-Before going further login to the Heroku Command Line by using the [Heroku Toolbelt](https://toolbelt.heroku.com/standalone).
+話をすすめる前に[Heroku Toolbelt](https://toolbelt.heroku.com/standalone)を使ってHerokuコマンドラインにログインしましょう。
 
-This provides access to the Heroku Command-Line Interface (CLI), which can be used for managing and scaling your applications and add-ons.
+これはアプリケーションやアドオンの管理やスケーリングができる、Herokuコマンドラインインターフェース(CLI)。
 
-After installing the toolbet run the following:
+Toolbeltのインストール後以下を実行してください:
 
 ```
 $ heroku login
 ```
 
-### 3 : Create the app
+### 3 : Appの作成
 
-Go to the [heroku dashboard](https://dashboard.heroku.com) and create a new app.
-After doing this memorize the name of the created app, it will be useful later.
+[heroku dashboard](https://dashboard.heroku.com)へ行き新しいAppを作成しましょう。
+その後作ったAppの名前を覚えておいてください、後で役に立ちます。
 
-Or use the Command-Line like this:
+またはこのようにコマンドラインを使いましょう:
 
 ```
 $ heroku create
@@ -57,19 +55,18 @@ Creating app... done, ⬢ rocky-hamlet-67506
 https://rocky-hamlet-67506.herokuapp.com/ | https://git.heroku.com/rocky-hamlet-67506.git
 ```
 
-The app's name here is *rocky-hamlet-67506*.
+ここではAppの名前は*rocky-hamlet-67506*です。
 
-### Deploy using git
+### gitを使ってデプロイ
 
-To deploy the app directly use `git` commands. A separate git remote endpoint should be added to which new releases can be pushed.
-Thus the name of the newly created application
-in the previous chapter needs to be passed as argument - here it is *rocky-hamlet-67506*.
+`git`コマンドを使って直接Appをデプロイします。新しいリリースをプッシュできる異なるgitリモートエンドポイントを追加しなければなりません。
+従って前のチャプターで新しく作ったアプリケーションの名前を引数として渡す必要があります。ここでは*rocky-hamlet-67506*です。
 
 ```
 $ heroku git:remote -a rocky-hamlet-67506
 ```
 
-Notice the remote endpoint is added to the git config:
+リモートエンドポイントはgitコンフィグに追加されることを知っておいてください:
 
 ```
 $ git remote -v
@@ -77,28 +74,27 @@ heroku	https://git.heroku.com/rocky-hamlet-67506.git (fetch)
 heroku	https://git.heroku.com/rocky-hamlet-67506.git (push)
 ```
 
-### Adding the buildpack
+### ビルドパックの追加
 
-Buildpacks are responsible for generating assets or compiled code.
+ビルドパックはアセットやコンパイルされたコードの生成を請け負います。
 
-For more information browse the [Heroku documentation](https://devcenter.heroku.com/articles/buildpacks)
+詳しい情報は[Heroku documentation](https://devcenter.heroku.com/articles/buildpacks)を閲覧してください。
 
-For deployement the [Vibe.d buildpack](https://github.com/MartinNowak/heroku-buildpack-d) can be used:
+デプロイメントには[Vibe.dビルドパック](https://github.com/MartinNowak/heroku-buildpack-d)が使えます:
 
 ```
 $ heroku buildpacks:set https://github.com/MartinNowak/heroku-buildpack-d
 ```
-By default the buildpack uses the latest `dmd` compiler.
-It is possible to use GDC or LDC and to choose a specific compiler versions by adding a `.d-compiler` file to your project.
+デフォルトではこのビルドパックは最新の`dmd`コンパイラを使います。
+`.d-compiler`ファイルをプロジェクトに追加することで、GDCやLDCを使い、特定のコンパイラのバージョンを選ぶことができます。
 
-Use `dmd`, `ldc`, or `gdc` to select the latest or `dmd-2.0xxx`, `ldc-1.0xxx`, or `gdc-4.9xxx` to
-select a specific version of a compiler.
+`dmd`、`ldc`、`gdc`を使い最新を選択するか`dmd-2.0xxx`、`ldc-1.0xxx`、`gdc-4.9xxx`を使いコンパイラの特定のバージョンを選択します。
 
-### Deploy the code
+### コードのデプロイ
 
-Proceed in your usual git habit and write awesome code.
+あなたのgitの習慣で作業を進め、素晴らしいコードを書いてください。
 
-To release a new version, just push the newest version to the Heroku endpoint.
+新しいバージョンのリリースには、ただ最新のバージョンをHerokuエンドポイントにプッシュしてください。
 
 ```
 $ git add .
@@ -134,18 +130,18 @@ To git@heroku.com:rocky-hamlet-67506.git
  * [new branch]      master -> master
 ```
 
-Open the app in the browser with the following command
+以下のコマンドによってブラウザでAppを開きましょう。
 
 ```
 $ heroku open
 ```
 
-### Scaling dynos containers
+### dynoコンテナのスケーリング
 
-After deploying, the app is running on a web dyno.
-Think of a dyno as a lightweight container that runs the command specified in the Procfile.
+デプロイ後、Appはweb dyno上で動作します。
+dynoのことはProcfileで指定したコマンドが実行される軽量のコンテナだと考えてください。
 
-Using the `ps` command allows checking how many dynos are running:
+`ps`コマンドを使っていくつのdynoが動作中かチェックできます:
 
 ```
 $ heroku ps
@@ -156,27 +152,27 @@ https://devcenter.heroku.com/articles/dyno-sleeping
 No dynos on ⬢ rocky-hamlet-67506
 ```
 
-By default, the app is deployed on a free dyno which doesn't accept requests by default.
-Free dynos will sleep after a half hour of inactivity. This causes a delay of a few seconds for the first request upon waking.
+デフォルトでは、Appはデフォルトではリクエストを受け入れないフリーdynoにデプロイされます。
+フリーdynoは30分活動がないとスリープします。これによって起動時の最初のリクエストが数秒遅延します。
 
-To start the dyno run the following:
+以下を実行してdynoを開始してください:
 
 ```
 $ heroku ps:scale web=1
 ```
 
-### See the logs
+### ログを見る
 
-Heroku treats logs as streams of time-ordered events aggregated from the output streams of all your app and Heroku components,
-providing a single channel for all of the events.
+Herokuはログを時間順のすべてのAppとHerokuコンポーネンツの出力ストリームから集約されたイベントストリームとして扱い、
+すべてのイベントの単一のチャンネルを提供します。
 
 ```
 $ heroku logs --tail
 ```
 
-## More informations
+## さらなる情報
 
-After deploying the app to Heroku you can make it more awesome by using add-ons. For example :
+HerokuへのAppのデプロイ後に、アドオンを使ってさらに素晴らしくできます。たとえば:
 
 - [Postgresql](https://elements.heroku.com/addons/heroku-postgresql)
 - [MongoDb](https://elements.heroku.com/addons/mongohq)
