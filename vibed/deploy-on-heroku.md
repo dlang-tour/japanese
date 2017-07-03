@@ -32,9 +32,9 @@ web: ./hello-world
 
 ### 2 : Appの準備
 
-話をすすめる前に[Heroku Toolbelt](https://toolbelt.heroku.com/standalone)を使ってHerokuコマンドラインにログインしましょう。
+まずは、[Heroku Toolbelt](https://toolbelt.heroku.com/standalone)を使ってHerokuコマンドラインにログインしましょう。
 
-これはアプリケーションやアドオンの管理やスケーリングができる、Herokuコマンドラインインターフェース(CLI)。
+これはアプリケーションやアドオンの管理やスケーリングができる、Herokuコマンドラインインターフェース(CLI)です。
 
 Toolbeltのインストール後以下を実行してください:
 
