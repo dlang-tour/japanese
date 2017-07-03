@@ -65,9 +65,8 @@ void setFieldA(bool b);
 
 ### パディングとアライメント
 
-As the compiler will add padding for variables with a size lower than the current
-OS memory layout (`size_t.sizeof`) e.g. `bool`, `byte`, `char`, it is recommended
-to start with fields of high alignments.
+コンパイラは、`bool`, `byte`, `char` のようなOSのメモリレイアウト (`size_t.sizeof`)
+よりも小さいサイズの変数に対してパディングを挿入するため、アライメントの大きいフィールドから書くと良いでしょう。
 
 ## 掘り下げる
 
