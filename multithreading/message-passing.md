@@ -104,7 +104,7 @@ void worker(Tid parentId)
 void main()
 {
     Tid threads[];
-    // 小さな10個のワーカースレッドをスポーン。
+    // 小さな10個のワーカースレッドを生成。
     for (size_t i = 0; i < 10; ++i) {
         threads ~= spawn(&worker, thisTid);
     }
