@@ -1,65 +1,80 @@
-# Dにおけるユニコード
+# Unicode in D
 
-ユニコードはエンコーディングの世界標準で、コンピュータ上でテキストを表現します。
-Dは言語と標準ライブラリの両方でユニコードに完全対応しています。
+Unicode is a global standard for representing text in computers.
+D fully supports Unicode in both the language and the standard
+library.
 
-## 何を、どうして
+## What and Why
 
-コンピュータは、最も低レベルのところでは数値しか扱わないため、テキストとは何かという
-概念を持ちません。結果、コンピュータコードはテキストデータをとり、それをバイナリ表現
-との間で変換する方法を必要とします。変換の方法を**符号化方式**といい、
-ユニコードはそのような方式のひとつです。
+Computers, at the lowest level, have no notion of what text is,
+as they only deal with numbers. As a result, computer code needs
+a way to take text data and transform it to and from a binary
+representation. The method of transformation is called an
+*encoding scheme*, and Unicode is one such scheme.
 
-例の文字列の根本にある数値表現を見ると、単にコードを実行しています。
+To see the numerical representations underlying the strings in
+the example, simply run the code.
 
-ユニコードは世界のすべての言語を同じ符号化方式を使い表現することを可能にする
-そのデザインにおいて独特です。ユニコード以前は、コンピュータは異なる会社によって製造されたり
-コミュニケーションに苦労する異なる地域で出荷されたりしており、場合によっては符号化方式が
-全くサポートされないこともあり、そのコンピュータでテキストを表示することは不可能でした。
+Unicode is unique in that its design allows it to represent all
+the languages of the world using the same encoding scheme. Before
+Unicode, computers made by different companies or shipped in
+different areas had a hard time communicating, and in some cases
+an encoding scheme wasn't supported at all, making viewing the text
+on that computer impossible.
 
+For more info on Unicode and the technical details, check the
+Wikipedia article on Unicode in the "In-Depth" section.
 
-ユニコードとその技術的詳細についてのさらなる情報については、「掘り下げる」セクションの
-ウィキペディアのユニコードの記事を確認してください。
+## How
 
-## どうやって
+Unicode has fixed most of those problems and is supported on every
+modern machine. D learns from the mistakes of older languages,
+as such **all** strings in D are Unicode strings, whereas strings
+in languages such as C and C++ are just arrays of bytes.
 
-ユニコードはこれらの問題のほとんどを修正し、あらゆるモダンなマシンでサポートされています。
-Dは古い言語の過ちから学び、Dのそのような文字列**すべて**はユニコード文字列であるのに対して、
-CやC++のような言語では文字列はただのバイトの配列です。
+In D, `string`, `wstring`, and `dstring` are UTF-8, UTF-16, and
+UTF-32 encoded strings respectively. Their character types are
+`char`, `wchar`, and `dchar`.
 
-Dでは`string`、`wstring`、`dstring`はそれぞれUTF-8、UTF-16、UTF-32でエンコードされた
-文字列です。これらの文字型は`char`、`wchar`、`dchar`です。
+According to the spec, it is an error to store non-Unicode
+data in the D string types; expect your program to fail in
+different ways if your string is encoded improperly.
 
-仕様によると、Dの文字列型にユニコードでないデータを格納するとエラーになります。
-文字列が不適切にエンコードされた場合プログラムは異なる方法で失敗することを期待します。
+In order to store other string encodings, or to obtain C/C++
+behavior, you can use `ubyte[]` or `char*`.
 
-文字列エンコーディングを格納するため、またはC・C++の挙動を得るために、`ubyte[]`か`char*`が使えます。
+## Strings in Range Algorithms
 
-## レンジアルゴリズムでの文字列
+*Reading the [gem on range algorithms](gems/range-algorithms) is
+suggested for this section.*
 
-**このセクションのために[レンジアルゴリズム](gems/range-algorithms)を読むことを推奨します**
+There are some important caveats to keep in mind with Unicode
+in D.
 
-Dのユニコードにおいていくつか念頭に置いておく重要な注意事項があります。
-
-まず、便利な機能として、レンジ関数を使って文字列を反復処理するとき、
-Phobosは`string`と`wstrings`の全要素をUTF-32コードポイントにエンコードします。
-**オートデコーディング**として知られるこの方法は、このようなことを意味します
+First, as a convenience feature, when iterating over a string
+using the range functions, Phobos will encode the elements of
+`string`s and `wstrings` into UTF-32 code-points as each item.
+This practice, known as **auto decoding**, means that
 
 ```
 static assert(is(typeof(utf8.front) == dchar));
 ```
 
-この振る舞いは多くのことを示唆し、多くの人を混乱させる主なものとしては、
-`std.traits.hasLength!(string)`が`False`になります。なぜ?レンジAPIの観点からいうと、
-`string`の`length`は**レンジ関数が反復処理をする**要素の数ではなく**文字列内の要素の数**を返すためです。
+This behavior has a lot of implications, the main one that
+confuses most people is that `std.traits.hasLength!(string)`
+equals `False`. Why? Because, in terms of the range API,
+`string`'s `length` returns **the number of elements in the string**,
+rather than the number of elements the *range function will iterate over*.
 
-例から、なぜこれら2つのものが常に等しいとは限らないかを見ることができます。
-したがって、Phobosのレンジアルゴリズムは`string`が長さの情報を持たないかのように振る舞います。
+From the example, you can see why these two things might not always
+be equal. As such, range algorithms in Phobos act as if `string`s
+do not have length information.
 
-オートデコーディングの技術的詳細、そしてそれがあなたのプログラムにとって持つ意味についての
-さらなる情報については、「掘り下げる」セクションのリンクを確認してください。
+For more information on the technical details of auto decoding,
+and what it means for your program, check the links in the
+"In-Depth" section.
 
-### 掘り下げる
+### In-Depth
 
 - [Unicode on Wikipedia](https://en.wikipedia.org/wiki/Unicode)
 - [Basic Unicode Functions in Phobos](https://dlang.org/phobos/std_uni.html)
@@ -91,10 +106,10 @@ void main()
     }
     writeln();
 
-    // 指定された要素の型はdcharのため、文字列を
-    // UTF-32コードポイントにエンコードするために
-    // 先読みが使われます。
-    // 非文字列では、単純なキャストが使われます
+    // Because the specified the element type is
+    // dchar, look-ahead is used to encode the
+    // string to UTF-32 code points.
+    // For non-strings, a simple cast is used
     foreach (dchar item; utf16)
     {
         auto c = cast(ushort) item;
@@ -102,7 +117,7 @@ void main()
     }
     writeln();
 
-    // オートデコーディングの結果
+    // a result of auto-decoding
     static assert(
         is(typeof(utf8[0]) == immutable(char))
     );
