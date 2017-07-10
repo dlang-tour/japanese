@@ -66,7 +66,7 @@ struct NumberMessage {
 }
 
 /*
-メッセージは他のスレッドのストップサインとして使われます
+他のスレッドのストップサインとして使われるメッセージです
 */
 struct CancelMessage {
 }
