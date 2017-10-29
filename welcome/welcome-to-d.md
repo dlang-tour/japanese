@@ -38,6 +38,10 @@ Dは、様々な言語のコンパイラを実装してきた数十年の経験�
 各セクションにはDの特徴を試すために修正して実行できるサンプルコードが付属しています。
 runボタンをクリック (または `Ctrl-enter`) してコンパイル・実行してみましょう。
 
+To navigate this tour, either use the "`<` previous" and "next `>`" links at the
+bottom (or left and right arrow keys), or else go straight to particular sections
+using the menus at the top.
+
 ### コントリビューティング
 
 このツアーは [オープンソース](https://github.com/dlang-tour)
