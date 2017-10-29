@@ -41,11 +41,11 @@ ARMのようなその他のプラットフォームのサポートだけでな�
 
 [さらなる情報は](https://wiki.dlang.org/Compilers) wikiを参照してください。
 
-## Configure your editor
+## エディタを設定する
 
-The beauty about D is that you don't need a fancy IDE as boilerplate code is very rare.
-However, using D is nicer when you are in the comfortable zone of your favorite editor.
-There are D plugins for at least the following editors:
+D言語の美点は、定型的なコードが非常に少なく派手なIDEを使う必要がないというところです。
+しかしながら、あなたはお気に入りのエディタで気持ちよくD言語を使うと良いでしょう。
+少なくとも以下のエディタ用のD言語のプラグインがあります:
 
 - [Atom](https://github.com/Pure-D/atomize-d)
 - [Eclipse](http://ddt-ide.github.io)
@@ -56,10 +56,10 @@ There are D plugins for at least the following editors:
 - [VS Code](https://marketplace.visualstudio.com/items/webfreak.code-d)
 - [Visual Studio](http://rainers.github.io/visuald/visuald/StartPage.html)
 
-You may also want to try an IDE dedicated to D:
+D言語専用のIDEを試してみることもできます:
 
 - [Coedit](https://github.com/BBasile/Coedit)
 - [Dlang IDE](https://github.com/buggins/dlangide)
 
-The D wiki contains a more detailed overview of available [editors](https://wiki.dlang.org/Editors) and [IDEs](https://wiki.dlang.org/IDEs).
+D Wikiでは利用可能な [エディタ](https://wiki.dlang.org/Editors) や [IDE](https://wiki.dlang.org/IDEs)について、更に詳しい概要を確認できます。
 
