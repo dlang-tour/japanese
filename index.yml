@@ -5,5 +5,5 @@ ordering:
 - welcome
 - basics
 - gems
-#- multithreading
-#- vibed
+- multithreading
+- vibed
