@@ -53,7 +53,8 @@ class WebService
         username_;
 
     /*
-    デフォルトではルートパス("/")へのリクエストはindexメソッドにルーティングされます。
+    デフォルトではルートパス("/")へのリクエストは
+    indexメソッドにルーティングされます。
     */
     void index(HTTPServerResponse res)
     {
