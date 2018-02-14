@@ -26,7 +26,7 @@ Dの最も単純な契約プログラミングの形は`assert(...)`式で、
     } out (result) {
         assert((result * result) <= x
             && (result+1) * (result+1) > x);
-    } body {
+    } do {
         return cast(long)std.math.sqrt(cast(real)x);
     }
 
@@ -98,7 +98,7 @@ struct Date {
     in {
         assert(date.length == 10);
     }
-    body {
+    do {
         import std.format: formattedRead;
         // formattedReadは与えられたフォーマットで
         // パースし与えられた変数に結果を書き込みます
@@ -127,7 +127,7 @@ struct Date {
                     .equal([4, 2, 2]));
         assert(parts.all!isNumeric);
     }
-    body {
+    do {
         import std.format : format;
         return format("%.4d-%.2d-%.2d",
                       year, month, day);
