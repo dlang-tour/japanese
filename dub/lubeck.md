@@ -3,8 +3,7 @@
 CBLAS、LAPACK、Mir Algorithmによる高レベルな線形代数のライブラリです。
 
 ## 依存関係
-LubeckはCBLASとLAPACKのAPIに依存しています。環境によってはまずそれらをインストールし、`dub.sdl`を更新する必要があるかもしれません。
-MacOSは、CBLASとLAPACKが最初からインストールされています。
+LubeckはCBLASとLAPACKのAPIに依存しています。環境によってはまずそれらをインストールし、`dub.sdl`を更新する必要があるかもしれません。MacOSは、CBLASとLAPACKが最初からインストールされています。
 
 LinuxやWindowsでは、バックエンドとして [OpenBLAS](http://www.openblas.net) か [Intel MKL](https://software.intel.com/en-us/mkl) の利用を推奨しています。
 

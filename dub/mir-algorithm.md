@@ -32,7 +32,7 @@ void main()
     auto matrix = n
         // 遅延評価のもと魔法陣を作成し、
         .magic
-        // 要素の型を浮動小数点であるdouble型に変換し、
+        // 要素の型を倍精度浮動小数点数であるdouble型に変換し、
         .as!double
         // メモリを割り当てて書き換え可能なndsliceを作成します。
         .slice;
