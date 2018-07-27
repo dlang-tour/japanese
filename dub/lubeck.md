@@ -18,10 +18,7 @@ LinuxやWindowsでは、バックエンドとして [OpenBLAS](http://www.openbl
 
 ```d
 /+dub.sdl:
-dependency "lubeck" version="~>0.0"
-dependency "mir-algorithm" version="~>0.7"
-libs "lapack" "blas"
-
+dependency "lubeck" version="~>0.1"
 +/
 import std.stdio;
 import mir.ndslice: magic, repeat, as, slice;
