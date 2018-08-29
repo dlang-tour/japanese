@@ -24,16 +24,12 @@ Dは`interface`という、技術的には`class`に似ていますが、
 
 `class`が実装できる`interface`の数は無制限ですが、継承は**1つの**基底クラスからのみできます。
 
-### NVI (non virtual interface) pattern
+### NVI (non virtual interface) パターン
 
-The [NVI pattern](https://en.wikipedia.org/wiki/Non-virtual_interface_pattern)
-prevents the violation of a common execution pattern by allowing _non virtual_ methods
-for a common interface.
-D easily enables the NVI pattern by
-allowing the definition of `final` functions in an `interface`
-that aren't allowed to be overridden. This enforces specific
-behaviours customized by overriding the other `interface`
-functions.
+[NVIパターン](https://en.wikipedia.org/wiki/Non-virtual_interface_pattern)
+は共通したインターフェースで _非 virtual_ メソッドを許可することによって、共通した実行パターンに対する違反を防ぎます。
+Dでは`interface`においてオーバーライドを禁止する`final`関数を定義できるので、NVIパターンを容易に実現できます。
+これにより`interface`における他の関数のオーバーライドによる、特殊化した振る舞いのカスタマイズが可能になります。
 
     interface Animal {
         void makeNoise();
