@@ -16,7 +16,7 @@ ndsliceという多次元配列のパッケージを提供する、数学や金�
 
 ```d
 /+dub.sdl:
-dependency "mir-algorithm" version="~>1.1"
+dependency "mir-algorithm" version="~>2.0"
 +/
 
 void main()

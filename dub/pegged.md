@@ -14,7 +14,7 @@ Pegged は、解析式文法 (parsing expression grammar、PEG) ジェネレー�
 
 ```d
 /+dub.sdl:
-dependency "pegged" version="~>0.4.2"
+dependency "pegged" version="~>0.4"
 +/
 import pegged.grammar;
 import std.stdio;

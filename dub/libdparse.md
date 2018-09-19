@@ -6,7 +6,7 @@
 
 ```d
 /+dub.sdl:
-dependency "libdparse" version="~>0.7"
+dependency "libdparse" version="~>0.9"
 +/
 import dparse.ast;
 import std.stdio;

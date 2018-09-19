@@ -12,7 +12,7 @@
 
 ```d
 /+dub.sdl:
-dependency "mir-random" version="~>0.3"
+dependency "mir-random" version="~>1.0"
 +/
 import std.range, std.stdio;
 
