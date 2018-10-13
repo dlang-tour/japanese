@@ -2,10 +2,6 @@
 
 D言語ツアーは複数の言語で利用できます:
 
-# Read in your language
-
-The Dlang Tour is available in multiple languages:
-
 - [ブラジルポルトガル語 - Português Brasileiro](https://tour.dlang.org/tour/pt-br/welcome/welcome-to-d) (作成中)
 - [欧州ポルトガル語 - Português Europeu](https://tour.dlang.org/tour/pt/welcome/welcome-to-d) (作成中)
 - [フランス語 - Francais](https://tour.dlang.org/tour/fr/welcome/welcome-to-d)
