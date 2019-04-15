@@ -1,7 +1,6 @@
-# Structs
+# 構造体
 
-One way to define compound or custom types in D is to
-define them through a `struct`:
+Dでは`struct`で複合型もしくはカスタム型を定義できます:
 
     struct Person {
         int age;
@@ -9,17 +8,16 @@ define them through a `struct`:
         float ageXHeight;
     }
 
-`struct`s are always constructed on the stack (unless created
-with `new`) and are copied **by value** in assignments or
-as parameters to function calls.
+`struct`は(`new`で作成されない限り)常にスタックに構築され、
+代入や関数呼び出しの引数では**値として**コピーされます。
 
     auto p = Person(30, 180, 3.1415);
-    auto t = p; // copy
+    auto t = p; // コピー
 
-When a new object of a `struct` type is created, its members can be initialized
-in the order they are defined in the `struct`. A custom constructor can be defined through
-a `this(...)` member function. If needed to avoid name conflicts, the current instance
-can be explicitly accessed with `this`:
+`struct`型のオブジェクトが新規に作成されるとき、
+そのメンバは`struct`内で定義された順に初期化されます。
+カスタムコンストラクタは`this(...)`メンバ関数で定義できます。
+名前の衝突を回避したいときは、`this`を使って現在のインスタンスに明示的にアクセスできます:
 
     struct Person {
         this(int age, int height) {
@@ -29,14 +27,13 @@ can be explicitly accessed with `this`:
         }
             ...
 
-    Person p = Person(30, 180); // initialization
-    p = Person(30, 180);  // assignment to new instance
+    Person p = Person(30, 180); // 初期化
+    p = Person(30, 180);  // 新しいインスタンスへ代入
 
-A `struct` might contain any number of member functions. These
-are by default `public` and accessible from the outside. They could
-also be `private` and thus only be callable by other
-member functions of the same `struct`, or other code in the same
-module.
+`struct`は複数のメンバ関数を持つことができます。
+メンバ関数はデフォルトで`public`で、外部からアクセスが可能です。
+これは`private`にすることも可能で、その場合同じ`struct`のメンバ関数か、
+同じモジュール内のコードからのみ呼び出せるようになります。
 
     struct Person {
         void doStuff() {
@@ -44,52 +41,47 @@ module.
         private void privateStuff() {
             ...
 
-    p.doStuff(); // call method doStuff
-    p.privateStuff(); // forbidden
+    p.doStuff(); // メソッド doStuff を呼び出す
+    p.privateStuff(); // これは禁止されています
 
-### Const member functions
+### Constメンバ関数
 
-If a member function is declared with `const`, it won't be allowed
-to modify any of its members. This is enforced by the compiler.
-Making a member function `const` makes it callable on any `const`
-or `immutable` object, but also guarantees to callers that
-the member function will never change the state of the object.
+メンバ関数が`const`で宣言されている場合、そのメンバを変更することはできません。
+これはコンパイラにより強制されます。
+メンバ関数を`const`にすると、`const`または`immutable`オブジェクトから呼び出せるようになり、
+さらにこの関数がオブジェクトの状態を変更しないことが呼び出し元に保証されます。
 
-### Static member functions
+### Staticメンバ関数
 
-If a member function is declared as `static`, it will be callable
-without an instantiated object (e.g. `Person.myStatic()`) but it
-isn't allowed to access any non-`static` members.  It can be used if a
-method doesn't need to access any of the object member fields but logically
-belongs to the same class. Also it can be used to provide some functionality
-without creating an explicit instance, for example, some Singleton
-design pattern implementations use `static`.
+メンバ関数が`static`で宣言されると、
+その関数はインスタンス化されたオブジェクトなしに呼び出せるようになります
+(例: `Person.myStatic()`)が、非`static`メンバにアクセスできなくなります。
+これはメソッドがオブジェクトメンバフィールドにアクセスする必要はないが、
+論理的には同じクラスにあったほうがいいときに使えます。
+明示的インスタンスを作ることなく機能を提供するのにも使えます。
+例えばシングルトンデザインパターンの実装には`static`が使われることがあります。
 
-### Inheritance
+### 継承
 
-Note that a `struct` can't inherit from another `struct`.
-Hierachies of types can only be built using classes,
-which we will see in a future section.
-However, with `alias this` or `mixins` one can easily achieve
-polymorphic inheritance.
+`struct`は他の`struct`から継承できません。
+型ヒエラルキーは、後のセクションで見ていくクラスを用いてのみ構築可能です。
+しかし、`alias this`や`mixin`で簡単にポリモーフィックな継承が可能です。
 
-### In-depth
+### 掘り下げる
 
 - [Structs in _Programming in D_](http://ddili.org/ders/d.en/struct.html)
 - [Struct specification](https://dlang.org/spec/struct.html)
 
-### Exercise
+### エクササイズ
 
-Given the `struct Vector3`, implement the following functions and make
-the example application run successfully:
+`struct Vector3`に以下の関数を実装し、サンプルアプリケーションを正常に実行されるようにしましょう:
 
-* `length()` - returns the vector's length
-* `dot(Vector3)` - returns the dot product of two vectors
-* `toString()` - returns a string representation of this vector.
-  The function [`std.string.format`](https://dlang.org/phobos/std_format.html)
-  returns a string using `printf`-like syntax:
-  `format("MyInt = %d", myInt)`. Strings will be explained in detail in a later
-  section.
+* `length()` - ベクトルの長さを返す
+* `dot(Vector3)` - 2つのベクトルのドット積を返す
+* `toString()` - ベクトルの文字列表現を返す
+  関数 [`std.string.format`](https://dlang.org/phobos/std_format.html)
+  は`format("MyInt = %d", myInt)`のような`printf`風の構文を使って文字列を返します。
+  文字列は後のセクションで詳しく解説します。
 
 ## {SourceCode:incomplete}
 
@@ -101,13 +93,13 @@ struct Vector3 {
 
     double length() const {
         import std.math : sqrt;
-        // TODO: implement the length of Vector3
+        // TODO: Vector3のlengthを実装する
         return 0.0;
     }
 
-    // rhs will be copied
+    // rhsはコピーされます
     double dot(Vector3 rhs) const {
-        // TODO: implement the dot product
+        // TODO: ドット積を実装する
         return 0.0;
     }
 }
@@ -119,12 +111,12 @@ void main() {
     vec2.y = 20;
     vec2.z = 0;
 
-    // If a member function has no parameters,
-    // the calling braces () may be omitted
+    // メンバ関数がパラメータを持たないとき、
+    // 呼び出しのカッコ () は省略できます
     assert(vec1.length == 10);
     assert(vec2.length == 20);
 
-    // Test the functionality for dot product
+    // ドット積の機能をテスト
     assert(vec1.dot(vec2) == 0);
 
     // 1 * 1 + 2 * 1 + 3 * 1
