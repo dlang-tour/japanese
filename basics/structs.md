@@ -1,6 +1,7 @@
-# 構造体
+# Structs
 
-Dでは`struct`で複合型またはカスタム型を定義します:
+One way to define compound or custom types in D is to
+define them through a `struct`:
 
     struct Person {
         int age;
@@ -8,16 +9,17 @@ Dでは`struct`で複合型またはカスタム型を定義します:
         float ageXHeight;
     }
 
-`struct`は(`new`で作成されない限り)スタックに構築され、関数呼び出しの
-引数や代入では**値として**コピーされます。
+`struct`s are always constructed on the stack (unless created
+with `new`) and are copied **by value** in assignments or
+as parameters to function calls.
 
     auto p = Person(30, 180, 3.1415);
-    auto t = p; // コピー
+    auto t = p; // copy
 
-新しく`struct`型のオブジェクトが作成されるとき、そのメンバーは
-`struct`内で定義された順序で初期化されます。カスタム構造体は`this(...)`
-メンバ関数を通して定義するとができます。名前の衝突を回避したいときは、
-`this`で明示的に現在のインスタンスにアクセスできます。:
+When a new object of a `struct` type is created, its members can be initialized
+in the order they are defined in the `struct`. A custom constructor can be defined through
+a `this(...)` member function. If needed to avoid name conflicts, the current instance
+can be explicitly accessed with `this`:
 
     struct Person {
         this(int age, int height) {
@@ -27,13 +29,14 @@ Dでは`struct`で複合型またはカスタム型を定義します:
         }
             ...
 
-    Person p(30, 180); // 初期化
-    p = Person(30, 180);  // 新しいインスタンスを代入
+    Person p = Person(30, 180); // initialization
+    p = Person(30, 180);  // assignment to new instance
 
-`struct`には任意の数のメンバ関数が含まれます。それらはデフォルトでは
-`public`で、外部からアクセス可能です。それは`private`にすることで、
-同じ`struct`のメンバ関数や同じモジュールの他のコードからのみ
-呼べるようにした方がいいでしょう。
+A `struct` might contain any number of member functions. These
+are by default `public` and accessible from the outside. They could
+also be `private` and thus only be callable by other
+member functions of the same `struct`, or other code in the same
+module.
 
     struct Person {
         void doStuff() {
@@ -41,46 +44,52 @@ Dでは`struct`で複合型またはカスタム型を定義します:
         private void privateStuff() {
             ...
 
-    p.doStuff(); // doStuffメソッドを呼ぶ
-    p.privateStuff(); // 禁止
+    p.doStuff(); // call method doStuff
+    p.privateStuff(); // forbidden
 
-### Constメンバ関数
+### Const member functions
 
-メンバ関数が`const`で宣言されている場合、そのメンバを変更することはできません。
-これはコンパイラによって強制されます。メンバ関数を`const`にすると、
-それを`const`または`immutable`オブジェクトでも呼び出し可能になるだけでなく、
-メンバ関数がオブジェクトの状態を変更しないことを呼び出し元に保証します。
+If a member function is declared with `const`, it won't be allowed
+to modify any of its members. This is enforced by the compiler.
+Making a member function `const` makes it callable on any `const`
+or `immutable` object, but also guarantees to callers that
+the member function will never change the state of the object.
 
-### Staticメンバ関数
+### Static member functions
 
-メンバ関数が`static`として宣言されている場合、たとえば`Person.myStatic()`
-のようにインスタンス化されたオブジェクト無しで呼び出せるようになりますが、
-非`static`メンバーにはアクセスできません。`static`メンバ関数は現在のインスタンスだけでなく、
-`struct`のすべてのインスタンスにアクセスすることができます。
-また、利用可能なインスタンスを持たない呼び出し元でメンバ関数が利用可能でなければならない時にも利用できます。
-例えば、シングルトン(ただ一つのインスタンスのみが許可される)は`static`を使用しています。
+If a member function is declared as `static`, it will be callable
+without an instantiated object (e.g. `Person.myStatic()`) but it
+isn't allowed to access any non-`static` members.  It can be used if a
+method doesn't need to access any of the object member fields but logically
+belongs to the same class. Also it can be used to provide some functionality
+without creating an explicit instance, for example, some Singleton
+design pattern implementations use `static`.
 
-### 継承
+### Inheritance
 
-`struct`は他の`struct`から継承できないことに注意してください。
-型のヒエラルキーはクラスを使ってのみ構築できます。後のセクションでお見せしましょう。
-しかし、`alias this`または`mixins`でポリモーフィックの継承を簡単に達成することができます。
+Note that a `struct` can't inherit from another `struct`.
+Hierachies of types can only be built using classes,
+which we will see in a future section.
+However, with `alias this` or `mixins` one can easily achieve
+polymorphic inheritance.
 
-### 掘り下げる
+### In-depth
 
 - [Structs in _Programming in D_](http://ddili.org/ders/d.en/struct.html)
 - [Struct specification](https://dlang.org/spec/struct.html)
 
-### エクササイズ
+### Exercise
 
-`struct Vector3`に以下の関数を実装し、サンプルアプリケーションを正常に実行させましょう:
+Given the `struct Vector3`, implement the following functions and make
+the example application run successfully:
 
-* `length()` - ベクトルの長さを返す
-* `dot(Vector3)` - ２つのベクトルのドット積を返す
-* `toString()` - ベクトルの文字列表現を返す
-  関数[`std.string.format`](https://dlang.org/phobos/std_format.html)
-  は`printf`風構文を使った文字列を返します:
-  `format("MyInt = %d", myInt)`文字列は後のセクションで詳しく説明します。
+* `length()` - returns the vector's length
+* `dot(Vector3)` - returns the dot product of two vectors
+* `toString()` - returns a string representation of this vector.
+  The function [`std.string.format`](https://dlang.org/phobos/std_format.html)
+  returns a string using `printf`-like syntax:
+  `format("MyInt = %d", myInt)`. Strings will be explained in detail in a later
+  section.
 
 ## {SourceCode:incomplete}
 
@@ -91,26 +100,15 @@ struct Vector3 {
     double z;
 
     double length() const {
-        import std.math: sqrt;
+        import std.math : sqrt;
+        // TODO: implement the length of Vector3
         return 0.0;
     }
 
-    // rhsはコピーされる
+    // rhs will be copied
     double dot(Vector3 rhs) const {
+        // TODO: implement the dot product
         return 0.0;
-    }
-
-    /**
-    返値: 特殊なフォーマットの文字列表現。
-    出力は1桁の精度に制限されます!
-    "x: 0.0 y: 0.0 z: 0.0"
-    */
-    string toString() const {
-        import std.string: format;
-        // ヒント: 浮動小数点数の出力に影響を与える
-        // 方法については、std.formatのドキュメントを
-        // 参照してください。
-        return format("");
     }
 }
 
@@ -121,31 +119,19 @@ void main() {
     vec2.y = 20;
     vec2.z = 0;
 
-    // メンバ関数に引数がないとき、
-    // 呼び出しカッコ()は省略できます
+    // If a member function has no parameters,
+    // the calling braces () may be omitted
     assert(vec1.length == 10);
     assert(vec2.length == 20);
 
-    // ドット積の機能をテストします
+    // Test the functionality for dot product
     assert(vec1.dot(vec2) == 0);
 
     // 1 * 1 + 2 * 1 + 3 * 1
     auto vec3 = Vector3(1, 2, 3);
-    assert(vec3.dot(Vector3(1, 1, 1) == 6);
+    assert(vec3.dot(Vector3(1, 1, 1)) == 6);
 
     // 1 * 3 + 2 * 2 + 3 * 1
-    assert(vec3.dot(Vector3(3, 2, 1) == 10);
-
-    // toString()のおかげでベクトルを
-    // writelnで出力できます
-    import std.stdio: writeln, writefln;
-    writeln("vec1 = ", vec1);
-    writefln("vec2 = %s", vec2);
-
-    // 文字列表現をチェックします
-    assert(vec1.toString() ==
-        "x: 10.0 y: 0.0 z: 0.0");
-    assert(vec2.toString() ==
-        "x: 0.0 y: 20.0 z: 0.0");
+    assert(vec3.dot(Vector3(3, 2, 1)) == 10);
 }
 ```
