@@ -1,32 +1,28 @@
-# Install D locally
+# D言語をローカルにインストール
 
-The D language reference compiler is called DMD (Digital Mars D).
-Also available are [LDC](https://github.com/ldc-developers/ldc)
-(a [LLVM](http://llvm.org)-based D compiler).
-and [GDC](https://gdcproject.org) (a [GCC](https://gcc.gnu.org/)-based D
-compiler).
-See [the Compilers wiki page](https://wiki.dlang.org/Compilers) for
-more detailed information, but if you're new to D and aren't sure
-which to install, install DMD.
+D言語のリファレンスコンパイラはDMD (Digital Mars D)と呼ばれています。
+[LDC](https://github.com/ldc-developers/ldc)
+([LLVM](http://llvm.org)ベースのDコンパイラ)も使えます。
+[GDC](https://gdcproject.org) ([GCC](https://gcc.gnu.org/)ベースのDコンパイラ)
+もあります。
+より詳細な情報が[WikiのCompilersページ](https://wiki.dlang.org/Compilers)にありますが、
+D言語初心者で何をインストールすればいいか迷っているならば、DMDをインストールしましょう。
 
-## Download and Install
+## ダウンロードとインストール
 
-The [D downloads page](https://dlang.org/download.html) provides an
-overview of the various D implementations, and contains links to
-pre-built OS-specific DMD packages ready to download and install.
+[D言語のダウンロードページ](https://dlang.org/download.html)
+は様々なD言語の実装の概要を提示しており、
+OS固有のビルド済みDMDパッケージがすぐにダウンロードし、インストールできます。
 
-As an alternative to the OS-specific packages, there's also an
-[install script](https://dlang.org/install.html)
-for use with any Posix-like System (Linux, FreeBSD, MacOS)
-that can install the various implementations (including multiple versions of them)
-locally without requiring any administration rights.
-See the [install script documentation](https://dlang.org/install.html) for details.
+もうひとつのOS固有のパッケージとして、Posix系システム(Linux、FreeBSD、MacOS)で動作する
+[インストールスクリプト](https://dlang.org/install.html)があり、
+これは管理者権限なしに様々な実装(それらの複数のバージョンを含む)をローカルにインストールできます。
 
-## Configure your editor
+## エディタを設定する
 
-The beauty about D is that you don't need a fancy IDE as boilerplate code is very rare.
-However, using D is nicer when you are in the comfortable zone of your favorite editor.
-There are D plugins for at least the following editors:
+D言語の美点は、定型的なコードが非常に少なく派手なIDEを使う必要がないというところです。
+しかしながら、あなたはお気に入りのエディタで気持ちよくD言語を使うと良いでしょう。
+少なくとも以下のエディタ用のD言語のプラグインがあります:
 
 - [Atom](https://github.com/Pure-D/atomize-d)
 - [Eclipse](http://ddt-ide.github.io)
@@ -35,11 +31,12 @@ There are D plugins for at least the following editors:
 - [Sublime Text](https://github.com/yazd/DKit)
 - [Vim](https://wiki.dlang.org/D_in_Vim)
 - [VS Code](https://marketplace.visualstudio.com/items/webfreak.code-d)
-- [__Visual Studio__](http://rainers.github.io/visuald/visuald/StartPage.html)
+- [Visual Studio](http://rainers.github.io/visuald/visuald/StartPage.html)
 
-You may also want to try an IDE dedicated to D:
+D言語専用のIDEを試してみることもできます:
 
 - [Coedit](https://github.com/BBasile/Coedit)
 - [Dlang IDE](https://github.com/buggins/dlangide)
 
-The D wiki contains a more detailed overview of available [editors](https://wiki.dlang.org/Editors) and [IDEs](https://wiki.dlang.org/IDEs).
+D Wikiでは利用可能な [エディタ](https://wiki.dlang.org/Editors) や [IDE](https://wiki.dlang.org/IDEs)について、更に詳しい概要を確認できます。
+
