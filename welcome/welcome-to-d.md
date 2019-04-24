@@ -1,52 +1,50 @@
-# Welcome to D
+# D言語を始めよう
 
-Welcome to the interactive tour of the *D Programming language*.
+**プログラミング言語D**のインタラクティブツアーにようこそ。
 
 {{#dmanmobile}}
 
-The tour gives an overview of this __powerful__ and __expressive__
-language which compiles directly to __efficient__, __native__ machine code.
+このツアーは直接**効率的**で**ネイティブ**なマシンコードにコンパイルされる、
+**パワフル**で**表現力の高い**D言語について概要を説明します。
 
 {{/dmanmobile}}
 
-### What is D?
+### Dって何?
 
-D is the culmination of _decades of experience implementing compilers_
-for many diverse languages and has a unique set of features:
+Dは、様々な言語のコンパイラを実装してきた**数十年の経験の集大成**であり、
+独特な機能セットを持ちます:
 
 {{#dmandesktop}}
 
-- _high level_ constructs for great modeling power
-- _high performance_, compiled language
-- static typing
-- direct interface to the operating system API's and hardware
-- blazingly fast compile-times
-- memory-safe subset (SafeD)
-- _maintainable_, _easy to understand_ code
-- gradual learning curve (C-like syntax, similar to Java and others)
-- compatible with C application binary interface
-- limited compatibility with C++ application binary interface
-- multi-paradigm (imperative, structured, object oriented, generic, functional programming purity, and even assembly)
-- built-in error detection (contracts, unittests)
+- 強力な表現を可能にする**高級な**構文
+- **ハイパフォーマンス**なコンパイル言語
+- 静的型付け
+- オペレーティングシステムAPIやハードウェアへの直接的なインターフェース
+- 驚くほど早いコンパイル
+- メモリセーフなサブセット (SafeD)
+- **保守性が高く**、**理解しやすい**コード
+- ゆるやかな学習曲線 (C風のシンタックス、Javaなどと似ている)
+- Cアプリケーションとのバイナリインターフェース互換性
+- C++アプリケーションとの制限付きバイナリインターフェース互換性
+- マルチパラダイム (手続き型、構造化、オブジェクト指向、ジェネリック、純粋関数型プログラミング、そしてアセンブリさえも)
+- ビルトインのエラー検知機能 (契約、ユニットテスト)
 
-... and many more [features](http://dlang.org/overview.html).
+... その他にもたくさんの[特徴](http://dlang.org/overview.html)があります。
 
 {{/dmandesktop}}
 
-### About the tour
+### このツアーについて
 
-Each section comes with a source code example that can be modified and used
-to experiment with D's language features.
-Click the run button (or `Ctrl-enter`) to compile and run it.
+各セクションにはDの特徴を試すために編集、実行できるサンプルコードが付属しています。
+runボタンをクリック (または `Ctrl-enter`) してコンパイル・実行してみましょう。
 
-To navigate this tour, either use the "`<` previous" and "next `>`" links at the
-bottom (or left and right arrow keys), or else go straight to particular sections
-using the menus at the top.
+このツアーは、下部の"`<` 前へ" と "次へ `>`" のリンク(または左右の矢印キー)を使うか、
+もしくは上部のメニューから特定のページに直接進むことで回ることができます。
 
-### Contributing
+### コントリビューティング
 
-This tour is [open source](https://github.com/dlang-tour)
-and we welcome pull requests making this tour even better.
+このツアーは [オープンソース](https://github.com/dlang-tour)
+で、われわれはこのツアーをより良くするプルリクエストを待っています。
 
 ## {SourceCode}
 
@@ -57,19 +55,18 @@ import std.range;
 
 void main()
 {
-    // Let's get going!
+    // さあ始めましょう!
     writeln("Hello World!");
 
-    // An example for experienced programmers:
-    // Take three arrays, and without allocating
-    // any new memory, sort across all the
-    // arrays inplace
+    // 経験豊富なプログラマ向けサンプル:
+    // 3つの配列を取り、新しいメモリ割り当てなしで、
+    // インプレースですべての配列をソート
     int[] arr1 = [4, 9, 7];
     int[] arr2 = [5, 2, 1, 10];
     int[] arr3 = [6, 8, 3];
     sort(chain(arr1, arr2, arr3));
     writefln("%s\n%s\n%s\n", arr1, arr2, arr3);
-    // To learn more about this example, see the
-    // "Range algorithms" page under "Gems"
+    // このサンプルについてさらに学びたいなら、
+    // "Gems"内の"Range algorithms"ページを見てください。
 }
 ```
