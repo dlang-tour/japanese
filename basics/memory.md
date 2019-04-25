@@ -1,51 +1,52 @@
 # Memory
 
-Dはシステムプログラミング言語であり、したがって手動での管理ができます。
-しかし手動でのメモリ管理はエラーを起こしやすい傾向があり、そのため
-Dはデフォルトで未使用メモリの解放に**ガベージコレクタ**を使用します。
+D is a system programming language and thus allows manual
+memory management. However, manual memory management is very error-prone
+and thus D uses a *garbage collector* by default to manage memory allocation.
 
-DはCのようなポインタ型 `T*`を提供します:
+D provides pointer types `T*` like in C:
 
     int a;
-    int* b = &a; // bにはaのアドレスが入る
-    auto c = &a; // cはint*でaのアドレスが入る
+    int* b = &a; // b contains address of a
+    auto c = &a; // c is int* and contains address of a
 
-ヒープ上の新しいメモリブロックは`new`式を使って割り当てます。
-これは管理されたメモリへのポインタを返します:
+A new memory block on the heap is allocated using the
+`new` expression, which returns a pointer to the managed
+memory:
 
     int* a = new int;
 
-`a`によって参照されるメモリがもはやプログラムのどこからも参照されなくなると、
-すぐにガベージコレクタはそれを解放します。
+As soon as the memory referenced by `a` isn't referenced anymore
+through any variable in the program, the garbage collector
+will free its memory.
 
-Dには関数のための3つのセキュリティレベルがあります: `@system`、 `@trusted`、そして `@safe`です。
-特に指定されない限り、デフォルトは`@system`です。
-`@safe`は設計によってメモリバグを防ぐDのサブセットです。
-`@safe`なコードは`@safe`または`@trusted`な関数のみ呼び出すことができます。
-また、`@safe`コード中での明示的なポインタ演算は禁止されています:
+D has three different security levels for functions: `@system`, `@trusted`, and `@safe`.
+Unless specified otherwise, the default is `@system`.
+`@safe` is a subset of D that prevents memory bugs by design.
+`@safe` code can only call other `@safe` or `@trusted` functions.
+Moreover, explicit pointer arithmetic is forbidden in `@safe` code:
 
     void main() @safe {
         int a = 5;
         int* p = &a;
-        int* c = p + 5; // エラー
+        int* c = p + 5; // error
     }
 
-`@trusted`関数は手動で検証された関数で、SafeDと
-根本的でダーティで低レベルな世界を橋渡しします。
+`@trusted` functions are manually verified functions that allow a bridge between SafeD and the underlying dirty low-level world.
 
-### 掘り下げる
+### In-depth
 
 * [SafeD](https://dlang.org/safed.html)
 
 ## {SourceCode}
 
 ```d
-import std.stdio;
+import std.stdio : writeln;
 
 void safeFun() @safe
 {
     writeln("Hello World");
-    // GCでメモリを割り当てるのはとても安全です。
+    // allocating memory with the GC is safe too
     int* p = new int;
 }
 
