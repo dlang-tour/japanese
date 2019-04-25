@@ -1,33 +1,51 @@
-# インポートとモジュール
+# Imports and modules
 
-Dでシンプルなhello worldプログラムを書くには`import`が必要です。
-`import`文は与えられた利用可能な**モジュール**から
-すべてのパブリックな関数と型を作ります。
+{{#img-right}}turtle.svg{{/img-right}}
 
-[Phobos](https://dlang.org/phobos/)と呼ばれる標準ライブラリが
-`std`**パッケージ**下にあり、
-それらのモジュールは`import std.モジュール名`で参照できます。
+One of D's core design decision was to be consistent and avoid corner cases
+in the language.
+This is called [_turtles all the way down_](https://en.wikipedia.org/wiki/Turtles_all_the_way_down).
+One good example for this consistency are `import`s.
 
-`import`文はモジュールの特定のシンボルを選択的に
-インポートすることもできます:
+## Imports
 
-    import std.stdio: writeln, writefln;
+For a simple hello world program in D, `import`s are needed.
+The `import` statement makes all public functions
+and types from the given **module** available.
 
-選択的インポートはシンボルがどこから来たものか分かりやすくして
-可読性を向上させたり、他のモジュールの同じ名前のシンボルとの
-衝突を防いだりするために使えます。
-`import`文はソースファイルの一番上に出てくる必要はありません。
-関数やその他のスコープ内で局所的に使用することもできます。
+### The turtles start falling down
 
-### インポートはディレクトリとファイルと一致します
+An `import` statement __does not__ need to appear at the top of a source file.
+It can also be used locally within functions or any other scope.
+In the following chapters you will see that this applies to almost all concepts in D. The language doesn't expose arbitrary restrictions on you.
 
-Dのモジュールシステムは、他のシステムとは対照的に、完全にファイルに基づいています。
-例えば、`my.cat`は常に`my/`フォルダの中にある`cat.d`というファイルを参照します。
-`my`フォルダはカレントディレクトリか明示的に指定されたディレクトリインポート(`-I`)のどれか１つに存在する必要があります。
-最後に、簡単に大きなモジュールを複数の小さなファイルに分割するために、`cat.d`の代わりに、`cat/`フォルダを同様に使うことができます。
-その場合Dコンパイラは`my/cat.d`の代わりに`my/cat/package.d`をロードしようとします。
+### Selective imports
 
-`package.d`ファイルの規約（厳密なルールではありませんが）として、同じフォルダにある他の全てのモジュールをimportします。
+The standard library, called [Phobos](https://dlang.org/phobos/),
+is located under the **package** `std`
+and its modules are referenced through `import std.MODULE`.
+
+The `import` statement can also be used to selectively
+import certain symbols of a module:
+
+    import std.stdio : writeln, writefln;
+
+Selective imports can be used to improve readability by making
+it obvious where a symbol comes from, and also as a way to
+prevent clashing of symbols with the same name from different modules.
+
+### Imports match directories and files
+
+D's module system — in contrast to other systems — is entirely based on files.
+For example, `my.cat` always refers to a file `cat.d` in the folder `my/`.
+The folder `my` needs to be in the current working directory or
+in one of the explicitly specified directory imports (`-I`).
+Lastly, to ease splitting big modules up into multiple smaller files,
+instead of `cat.d`, a folder `cat/` could be used as well.
+The D compiler would then try to load `my/cat/package.d` instead of `my/cat.d`.
+
+The convention (but not a hard rule) for `package.d` files is to publicly import
+all other modules in the same folder.
 
 ## {SourceCode}
 
@@ -35,7 +53,7 @@ Dのモジュールシステムは、他のシステムとは対照的に、完�
 void main()
 {
     import std.stdio;
-    // または import std.stdio: writeln;
+    // or import std.stdio : writeln;
     writeln("Hello World!");
 }
 ```
