@@ -1,66 +1,65 @@
-# Mutability
+# 可変性
 
-D is a statically typed language: once a variable has been declared,
-its type can't be changed from that point onwards. This allows
-the compiler to prevent bugs early and enforce restrictions
-at compile time. Good type-safety provides the support one needs
-to make large programs safer and more maintainable.
+Dは静的型付き言語です: 一度変数が宣言されたあと、
+それ以降その型は変更できません。これはコンパイラに早期にバグを防止させ、
+コンパイル時に制限を実施します。巨大なプログラムをより安全に、
+より保守性を高く作るときに必要なサポートを、優れた型安全性は提供します。
 
-There are several type qualifiers in D but the most commonly used ones are
-`const` and `immutable`.
+Dにはいくつか型修飾子がありますが、もっとも一般的に使用されるのは
+`const`と`immutable`です。
 
 ### `immutable`
 
-In addition to a static type system, D provides type qualifiers (sometimes also
-called "type constructors") that enforce additional constraints on certain
-objects. For example an `immutable` object can only be initialized once and
-after that isn't allowed to change.
+静的型付けシステムに加えて、Dは特定のオブジェクトに追加の制約を適用する
+型修飾子（時々型コンストラクタとも呼ばれる）を提供します。たとえば
+`immutable`なオブジェクトは一度だけ初期化でき、
+その後変更できません。
 
     immutable int err = 5;
     // or: immutable err = 5 and int is inferred.
     err = 5; // won't compile
 
-`immutable` objects can thus be safely shared among different threads with no
-synchronization because they never change by definition. This also implies that
-`immutable` objects can be cached perfectly.
+`immutable`なオブジェクトは定義上変更されないので、
+例えば異なるスレッド間で同期なしで安全に共有できます。これは、`immutable`
+なオブジェクトが完全にキャッシュされることも意味します。
 
 ### `const`
 
-`const` objects can't be modified, too. This restriction is just valid for the
-current scope. A `const` pointer can be created from either a *mutable* or
-`immutable` object. This means that the object is `const` for your current
-scope, but someone else might modify it from a different context. It is common
-for APIs to accept `const` arguments to ensure they don't modify the input as
-that allows the same function to process both mutable and immutable data.
+`const`なオブジェクトも変更ができません。この制限はカレントスコープでのみ有効です。
+`const`なポインタは**ミュータブル**または`immutable`なオブジェクトのどちらからでも作ることができます。
+これは、カレントスコープでオブジェクトが`const`でも、
+違うコンテキストで誰かが変更するかもしれない、ということを意味します。
+APIが同じ関数で変更可能と不可能両方の入力を受け入れ、それを変更しないことを保証するために
+`const`な引数を受け入れるのは一般的なことです。
 
     void foo(const char[] s)
     {
-        // if not commented out, next line will
-        // result in error (can't modify const):
+        // コメントアウトしないと、
+        // 次の行はエラーになります (constは変更できない):
         // s[0] = 'x';
 
         import std.stdio : writeln;
         writeln(s);
     }
 
-    // thanks to `const`, both calls will compile:
-    foo("abcd"); // string is an immutable array
-    foo("abcd".dup); // .dup returns a mutable copy
+    // `const`のおかげで、どちらの呼び出しもコンパイルされます:
+    foo("abcd"); // stringは変更不可能な配列
+    foo("abcd".dup); // .dupは変更可能なコピーを返す
 
-Both `immutable` and `const` are _transitive_ type qualifiers, which ensures that once
-`const` is applied to a type, it applies recursively to every sub-component of that type.
+`immutable`と`const`どちらも**推移的**な型修飾子です。つまり、一度`const`が型に適用されると、
+その型のすべてのサブコンポーネントにも再帰的にそれが適用されます。
 
-### In-depth
+### 掘り下げる
 
-#### Basic references
+#### ベーシック・リファレンス
 
 - [Immutable in _Programming in D_](http://ddili.org/ders/d.en/const_and_immutable.html)
 - [Scopes in _Programming in D_](http://ddili.org/ders/d.en/name_space.html)
 
-#### Advanced references
+#### アドバンスト・リファレンス
 
 - [const(FAQ)](https://dlang.org/const-faq.html)
-- [Type qualifiers in D](https://dlang.org/spec/const3.html)
+- [Type qualifiers D](https://dlang.org/spec/const3.html)
 
 ## {SourceCode}
 
@@ -70,39 +69,38 @@ import std.stdio : writeln;
 void main()
 {
     /**
-    * Variables are mutable by default and
-    * editing them is allowed:
+    * 変数はデフォルトで変更可能であり、
+    * 編集することができます:
     */
-    int m = 100; // mutable
+    int m = 100; // 変更可能
     writeln("m: ", typeof(m).stringof);
-    m = 10; // fine
+    m = 10; // 良い
 
     /**
-    * Pointing to mutable memory:
+    * 変更可能なメモリを指す:
     */
-    // A const pointer to mutable memory is
-    // allowed
+    // 変更可能なメモリへのconstポインタ
+    // は許可されます
     const int* cm = &m;
     writeln("cm: ", typeof(cm).stringof);
-    // By defintion `const` can't be modified:
-    // *cm = 100; // error!
+    // 定義上、constは変更できません:
+    // *cm = 100; // エラー!
 
-    // As `immutable` is guaranteed to stay
-    // unchanged, it can't point to
-    // mutable memory
-    // immutable int* im = &m; // error!
+    // immutableは変更不可であることが保証されているので、
+    // 変更可能なメモリを指すことはできません。
+    // immutable int* im = &m; // エラー!
 
     /**
-    * Pointing to readonly memory:
+    * リードオンリーなメモリを指す:
     */
     immutable v = 100;
     writeln("v: ", typeof(v).stringof);
-    // v = 5; // error!
+    // v = 5; // エラー!
 
-    // `const` may point to readonly memory,
-    // but it is readonly as well
+    // `const`はリードオンリーなメモリを指すことがあり、
+    // その`const`もまたリードオンリーです。
     const int* cv = &v;
-    writeln("cv: ", typeof(cv).stringof);
-    // *cv = 10; // error!
+    writeln("*cv: ", typeof(cv).stringof);
+    // *cv = 10; // エラー!
 }
 ```
