@@ -6,7 +6,7 @@
     alias string = immutable(char)[];
 
 `string`という語は`alias`文によって、`immutable(char)`のスライスとして定義されています。
-これは、いちど`string`が構築されるとその内容が再び変更されることはない、ということを意味します。
+これは、一度`string`が構築されるとその内容が再び変更されることはないということを意味します。
 そして実はこれが2つ目に紹介するものです: UTF-8 `string`へようこそ!
 
 その不変性により、`string`は異なるスレッド間で完璧に共有されます。
@@ -35,7 +35,7 @@ UTF-8 `string`のほかに、さらに2つの型があります:
 明示的な[`std.uni.byGrapheme`](https://dlang.org/library/std/uni/by_grapheme.html)の使用により、
 それらを[書記素](http://unicode.org/glossary/#grapheme)の列として扱うオプションもあります。
 
-この小さな例は解釈の違いを説明します。:
+以下の簡単な例で解釈の違いを説明します:
 
     string s = "\u0041\u0308"; // Ä
 
@@ -52,11 +52,11 @@ UTF-8 `string`のほかに、さらに2つの型があります:
 (ダイアクリティカルマーク結合文字)を定義し、
 [`walkLength`](https://dlang.org/library/std/range/primitives/walk_length.html)
 (任意のレンジの長さを計算する標準ライブラリ関数)は合計2つのコードポイントを数えます。
-最後に、`byGrapheme`はこれら2つのコードポイントが1つの表示された文字に組み合わさることを
+最後に、`byGrapheme`はこれら2つのコードポイントが1つの表示される文字に組み合わさることを
 認識するためにかなり高価な計算を実行します。
 
 ユニコードの正しい処理は非常に複雑になりえますが、大抵の場合、Dデベロッパーは単に`string`変数を
-魔法のバイト配列として考え、標準ライブラリのアルゴリズムに依存して自分に合った仕事ができます。
+魔法のバイト配列として考え、標準ライブラリのアルゴリズムに頼ることで適切に仕事をこなすことができます。
 要素(コードユニット)の列を望む人は、
 [`byCodeUnit`](http://dlang.org/phobos/std_utf.html#.byCodeUnit)が使えます。
 
@@ -83,7 +83,8 @@ Dにおける文字列は複数行に続くことができます:
     string raw  =  `raw "string"`; // raw "string"
     string raw2 = r"raw `string`"; // raw `string`
 
-
+D言語はさらに多くの文字列を表現する方法を提供しています。
+ぜひ[調べて](https://dlang.org/spec/lex.html#string_literals)みてください。
 
 ### 掘り下げる
 
