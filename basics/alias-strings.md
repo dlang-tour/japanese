@@ -1,45 +1,41 @@
-# Alias & Strings
+# エイリアスと文字列
 
-Now that we know what arrays are, have gotten in touch with `immutable`,
-and had a quick look at the basic types, it's time to introduce two
-new constructs in one line:
+今私達は配列が何かを知っていて、`immutable`に触れて、基本型も見てきているので、
+1行に2つの構造を導入してみましょう:
 
     alias string = immutable(char)[];
 
-The term `string` is defined by an `alias` statement which defines it
-as a slice of `immutable(char)`s. This means, once a `string` has been constructed
-its content will never change again. And actually this is the second
-introduction: welcome UTF-8 `string`!
+`string`という語は`alias`文によって、`immutable(char)`のスライスとして定義されています。
+これは、いちど`string`が構築されるとその内容が再び変更されることはない、ということを意味します。
+そして実はこれが2つ目に紹介するものです: UTF-8 `string`へようこそ!
 
-Due to their immutablility, `string`s can be shared perfectly among
-different threads. As `string` is a slice, parts can be taken out of it without
-allocating memory. The standard function
+その不変性により、`string`は異なるスレッド間で完璧に共有されます。
+`string`はスライスなので、メモリ割り当て無しで一部分を取り出すことができます。
+例として標準関数
 [`std.algorithm.splitter`](https://dlang.org/phobos/std_algorithm_iteration.html#.splitter)
-for example, splits a string by newline without any memory allocations.
+は、メモリ割り当て無しに文字列を改行で分割します。
 
-Besides the UTF-8 `string`, there are two more types:
+UTF-8 `string`のほかに、さらに2つの型があります:
 
     alias wstring = immutable(wchar)[]; // UTF-16
     alias dstring = immutable(dchar)[]; // UTF-32
 
-The variants are most easily converted between each other using
-the `to` method from `std.conv`:
+`std.conv`の`to`メソッドを使うことで各種型は非常に簡単に他のものに変換できます:
 
     dstring myDstring = to!dstring(myString);
     string myString   = to!string(myDstring);
 
-### Unicode strings
+### ユニコード文字列
 
-This means that a plain `string` is defined as an array of 8-bit Unicode [code
-units](http://unicode.org/glossary/#code_unit). All array operations can be
-used on strings, but they will work on a code unit level, and not a character level. At
-the same time, standard library algorithms will interpret `string`s as sequences
-of [code points](http://unicode.org/glossary/#code_point), and there is also an
-option to treat them as sequence of
-[graphemes](http://unicode.org/glossary/#grapheme) by explicit usage of
-[`std.uni.byGrapheme`](https://dlang.org/library/std/uni/by_grapheme.html).
+普通の`string`は8ビットユニコード[コードユニット](http://unicode.org/glossary/#code_unit)
+の配列として定義されています。
+文字列にはすべての配列操作が使えますが、それらは文字レベルでなくコードユニットレベルで働きます。
+同時に、標準ライブラリのアルゴリズムは文字列を
+[コードポイント](http://unicode.org/glossary/#code_point)の列として解釈します。
+明示的な[`std.uni.byGrapheme`](https://dlang.org/library/std/uni/by_grapheme.html)の使用により、
+それらを[書記素](http://unicode.org/glossary/#grapheme)の列として扱うオプションもあります。
 
-This small example illustrates the difference in interpretation:
+この小さな例は解釈の違いを説明します。:
 
     string s = "\u0041\u0308"; // Ä
 
@@ -51,27 +47,24 @@ This small example illustrates the difference in interpretation:
     import std.uni : byGrapheme;
     writeln(s.byGrapheme.walkLength); // 1
 
-Here the actual array length of `s` is 3, because it contains 3 code units:
-`0x41`, `0x03` and `0x08`. Those latter two define a single code point
-(combining diacritics character) and
+ここで`s`の実際の配列の長さは3で、これは3つのコードユニットを含むからです:
+`0x41`、`0x03` そして `0x08` です。これらの後ろの2つは単一のコードポイント
+(ダイアクリティカルマーク結合文字)を定義し、
 [`walkLength`](https://dlang.org/library/std/range/primitives/walk_length.html)
-(standard library function to calculate arbitrary range length) counts two code
-points total. Finally, `byGrapheme` performs rather expensive calculations
-to recognize that these two code points combine into a single displayed
-character.
+(任意のレンジの長さを計算する標準ライブラリ関数)は合計2つのコードポイントを数えます。
+最後に、`byGrapheme`はこれら2つのコードポイントが1つの表示された文字に組み合わさることを
+認識するためにかなり高価な計算を実行します。
 
-Correct processing of Unicode can be very complicated, but most of the time, D
-developers can simply consider `string` variables as magical byte arrays and
-rely on standard library algorithms to do the right job.
-If by element (code unit) iteration is desired, one can use
-[`byCodeUnit`](http://dlang.org/phobos/std_utf.html#.byCodeUnit).
+ユニコードの正しい処理は非常に複雑になりえますが、大抵の場合、Dデベロッパーは単に`string`変数を
+魔法のバイト配列として考え、標準ライブラリのアルゴリズムに依存して自分に合った仕事ができます。
+要素(コードユニット)の列を望む人は、
+[`byCodeUnit`](http://dlang.org/phobos/std_utf.html#.byCodeUnit)が使えます。
 
-Auto-decoding in D is explained in more details
-in the [Unicode gems chapter](gems/unicode).
+Dにおけるオートデコーディングは[Unicode gemsチャプター](gems/unicode)で詳細に説明されます。
 
-### Multi-line strings
+### 複数行文字列
 
-Strings in D can always span over multiple lines:
+Dにおける文字列は複数行に続くことができます:
 
     string multiline = "
     This
@@ -79,22 +72,20 @@ Strings in D can always span over multiple lines:
     long document
     ";
 
-When quotes appear in the document, Wysiwyg strings (see below) or
-[heredoc strings](http://dlang.org/spec/lex.html#delimited_strings) can be used.
+ドキュメント中に引用符がある場合は、Wysiwyg文字列(下記参照)か
+[ヒアドキュメント文字列](http://dlang.org/spec/lex.html#delimited_strings)が利用できます。
 
-### Wysiwyg strings
+### Wysiwyg文字列
 
-It is also possible to use raw strings to minimize laborious escaping
-of reserved symbols. Raw strings can be declared using either backticks (`` `
-... ` ``) or the r(aw)-prefix (`r" ... "`).
+予約されたシンボルの面倒なエスケープを最小限に抑えるために生文字列を使うことができます。
+生文字列はバックティック(`` `... ` ``)かr(aw)プレフィックス(`r" ... "`)を使い宣言することができます。
 
     string raw  =  `raw "string"`; // raw "string"
     string raw2 = r"raw `string`"; // raw `string`
 
-D provides even more ways to represent strings - don't hesitate
-to [explore](https://dlang.org/spec/lex.html#string_literals) them.
 
-### In-depth
+
+### 掘り下げる
 
 - [Unicode gem](gems/unicode)
 - [Characters in _Programming in D_](http://ddili.org/ders/d.en/characters.html)
@@ -112,9 +103,9 @@ import std.uni : byGrapheme;
 import std.string : format;
 
 void main() {
-    // format generates a string using a printf
-    // like syntax. D allows native UTF string
-    // handling!
+    // formatはprintf風の構文を使って文字列を
+    // 生成できます。DはネイティブUTF文字列操作が
+    // できます!
     string str = format("%s %s", "Hellö",
         "Wörld");
     writeln("My string: ", str);
@@ -126,9 +117,8 @@ void main() {
         ~ " of string: ",
         str.byGrapheme.walkLength);
 
-    // Strings are just normal arrays, so any
-    // operation that works on arrays works here
-    // too!
+    // 文字列はただの配列なので、
+    // 配列で可能な操作はここでも可能です!
     import std.array : replace;
     writeln(replace(str, "lö", "lo"));
     import std.algorithm : endsWith;
