@@ -1,53 +1,53 @@
-# Slices
+# スライス
 
-Slices are objects from type `T[]` for any given type `T`.
-Slices provide a view on a subset of an array
-of `T` values - or just point to the whole array.
-**Slices and dynamic arrays are the same.**
+スライスは任意の型`T`に対する型`T[]`のオブジェクトです。
+スライスは`T`の配列の部分集合のビューを提供するか、
+単に配列全体を指します。
+**スライスと動的配列は同じものです。**
 
-A slice consists of two members - a pointer to the starting element and the
-length of the slice:
+スライスは２つのメンバから構成されています。 - 
+最初の要素へのポインタとスライスの長さです:
 
     T* ptr;
-    size_t length; // unsigned 32 bit on 32bit, unsigned 64 bit on 64bit
+    size_t length; // 32bit環境なら符号なし32ビット、64bit環境なら符号なし64ビット
 
-### Getting a slice via new allocation
+### 新しい割り当てによりスライスを得る
 
-If a new dynamic array is created, a slice to this freshly
-allocated memory is returned:
+新しい動的配列が作成されるとき、新しく割り当てられたメモリからのスライスが返されます:
 
     auto arr = new int[5];
-    assert(arr.length == 5); // memory referenced in arr.ptr
+    assert(arr.length == 5); // メモリはarr.ptrから参照される
 
-Actual allocated memory in this case is completely managed by the garbage
-collector. The returned slice acts as a "view" on underlying elements.
+この場合割り当てられたメモリは完璧にガベージコレクタによって管理されます。
+返されるスライスは根底にある要素の「ビュー」として振る舞います。
 
-### Getting a slice to existing memory
+### 既存のメモリからスライスを得る
 
-Using a slicing operator one can also get a slice pointing to some already
-existing memory. The slicing operator can be applied to another slice, static
-arrays, structs/classes implementing `opSlice` and a few other entities.
+スライシング演算子を使いすでに存在するメモリと同じ所を指すスライスを得ることもできます。
+スライシング演算子は別のスライス、静的配列、`opSlice`が実装されている構造体/クラスや
+その他いくつかのエンティティに適用できます。
 
-In an example expression `origin[start .. end]` the slicing operator is used to get
-a slice of all elements of `origin` from `start` to the element _before_ `end`:
+例として式`origin[start .. end]`の中のスライシング演算子は`origin`の
+`start`から`end`の**前**までのすべての要素のスライスを得るのに使われます:
 
-    auto newArr = arr[1 .. 4]; // index 4 is NOT included
+    auto newArr = arr[1 .. 4]; // インデックス4は含まれません
     assert(newArr.length == 3);
-    newArr[0] = 10; // changes newArr[0] aka arr[1]
+    newArr[0] = 10; // arr[1]の別名であるnewArr[0]を変更
 
-Such slices generate a new view on existing memory. They *don't* create
-a new copy. If no slice holds a reference to that memory anymore - or a *sliced*
-part of it - it will be freed by the garbage collector.
+そのようなスライスは既存のメモリの新しいビューを生成します。
+それは新しいコピーを作り**ません**。
+メモリ、またはその**スライス**された部分への参照を持つスライスがもはや存在しないなら、
+それはガベージコレクタによって開放されます。
 
-Using slices, it's possible to write very efficient code for things (like parsers, for example)
-that only operate on one memory block, and slice only the parts they really need
-to work on. In this way, there's no need to allocate new memory blocks.
+スライスを使うと、（たとえばパーサのような）1つのメモリブロックのみを操作し、
+本当に必要な場所のみをスライスするようなものにおいて非常に効率的なコードを書くことができます。
+この方法なら、新しいメモリブロックを割り当てる必要はありません。
 
-As seen in the [previous section](basics/arrays), the `[$]` expression is a shorthand form for
-`arr.length`. Hence `arr[$]` indexes the element one past the slice's end, and
-thus would generate a `RangeError` (if bounds-checking hasn't been disabled).
+[前のセクション](basics/arrays)で見たように、`[$]`式は`arr.length`の短縮形です。
+そのため`arr[$]`はスライスの最後のひとつ先の要素をインデックスし、
+したがって（境界チェックが無効化されていなければ）`RangeError`を生成します。
 
-### In-depth
+### 掘り下げる
 
 - [Introduction to Slices in D](http://dlang.org/d-array-article.html)
 - [Slices in _Programming in D_](http://ddili.org/ders/d.en/slices.html)
@@ -69,12 +69,12 @@ void main()
     writeln("Slices are views on the memory:");
     auto test2 = test;
     auto subView = test[3 .. $];
-    test[] += 1; // increment each element by 1
+    test[] += 1; // 各要素を1加算
     test.writeln;
     test2.writeln;
     subView.writeln;
 
-    // Create an empty slice
+    // 空のスライスを作る
     assert(test[2 .. 2].length == 0);
 }
 ```
