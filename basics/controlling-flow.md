@@ -1,6 +1,7 @@
-# 制御構造
+# Control flow
 
-アプリケーションにおける処理フローは `if` .. `else` 文によって条件づけて制御できます:
+An application's flow can be controlled conditionally with `if` and `else`
+statements:
 
     if (a == 5) {
         writeln("Condition is met");
@@ -10,30 +11,35 @@
         writeln("Nothing is met!");
     }
 
-`if` や `else` に続くブロックが単一の文のみからなるなら、カッコは省略できます。
+When an `if` or `else` block only contains one statement,
+the braces can be omitted.
 
-変数などの等価性をテストしたり比較したりする演算子として、D言語は C/C++ や Java と同じものを提供しています:
+D provides the same operators as C/C++ and Java to test
+variables for equality or compare them:
 
-* `==` および `!=`: 等価性および非等価性のテスト
-* `<`, `<=`, `>` および `>=`: 大小関係 (等しいことを含む) のテスト
+* `==` and `!=` for testing equality and inequality
+* `<`, `<=`, `>` and `>=` for testing less than (or equal to) and greater than (or equal to)
 
-複数の条件を組み合わせるには、論理 **和** `||` および論理 **積** `&&` を用います。
+For combining multiple conditions, the `||` operator represents
+the logical *OR*, and `&&` the logical *AND*.
 
-D言語には **1つの** 変数の値に基づいて1つのケースを実行する `switch`..`case` 文もあります。
-`switch` は **文字列も含む** すべての基本型に使うことができます。
-また、`case START: .. case END:` という構文を用いて整数の範囲に基づくケースを定義することもできます。
-ぜひサンプルコードを見てください。
+D also defines a `switch`..`case` statement which executes one case
+depending on the value of *one* variable. `switch`
+works with all basic types as well as strings!
+It's even possible to define ranges for integral types
+using the `case START: .. case END:` syntax. Make sure to
+take a look at the source code example.
 
-### 掘り下げる
+### In-depth
 
-#### ベーシック・リファレンス
+#### Basic references
 
 - [Logical expressions in _Programming in D_](http://ddili.org/ders/d.en/logical_expressions.html)
 - [If statement in _Programming in D_](http://ddili.org/ders/d.en/if.html)
 - [Ternary expressions in _Programming in D_](http://ddili.org/ders/d.en/ternary.html)
 - [`switch` and `case` in _Programming in D_](http://ddili.org/ders/d.en/switch_case.html)
 
-#### アドバンスト・リファレンス
+#### Advanced references
 
 - [Expressions in detail](https://dlang.org/spec/expression.html)
 - [If Statement specification](https://dlang.org/spec/statement.html#if-statement)
@@ -41,7 +47,7 @@ D言語には **1つの** 変数の値に基づいて1つのケースを実行�
 ## {SourceCode}
 
 ```d
-import std.stdio;
+import std.stdio : writeln;
 
 void main()
 {
@@ -52,11 +58,11 @@ void main()
     switch(c) {
         case 0: .. case 9:
             writeln(c, " is within 0-9");
-            break; // 必要です!
+            break; // necessary!
         case 10:
             writeln("A Ten!");
             break;
-        default: // どのケースにも当てはまらなかった場合
+        default: // if nothing else matches
             writeln("Nothing");
             break;
     }
