@@ -1,51 +1,53 @@
-# スライス
+# Slices
 
-スライスは任意の型`T`に対する型`T[]`のオブジェクトです。
-スライスは`T`値の配列の部分集合のビューを提供するか、
-単に配列全体を指します。
-**スライスと動的配列は同じものです。**
+Slices are objects from type `T[]` for any given type `T`.
+Slices provide a view on a subset of an array
+of `T` values - or just point to the whole array.
+**Slices and dynamic arrays are the same.**
 
-スライスは２つのメンバから構成されています。 - 
-最初の要素へのポインタとスライスの長さです:
+A slice consists of two members - a pointer to the starting element and the
+length of the slice:
 
     T* ptr;
-    size_t length; // 32bit環境なら符号なし32ビット、64bit環境なら符号なし64ビット
+    size_t length; // unsigned 32 bit on 32bit, unsigned 64 bit on 64bit
 
-### 新しい割り当てによりスライスを得る
+### Getting a slice via new allocation
 
-新しい動的配列が作成されるとき、新しく割り当てられたメモリからのスライスが返されます:
+If a new dynamic array is created, a slice to this freshly
+allocated memory is returned:
 
     auto arr = new int[5];
-    assert(arr.length == 5); // メモリはarr.ptrから参照される
+    assert(arr.length == 5); // memory referenced in arr.ptr
 
-この場合実際に割り当てられたメモリは完璧にガベージコレクタによって管理され、
-返されるスライスは根底にある要素の「ビュー」として振る舞います。
+Actual allocated memory in this case is completely managed by the garbage
+collector. The returned slice acts as a "view" on underlying elements.
 
-### 既存のメモリからスライスを得る
+### Getting a slice to existing memory
 
-スライシング演算子を使いすでに存在するメモリと同じ所を指すスライスを得ることもできます。
-スライシング演算子は別のスライス、静的配列、`opSlice`が実装されている構造体とクラスや
-その他いくつかのエンティティに適用できます。
+Using a slicing operator one can also get a slice pointing to some already
+existing memory. The slicing operator can be applied to another slice, static
+arrays, structs/classes implementing `opSlice` and a few other entities.
 
-式の例`origin[start .. end]`の中のスライシング演算子は`origin`の
-`start`から`end`の**前**までのすべての要素のスライスを得るのに使われます:
+In an example expression `origin[start .. end]` the slicing operator is used to get
+a slice of all elements of `origin` from `start` to the element _before_ `end`:
 
-    auto newArr = arr[1 .. 4]; // インデックス4は含まれません
+    auto newArr = arr[1 .. 4]; // index 4 is NOT included
     assert(newArr.length == 3);
-    newArr[0] = 10; // arr[1]の別名であるnewArr[0]を変更
+    newArr[0] = 10; // changes newArr[0] aka arr[1]
 
-そのようなスライスは既存のメモリの新しいビューを生成します。それは新しいコピーを作り**ません。**
-メモリ、またはそのスライスされた部分への参照を持つスライスがない場合、それはガベージコレクタによって開放されます。
+Such slices generate a new view on existing memory. They *don't* create
+a new copy. If no slice holds a reference to that memory anymore - or a *sliced*
+part of it - it will be freed by the garbage collector.
 
-スライスを使うと、（たとえばパーサのような）1つのメモリブロックのみを操作し、
-本当に必要な場所のみをスライスするようなものにおいて非常に効率的なコードを書くことができます。
-この方法なら、新しいメモリブロックを割り当てる必要はありません。
+Using slices, it's possible to write very efficient code for things (like parsers, for example)
+that only operate on one memory block, and slice only the parts they really need
+to work on. In this way, there's no need to allocate new memory blocks.
 
-前のセクションで見たように、`[$]`式は`arr.length`の短縮形です。
-そのため`arr[$]`はスライスの最後のひとつ先の要素をインデックスし、
-したがって`RangeError`を生成します（境界チェックが無効化されていなければ）。
+As seen in the [previous section](basics/arrays), the `[$]` expression is a shorthand form for
+`arr.length`. Hence `arr[$]` indexes the element one past the slice's end, and
+thus would generate a `RangeError` (if bounds-checking hasn't been disabled).
 
-### 掘り下げる
+### In-depth
 
 - [Introduction to Slices in D](http://dlang.org/d-array-article.html)
 - [Slices in _Programming in D_](http://ddili.org/ders/d.en/slices.html)
@@ -53,29 +55,26 @@
 ## {SourceCode}
 
 ```d
-import std.stdio;
-
-/**
-スライス内のすべての値の最小値を再帰的に計算します。
-すべての再帰呼出しに対してサブスライスが呼び出され、
-したがって新しいコピーを作らず、割り当てを行いません。
-*/
-int minimum(int[] slice)
-{
-    assert(slice.length > 0);
-    if (slice.length == 1)
-        return slice[0];
-    auto otherMin = minimum(slice[1 .. $]);
-    return slice[0] < otherMin ?
-        slice[0] : otherMin;
-}
+import std.stdio : writeln;
 
 void main()
 {
     int[] test = [ 3, 9, 11, 7, 2, 76, 90, 6 ];
-    auto min = minimum(test);
-    writefln("The minimum of %s is %d",
-        test, min);
-    assert(min == 2);
+    test.writeln;
+    writeln("First element: ", test[0]);
+    writeln("Last element: ", test[$ - 1]);
+    writeln("Exclude the first two elements: ",
+        test[2 .. $]);
+
+    writeln("Slices are views on the memory:");
+    auto test2 = test;
+    auto subView = test[3 .. $];
+    test[] += 1; // increment each element by 1
+    test.writeln;
+    test2.writeln;
+    subView.writeln;
+
+    // Create an empty slice
+    assert(test[2 .. 2].length == 0);
 }
 ```
