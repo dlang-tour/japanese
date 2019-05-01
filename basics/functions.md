@@ -1,32 +1,35 @@
-# 関数
+# Functions
 
-ひとつの関数はすでに導入されています: `main()` - すべてのDプログラムの開始地点です。
-関数は任意の個数の引数を受け取り、値を返します - または、`void`と宣言されると何も返しません:
+One function has already been introduced: `main()` - the starting point of every
+D program. A function may return a value (or be declared with
+`void` if nothing is returned) and accept an arbitrary number of arguments:
 
     int add(int lhs, int rhs) {
         return lhs + rhs;
     }
 
-### `auto` 返値型
+### `auto` return types
 
-返値型が`auto`と定義されている場合、D コンパイラは自動的に返値型を推論します。
-したがって複数の`return`式は互換性のある型の値を返す必要があります。
+If the return type is defined as `auto`, the D compiler infers the return
+type automatically. Hence multiple `return` statements must return values with
+compatible types.
 
-    auto add(int lhs, int rhs) { // `int`を返す
+    auto add(int lhs, int rhs) { // returns `int`
         return lhs + rhs;
     }
 
-    auto lessOrEqual(int lhs, int rhs) { // `double`を返す
+    auto lessOrEqual(int lhs, int rhs) { // returns `double`
         if (lhs <= rhs)
             return 0;
         else
             return 1.0;
     }
 
-### デフォルト引数
+### Default arguments
 
-関数は必要に応じてデフォルト引数を定義することができます。
-これは冗長なオーバーロードの定義という退屈な仕事を回避します。
+Functions may optionally define default arguments.
+This avoids the tedious work of declaring redundant
+overloads.
 
     void plot(string msg, string color = "red") {
         ...
@@ -34,24 +37,27 @@
     plot("D rocks");
     plot("D rocks", "blue");
 
-デフォルト引数が指定された後はその次からのすべての引数もデフォルト引数でなければなりません。
+Once a default argument has been specified, all following arguments
+must be default arguments too.
 
-### ローカル関数
+### Local functions
 
-関数はそれが局所的に使え、外の世界に見えないようにできる、他の関数の中で宣言されることもあります。
-これらの関数は親のスコープのローカルオブジェクトにアクセスすることもできます:
+Functions may even be declared inside other functions, where they may be
+used locally and aren't visible to the outside world.
+These functions can even have access to objects that are local to
+the parent's scope:
 
     void fun() {
         int local = 10;
         int fun_secret() {
-            local++; // 正しい
+            local++; // that's legal
         }
         ...
 
-このようなネストした関数はデリゲートと呼ばれ、
-[すぐに](basics/delegates)より深く説明されます。
+Such nested functions are called delegates, and they will be explained in more depth
+[soon](basics/delegates).
 
-### 掘り下げる
+### In-depth
 
 - [Functions in _Programming in D_](http://ddili.org/ders/d.en/functions.html)
 - [Function parameters in _Programming in D_](http://ddili.org/ders/d.en/function_parameters.html)
@@ -60,13 +66,13 @@
 ## {SourceCode}
 
 ```d
-import std.stdio;
-import std.random;
+import std.stdio : writeln;
+import std.random : uniform;
 
 void randomCalculator()
 {
-    // 4つの異なる数学的操作のため
-    // 4つのローカル関数を定義します。
+    // Define 4 local functions for
+    // 4 different mathematical operations
     auto add(int lhs, int rhs) {
         return lhs + rhs;
     }
@@ -83,9 +89,10 @@ void randomCalculator()
     int a = 10;
     int b = 5;
 
-    // uniformはSTARTからENDまでの数字を生成します。
-    // ただしENDは含まれません。
-    // その結果に応じて数学的操作のいずれかを呼び出します。
+    // uniform generates a number between START
+    // and END, whereas END is NOT inclusive.
+    // Depending on the result we call one of
+    // the math operations.
     switch (uniform(0, 4)) {
         case 0:
             writeln(add(a, b));
@@ -100,7 +107,8 @@ void randomCalculator()
             writeln(div(a, b));
             break;
         default:
-            // 到達不能コードを表す特殊なコード
+            // special code which marks
+            // UNREACHABLE code
             assert(0);
     }
 }
@@ -108,8 +116,8 @@ void randomCalculator()
 void main()
 {
     randomCalculator();
-    // add()、 sub()、 mul() そして div()は
-    // そのスコープの外からは見えません。
+    // add(), sub(), mul() and div()
+    // are NOT visible outside of their scope
     static assert(!__traits(compiles,
                             add(1, 2)));
 }
