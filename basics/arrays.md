@@ -1,101 +1,124 @@
-# 配列
+# Arrays
 
-Dには**static**と**dynamic**の二種類の配列があります。
-配列へのあらゆるアクセスは境界チェックされています
-(コンパイラが境界チェックが不要だと証明できる場合を除く）。
-境界チェックに失敗すると、アプリケーションを終了させる`RangeError`を発生させます。
-勇敢な人は、安全性を犠牲にして速度を向上させるため、
-このセーフティ機能を`-boundschecks=off`コンパイラフラグで無効化できます。
+There are two types of Arrays in D: **static** and **dynamic**.
+Access to arrays of any kind is bounds-checked (except when the compiler can prove
+that bounds checks aren't necessary).
+A failed bounds check yields a `RangeError` which aborts the application.
+The brave can disable this safety feature with the
+compiler flag `-boundscheck=off`
+in order to gain speed improvements at the cost of safety.
 
-#### 静的配列
+#### Static arrays
 
-静的配列は関数の中で定義された場合スタックに、そうでなければ静的メモリに保持されます。
-その長さは一定で、コンパイル時に判明しています。静的配列の型は一定のサイズを含みます:
+Static arrays are stored on the stack if defined inside a function,
+or in static memory otherwise. They have a fixed,
+compile-time known length. A static array's type includes
+the fixed size:
 
     int[8] arr;
 
-`arr`の型は`int[8]`です。配列のサイズは型の次に表記され、
-C/C++のように変数名の後には来ないことに注意してください。
+`arr`'s type is `int[8]`. Note that the size of the array is denoted
+next to the type, and not after the variable name like in C/C++.
 
-#### 動的配列
+#### Dynamic arrays
 
-動的配列はヒープに保持され、実行時に伸び縮みできます。
-動的配列は`new`式と長さを使い作成します:
+Dynamic arrays are stored on the heap and can be expanded
+or shrunk at runtime. A dynamic array is created using a `new` expression
+and its length:
 
-    int size = 8; // 実行時変数
+    int size = 8; // run-time variable
     int[] arr = new int[size];
 
-`arr`の型は`int[]`で、これは**スライス**です。スライスは次のセクションでより詳細に説明されます。
-多次元配列は`auto arr = new int[3][3]`構文で簡単に作成できます。
+The type of `arr` is `int[]`, which is also called a **slice**. Slices
+are views on a contiguous block of memory and will be explained
+in more detail in the [next section](basics/slices).
+Multi-dimensional arrays can be created easily
+using the `auto arr = new int[3][3]` syntax.
 
-#### 配列操作とプロパティ
+#### Array operations and properties
 
-配列は`~`演算子で結合でき、このとき新しい動的配列が作られます。
+Arrays can be concatenated using the `~` operator, which
+will create a new dynamic array.
 
-数学的演算はたとえば`c[] = a[] + b[]`のような構文を使って配列全体に適用できます。
-これは`a`と`b`のすべての要素を`c[0] = a[0] + b[0]`、 `c[1] = a[1] + b[1]`
-などというように足し合わせます。配列全体と単一の値でも操作を行えます:
+Mathematical operations can
+be applied to whole arrays using a syntax like `c[] = a[] + b[]`, for example.
+This adds all elements of `a` and `b` so that
+`c[0] = a[0] + b[0]`, `c[1] = a[1] + b[1]`, etc. It is also possible
+to perform operations on a whole array with a single
+value:
 
-    a[] *= 2; // すべての要素に2をかける
-    a[] %= 26; // aの全部でモジュロ26を計算する
+    a[] *= 2; // multiply all elements by 2
+    a[] %= 26; // calculate the modulo by 26 for all a's
 
-これらの操作はそれを一度に行える特殊なプロセッサ命令を使うよう
-コンパイラが最適化するかもしれません。
+These operations might be optimized
+by the compiler to use special processor instructions that
+do the operations in one go.
 
-動的、静的両方の配列に`.length`プロパティがあり、これは静的配列では読み込み専用ですが、
-動的配列の場合そのサイズを動的に変更するのに使えます。`.dup`プロパティは配列のコピーを作ります。
+Both static and dynamic arrays provide the property `.length`,
+which is read-only for static arrays, but can be used in the case of
+dynamic arrays to change its size dynamically. The
+property `.dup` creates a copy of the array.
 
-`arr[idx]`構文で配列をインデクシングするとき、特殊な`$`記号は配列の長さを表します。
-例えば、`arr[$ - 1]`は最後の要素を参照し、`arr[arr.length - 1]`を短縮したものです。
+When indexing an array through the `arr[idx]` syntax, a special
+`$` symbol denotes an array's length. For example, `arr[$ - 1]` references
+the last element and is a short form for `arr[arr.length - 1]`.
 
-### エクササイズ
+### Exercise
 
-`encrypt`関数を完成させてシークレットメッセージを解読しましょう。
-テキストは**シーザー暗号**を使って暗号化されなければなりません。
-これは特定のインデックスを用いてアルファベットの文字をシフトするものです。
-暗号化される（to-be-encrypted）テキストには`a-z`
-の範囲の文字しか含まれていないため、作業が楽なはずです。
+Complete the function `encrypt` to encrypt the secret message.
+The text should be encrypted using *Caesar encryption*,
+which shifts the characters in the alphabet using a certain index.
+The to-be-encrypted text only contains characters in the range `a-z`,
+which should make things easier.
 
-### 掘り下げる
+You can browse the solution [here](https://github.com/dlang-tour/core/issues/227).
+
+### In-depth
 
 - [Arrays in _Programming in D_](http://ddili.org/ders/d.en/arrays.html)
+- [D Slices](https://dlang.org/d-array-article.html)
 - [Array specification](https://dlang.org/spec/arrays.html)
 
 ## {SourceCode:incomplete}
 
 ```d
-import std.stdio;
+import std.stdio : writeln;
 
 /**
-`input`内の各文字を`shift`文字シフトします。
-文字の範囲は`a-z`に制限されており、zの次の文字はaです。
+Shifts every character in the
+array `input` for `shift` characters.
+The character range is limited to `a-z`
+and the next character after z is a.
 
 Params:
-    input = シフトする配列
-    shift = 各文字をシフトする量
+    input = array to shift
+    shift = shift length for each char
 Returns:
-    シフトされた文字列の配列
+    Shifted char array
 */
 char[] encrypt(char[] input, char shift)
 {
     auto result = input.dup;
-    // ...
+    // TODO: shift each character
     return result;
 }
 
 void main()
 {
-    // シーザー暗号でメッセージを暗号化し、
-    // 係数16でシフトします!
+    // We will now encrypt the message with
+    // Caesar encryption and a
+    // shift factor of 16!
     char[] toBeEncrypted = [ 'w','e','l','c',
       'o','m','e','t','o','d',
-      // 最後の,はあってもよく、無視されます!
+      // The last , is okay and will just
+      // be ignored!
     ];
     writeln("Before: ", toBeEncrypted);
     auto encrypted = encrypt(toBeEncrypted, 16);
     writeln("After: ", encrypted);
 
-    // アルゴリズムが期待通りに動くか確認します
+    // Make sure the algorithm works
+    // as expected
     assert(encrypted == [ 'm','u','b','s','e',
             'c','u','j','e','t' ]);
 }
