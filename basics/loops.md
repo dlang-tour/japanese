@@ -1,11 +1,10 @@
-# Loops
+# ループ
 
-D provides four loop constructs.
+Dは4つのループ構造を提供します。
 
 ### 1) `while`
 
-`while`  loops execute the given code block
-while a certain condition is met:
+`while`ループは与えられたコードを一定の条件が満たされている間実行します:
 
     while (condition)
     {
@@ -14,20 +13,19 @@ while a certain condition is met:
 
 ### 2) `do ... while`
 
-The `do .. while` loops execute the given code block
-while a certain condition is met, but in contrast to `while`
-the _loop block_ is executed before the loop condition is
-evaluated for the first time.
+`do .. while`ループは与えられたコードを一定の条件が満たされている間
+実行しますが、`while`とは対象的に**ループブロック**はループ条件が
+最初に評価される前に実行されます。
 
     do
     {
         foo();
     } while (condition);
 
-### 3) Classical `for` loop
+### 3) 古典的`for`ループ
 
-The classical `for` loop known from C/C++ or Java
-with _initializer_, _loop condition_ and _loop statement_:
+**初期化子**、**ループ条件**、そして**ループ文**からなる
+C/C++またはJavaから知られる古典的な`for`ループです:
 
     for (int i = 0; i < arr.length; i++)
     {
@@ -35,18 +33,17 @@ with _initializer_, _loop condition_ and _loop statement_:
 
 ### 4) `foreach`
 
-The [`foreach` loop](basics/foreach) which will be introduced in more detail
-in the next section:
+次のセクションでより詳細に紹介される[`foreach` ループ](basics/foreach)です:
 
     foreach (el; arr)
     {
         ...
     }
 
-#### Special keywords and labels
+#### 特殊なキーワードとラベル
 
-The special keyword `break` will immediately abort the current loop.
-In a nested loop a _label_ can be used to break out of any outer loop:
+特殊なキーワード`break`は現在のループを直ちに中止します。
+ネストしたループ内で**ラベル**は任意の外側のループをやめさせるのに使われます:
 
     outer: for (int i = 0; i < 10; ++i)
     {
@@ -55,9 +52,9 @@ In a nested loop a _label_ can be used to break out of any outer loop:
             ...
             break outer;
 
-The keyword `continue` starts with the next loop iteration.
+キーワード`continue`は次のループの反復処理を始めます。
 
-### In-depth
+### 掘り下げる
 
 - `for` loop in [_Programming in D_](http://ddili.org/ders/d.en/for.html), [specification](https://dlang.org/spec/statement.html#ForStatement)
 - `while` loop in [_Programming in D_](http://ddili.org/ders/d.en/while.html), [specification](https://dlang.org/spec/statement.html#WhileStatement)
@@ -69,8 +66,7 @@ The keyword `continue` starts with the next loop iteration.
 import std.stdio : writeln;
 
 /*
-Computes the average of
-the elements of an array.
+配列の要素の平均値を計算します。
 */
 double average(int[] array)
 {
@@ -78,8 +74,8 @@ double average(int[] array)
     double accumulator = 0.0;
     while (array.length)
     {
-        // this could be also done with .front
-        // with import std.array : front;
+        // これは import std.array : front;
+        // として .front とすることもできました
         accumulator += array[0];
         array = array[1 .. $];
     }
