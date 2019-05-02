@@ -1,54 +1,63 @@
-# ループ
+# Loops
 
-Dは4つのループ構造を提供します。
+D provides four loop constructs.
 
 ### 1) `while`
 
-`while`ループは与えられたコードを一定の条件が満たされている間実行します:
+`while`  loops execute the given code block
+while a certain condition is met:
 
-    while (condition) {
+    while (condition)
+    {
         foo();
     }
 
 ### 2) `do ... while`
 
-`do .. while`ループは与えられたコードを一定の条件が満たされている間
-実行しますが、`while`とは対象的に**ループブロック**はループ条件が
-最初に評価される前に実行されます。
+The `do .. while` loops execute the given code block
+while a certain condition is met, but in contrast to `while`
+the _loop block_ is executed before the loop condition is
+evaluated for the first time.
 
-    do {
+    do
+    {
         foo();
     } while (condition);
 
-### 3) 古典的`for`ループ
+### 3) Classical `for` loop
 
-**初期化子**、**ループ条件**、そして**ループ文**からなる
-C/C++またはJavaから知られる古典的な`for`ループです:
+The classical `for` loop known from C/C++ or Java
+with _initializer_, _loop condition_ and _loop statement_:
 
-    for (int i = 0; i < arr.length; i++) {
+    for (int i = 0; i < arr.length; i++)
+    {
         ...
 
 ### 4) `foreach`
 
-次のセクションでより詳細に紹介される[`foreach` ループ](basics/foreach)です:
+The [`foreach` loop](basics/foreach) which will be introduced in more detail
+in the next section:
 
-    foreach (el; arr) {
+    foreach (el; arr)
+    {
         ...
     }
 
-#### 特殊なキーワードとラベル
+#### Special keywords and labels
 
-特殊なキーワード`break`は現在のループを直ちに中止します。
-ネストしたループ内で**ラベル**は任意の外側のループをやめさせるのに使われます:
+The special keyword `break` will immediately abort the current loop.
+In a nested loop a _label_ can be used to break out of any outer loop:
 
-    outer: for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 5; ++j) {
+    outer: for (int i = 0; i < 10; ++i)
+    {
+        for (int j = 0; j < 5; ++j)
+        {
             ...
             break outer;
 
-キーワード`continue`は次のループの反復処理を始めます。
+The keyword `continue` starts with the next loop iteration.
 
-### 掘り下げる
+### In-depth
 
 - `for` loop in [_Programming in D_](http://ddili.org/ders/d.en/for.html), [specification](https://dlang.org/spec/statement.html#ForStatement)
 - `while` loop in [_Programming in D_](http://ddili.org/ders/d.en/while.html), [specification](https://dlang.org/spec/statement.html#WhileStatement)
@@ -60,24 +69,22 @@ C/C++またはJavaから知られる古典的な`for`ループです:
 import std.stdio : writeln;
 
 /*
-配列の要素の平均値を計算します。
+Computes the average of
+the elements of an array.
 */
-double average(int[] array) {
-    // 配列のプロパティ .empty はDのネイティブでは
-    // ありませんが std.array から関数をインポートして
-    // アクセス可能にしなければなりません
-    import std.array : empty, front;
-
+double average(int[] array)
+{
+    immutable initialLength = array.length;
     double accumulator = 0.0;
-    auto length = array.length;
-    while (!array.empty) {
-        // これは import std.array : front;
-        // として .front とすることもできました
+    while (array.length)
+    {
+        // this could be also done with .front
+        // with import std.array : front;
         accumulator += array[0];
         array = array[1 .. $];
     }
 
-    return accumulator / length;
+    return accumulator / initialLength;
 }
 
 void main()
@@ -86,7 +93,8 @@ void main()
           [2, 3, 2, 3], // 10
           [3, 6, 2, 9] ]; // 20
 
-    for (auto i = 0; i < testers.length; ++i) {
+    for (auto i = 0; i < testers.length; ++i)
+    {
       writeln("The average of ", testers[i],
         " = ", average(testers[i]));
     }
