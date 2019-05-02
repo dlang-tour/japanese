@@ -2,68 +2,73 @@
 
 {{#img-right}}dman-teacher-foreach.jpg{{/img-right}}
 
-エラーが起こりにくく、より読みやすい繰り返しができるDの機能である`foreach`ループです。
+D features a `foreach` loop which allows for
+less error-prone and more readable iteration.
 
-### 要素の反復
+### Element iteration
 
-`int[]`型の配列`arr`があるとき、`foreach`ループを使って要素を
-反復処理することができます:
+Given an array `arr` of type `int[]` it is possible to
+iterate over the elements using a `foreach` loop:
 
     foreach (int e; arr) {
         writeln(e);
     }
 
-`foreach`の定義の最初のフィールドはループの繰り返し内で使われる変数名です。
-その型は自動的に帰納されます:
+The first parameter in a `foreach` loop is the variable
+name used for each iteration. Its type can be inferred automatically like so:
 
     foreach (e; arr) {
-        // typeof(e) は int
+        // typeof(e) is int
         writeln(e);
     }
 
-ふたつ目のフィールドは配列、または次のセクションで紹介される
-**レンジ**と呼ばれる特殊な反復可能オブジェクトでなければいけません。
+The second field must be an array - or a special iterable
+object called a **range** which will be introduced in the [next section](basics/ranges).
 
-### 参照によるアクセス
+### Access by reference
 
-要素は繰り返しの間に配列またはレンジからコピーされます。
-これは基本型においては好ましいことですが、大きな型においては問題かもしれません。
-コピーするのを防ぐ、または**インプレース**の変化を有効にするには、`ref`が使えます:
+Elements will be copied from the array or range during iteration.
+This is acceptable for basic types, but might be a problem for
+large types. To prevent copying or to enable *in-place
+*mutation, `ref` can be used:
 
     foreach (ref e; arr) {
-        e = 10; // 値を上書きする
+        e = 10; // overwrite value
     }
 
-### `n`回反復
+### Iterate `n` times
 
-Dは`n`回実行しなければならない繰り返しを、`..`文によりより簡潔に書くことができます:
+D allows us to write iterations which should be executed
+`n` times, more concisely with the `..` syntax:
 
-    foreach (i; 0..3) {
+    foreach (i; 0 .. 3) {
         writeln(i);
     }
     // 0 1 2
 
-`a..b`の最後の数字はレンジから除外され、したがってループ本文は`3`回実行されます。
+The last number in `a .. b` is excluded from the range,
+thus the loop body is executed `3` times.
 
-### インデックスカウンタ付きの繰り返し
+### Iteration with index counter
 
-配列で、別のインデックス変数にアクセスすることもできます。
+For arrays, it's also possible to access a separate index variable.
 
     foreach (i, e; [4, 5, 6]) {
         writeln(i, ":", e);
     }
     // 0:4 1:5 2:6
 
-### `foreach_reverse`による逆向きの繰り返し
+### Reverse iteration with `foreach_reverse`
 
-コレクションは`foreach_reverse`により逆順で繰り返すことができます:
+A collection can be iterated in reverse order with
+`foreach_reverse`:
 
     foreach_reverse (e; [1, 2, 3]) {
         writeln(e);
     }
     // 3 2 1
 
-### 掘り下げる
+### In-depth
 
 - [`foreach` in _Programming in D_](http://ddili.org/ders/d.en/foreach.html)
 - [`foreach` with Structs and Classes  _Programming in D_](http://ddili.org/ders/d.en/foreach_opapply.html)
