@@ -6,7 +6,8 @@ Dは4つのループ構造を提供します。
 
 `while`ループは与えられたコードを一定の条件が満たされている間実行します:
 
-    while (condition) {
+    while (condition)
+    {
         foo();
     }
 
@@ -16,7 +17,8 @@ Dは4つのループ構造を提供します。
 実行しますが、`while`とは対象的に**ループブロック**はループ条件が
 最初に評価される前に実行されます。
 
-    do {
+    do
+    {
         foo();
     } while (condition);
 
@@ -25,14 +27,16 @@ Dは4つのループ構造を提供します。
 **初期化子**、**ループ条件**、そして**ループ文**からなる
 C/C++またはJavaから知られる古典的な`for`ループです:
 
-    for (int i = 0; i < arr.length; i++) {
+    for (int i = 0; i < arr.length; i++)
+    {
         ...
 
 ### 4) `foreach`
 
 次のセクションでより詳細に紹介される[`foreach` ループ](basics/foreach)です:
 
-    foreach (el; arr) {
+    foreach (el; arr)
+    {
         ...
     }
 
@@ -41,8 +45,10 @@ C/C++またはJavaから知られる古典的な`for`ループです:
 特殊なキーワード`break`は現在のループを直ちに中止します。
 ネストしたループ内で**ラベル**は任意の外側のループをやめさせるのに使われます:
 
-    outer: for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 5; ++j) {
+    outer: for (int i = 0; i < 10; ++i)
+    {
+        for (int j = 0; j < 5; ++j)
+        {
             ...
             break outer;
 
@@ -62,22 +68,19 @@ import std.stdio : writeln;
 /*
 配列の要素の平均値を計算します。
 */
-double average(int[] array) {
-    // 配列のプロパティ .empty はDのネイティブでは
-    // ありませんが std.array から関数をインポートして
-    // アクセス可能にしなければなりません
-    import std.array : empty, front;
-
+double average(int[] array)
+{
+    immutable initialLength = array.length;
     double accumulator = 0.0;
-    auto length = array.length;
-    while (!array.empty) {
+    while (array.length)
+    {
         // これは import std.array : front;
         // として .front とすることもできました
         accumulator += array[0];
         array = array[1 .. $];
     }
 
-    return accumulator / length;
+    return accumulator / initialLength;
 }
 
 void main()
@@ -86,7 +89,8 @@ void main()
           [2, 3, 2, 3], // 10
           [3, 6, 2, 9] ]; // 20
 
-    for (auto i = 0; i < testers.length; ++i) {
+    for (auto i = 0; i < testers.length; ++i)
+    {
       writeln("The average of ", testers[i],
         " = ", average(testers[i]));
     }
