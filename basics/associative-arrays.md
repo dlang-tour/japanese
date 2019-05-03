@@ -1,34 +1,38 @@
-# 連想配列
+# Associative Arrays
 
-Dにはハッシュマップとしても知られる組み込みの**連想配列**があります。
-キーの型が`string`で値の方が`int`である連想配列は下記のように宣言されます:
+D has built-in *associative arrays* also known as hash maps.
+An associative array with a key type of `string` and a value type
+of `int` is declared as follows:
 
     int[string] arr;
 
-値はそのキーによってアクセスでき、したがって設定できます:
+The value can be accessed by its key and thus be set:
 
     arr["key1"] = 10;
 
-キーが連想配列内にあるかどうかをテストするのに、`in`式が使えます:
+To test whether a key is located in the associative array, the
+`in` expression can be used:
 
     if ("key1" in arr)
         writeln("Yes");
 
-`in`式は値が見つかった時はそのポインタを、そうでなければ`null`ポインタを返します。
-したがって存在チェックと書き込みは便利に組み合わせることができます:
+The `in` expression returns a pointer to the value if it
+can be found or a `null` pointer otherwise. Thus existence check
+and writes can be conveniently combined:
 
     if (auto val = "key1" in arr)
         *val = 20;
 
-存在しないキーへのアクセスは即座にアプリケーションを停止させる
-`RangeError`を発生させます。デフォルト値による安全なアクセスには、
-`get(key, defaultValue)`が使えます。
+Access to a key which doesn't exist yields a `RangeError`
+that immediately aborts the application. For a safe access
+with a default value, `get(key, defaultValue)` can be used.
 
-連想配列は配列のような`.length`プロパティを持ち、キーによって項目を
-削除する`.remove(val)`メンバを持ちます。
-特殊な`.byKey`と`.byValue`レンジを探索することは読者への練習問題とします。
+AA's have the `.length` property like arrays and provide
+a `.remove(val)` member to remove entries by their key.
+It is left as an exercise to the reader to explore
+the special `.byKey` and `.byValue` ranges.
 
-### 掘り下げる
+### In-depth
 
 - [Associative arrays in _Programming in D_](http://ddili.org/ders/d.en/aa.html)
 - [Associative arrays specification](https://dlang.org/spec/hash-map.html)
@@ -37,44 +41,46 @@ Dにはハッシュマップとしても知られる組み込みの**連想配�
 ## {SourceCode}
 
 ```d
-import std.stdio : writeln;
-
-/**
-与えられたテキストを単語で分割し
-それぞれの単語数をマップした連想配列を返します。
-
-Params:
-    text = 分割されるテキスト
-*/
-int[string] wordCount(string text)
-{
-    // 関数splitterは入力をlazyにレンジに分割します
-    import std.algorithm.iteration : splitter;
-    import std.string : toLower;
-
-    // 単語でインデックスされ個数を返します
-    int[string] words;
-
-    foreach(word; splitter(text.toLower(), " "))
-    {
-        // 単語が見つかったら単語数をインクリメントします。
-        // 整数はデフォルトで0です。
-        words[word]++;
-    }
-
-    return words;
-}
+import std.array : assocArray;
+import std.algorithm.iteration: each, group,
+    splitter, sum;
+import std.string: toLower;
+import std.stdio : writefln, writeln;
 
 void main()
 {
-    string text = "D is a lot of fun";
+    string text = "Rock D with D";
 
-    auto wc = wordCount(text);
-    writeln("Word counts: ", wc);
+    // Iterate over all words and count
+    // each word once
+    int[string] words;
+    text.toLower()
+        .splitter(" ")
+        .each!(w => words[w]++);
 
-    // 反復処理可能:
-    // byKey, byValue, byKeyValue
-    foreach (word; wc.byValue)
-        writeln(word);
+    foreach (key, value; words)
+        writefln("key: %s, value: %d",
+                       key, value);
+
+    // `.keys` and .values` return arrays
+    writeln("Words: ", words.keys);
+
+    // `.byKey`, `.byValue` and `.byKeyValue`
+    // return lazy, iteratable ranges
+    writeln("# Words: ", words.byValue.sum);
+
+    // A new associative array can be created
+    // with `assocArray` by passing a
+    // range of key/value tuples;
+    auto array = ['a', 'a', 'a', 'b', 'b',
+                  'c', 'd', 'e', 'e'];
+
+    // `.group` groups consecutively equivalent
+    // elements into a single tuple of the
+    // element and the number of its repetitions
+    auto keyValue = array.group;
+    writeln("Key/Value range: ", keyValue);
+    writeln("Associative array: ",
+             keyValue.assocArray);
 }
 ```
