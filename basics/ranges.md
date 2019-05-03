@@ -1,6 +1,6 @@
-# Ranges
+# レンジ
 
-If a `foreach` is encountered by the compiler
+コンパイラが`foreach`に遭遇した時、
 
 ```
 foreach (element; range)
@@ -9,7 +9,7 @@ foreach (element; range)
 }
 ```
 
-it's internally rewritten similar to the following:
+内部では下のものと同じように書き換えられます:
 
 ```
 for (auto __rangeCopy = range;
@@ -17,12 +17,12 @@ for (auto __rangeCopy = range;
      __rangeCopy.popFront())
  {
     auto element = __rangeCopy.front;
-    // Loop body...
+    // ループ本文...
 }
 ```
 
-Any object which fulfills the following interface is called a **range**
-(or more specific `InputRange`) and is thus a type that can be iterated over:
+下記のインターフェースを満たす任意のオブジェクトは**レンジ**(もしくはより明確に`InputRange`)
+と呼ばれ、これは反復処理のできる型です:
 
 ```
     interface InputRange(E)
@@ -32,23 +32,22 @@ Any object which fulfills the following interface is called a **range**
         void popFront();
     }
 ```
+右の例を見てインプットレンジの実装と使用法をより詳しく調べてみましょう。
 
-Have a look at the example on the right to inspect the implementation and usage
-of an input range closer.
+## 遅延評価
 
-## Laziness
-
-Ranges are __lazy__. They won't be evaluated until requested.
-Hence, a range from an infinite range can be taken:
+レンジは**遅延評価**をします。
+必要になるまで評価は行われません。
+そのため、無限レンジからレンジを得ることができます:
 
 ```d
 42.repeat.take(3).writeln; // [42, 42, 42]
 ```
 
-## Value vs. Reference types
+## 値型と参照型
 
-If the range object is a value type, then range will be copied and only the copy
-will be consumed:
+レンジオブジェクトが値型のとき、
+レンジはコピーされてコピーだけが消費されます:
 
 ```d
 auto r = 5.iota;
@@ -56,8 +55,9 @@ r.drop(5).writeln; // []
 r.writeln; // [0, 1, 2, 3, 4]
 ```
 
-If the range object is a reference type (e.g. `class` or [`std.range.refRange`](https://dlang.org/phobos/std_range.html#refRange)),
-then the range will be consumed and won't be reset:
+レンジオブジェクトが参照型
+(たとえば`class`や[`std.range.refRange`](https://dlang.org/phobos/std_range.html#refRange))
+のとき、レンジは消費されて元に戻りません:
 
 ```d
 auto r = 5.iota;
@@ -66,12 +66,12 @@ r2.drop(5).writeln; // []
 r2.writeln; // []
 ```
 
-### Copyable `InputRanges` are `ForwardRanges`
+### 複製可能`InputRange`は`ForwardRange`
 
-Most of the ranges in the standard library are structs and so `foreach`
-iteration is usually non-destructive, though not guaranteed. If this
-guarantee is important, an specialization of an `InputRange` can be used—
-**forward** ranges with a `.save` method:
+標準ライブラリに存在するレンジの殆どは構造体であり、
+`foreach`による反復は保証はされないもののふつう非破壊的です。
+それが保証されていることが重要なら、
+`InputRange`の特殊化であり`.save`メソッドを持つ**フォワード**レンジが利用できます:
 
 ```
 interface ForwardRange(E) : InputRange!E
@@ -81,18 +81,18 @@ interface ForwardRange(E) : InputRange!E
 ```
 
 ```d
-// by value (Structs)
+// 値 (構造体)
 auto r = 5.iota;
 auto r2 = refRange(&r);
 r2.save.drop(5).writeln; // []
 r2.writeln; // [0, 1, 2, 3, 4]
 ```
 
-### `ForwardRanges` can be extended to Bidirectional ranges + random access ranges
+### `ForwardRanges`はバイディレクショナルレンジとランダムアクセスレンジに拡張可能
 
-There are two extensions of the copyable `ForwardRange`: (1) a bidirectional range
-and (2) a random access range.
-A bidirectional range allows iteration from the back:
+複製可能な`ForwardRange`には2つの拡張があります。
+1つ目はバイディレクショナルレンジ、2つ目はランダムアクセスレンジです。
+バイディレクショナルレンジは後ろからの反復が可能です:
 
 ```d
 interface BidirectionalRange(E) : ForwardRange!E
@@ -106,7 +106,7 @@ interface BidirectionalRange(E) : ForwardRange!E
 5.iota.retro.writeln; // [4, 3, 2, 1, 0]
 ```
 
-A random access range has a known `length` and each element can be directly accessed.
+ランダムアクセスレンジは`length`を持ち、各要素に直接アクセスできます。
 
 ```d
 interface RandomAccessRange(E) : ForwardRange!E
@@ -116,26 +116,24 @@ interface RandomAccessRange(E) : ForwardRange!E
 }
 ```
 
-The best known random access range is D's array:
+Dの配列は最もよく知られたランダムアクセスレンジです:
 
 ```d
 auto r = [4, 5, 6];
 r[1].writeln; // 5
 ```
 
-### Lazy range algorithms
+### 遅延レンジアルゴリズム
 
-The functions in [`std.range`](http://dlang.org/phobos/std_range.html) and
-[`std.algorithm`](http://dlang.org/phobos/std_algorithm.html) provide
-building blocks that make use of this interface. Ranges allow
-to compose complex algorithms behind an object that
-can be iterated with ease. Furthermore, ranges allow to create **lazy**
-objects that only perform a calculation when it's really needed
-in an iteration e.g. when the next range's element is accessed.
-Special range algorithms will be presented later in the
-[D's Gems](gems/range-algorithms) section.
+[`std.range`](http://dlang.org/phobos/std_range.html)や
+[`std.algorithm`](http://dlang.org/phobos/std_algorithm.html)
+の関数はこのインターフェースを利用する素材を提供します。
+レンジによって容易に反復操作のできるオブジェクトの背後に複雑なアルゴリズムの構築が可能となります。
+さらに、レンジは反復の中でそれが本当に必要になったとき、
+例えばレンジの次の要素がアクセスされるときにのみ計算を行う**遅延**オブジェクトを作ることができます。
+後の[応用](gems/range-algorithms)セクションでは特殊なレンジアルゴリズムを紹介しましょう。
 
-### In-depth
+### 掘り下げる
 
 - [`std.algorithm`](http://dlang.org/phobos/std_algorithm.html)
 - [`std.range`](http://dlang.org/phobos/std_range.html)
@@ -147,19 +145,19 @@ import std.stdio : writeln;
 
 struct FibonacciRange
 {
-    // States of the Fibonacci generator
+    // フィボナッチ数ジェネレータの状態
     int a = 1, b = 1;
 
-    // The fibonacci range never ends
+    // フィボナッチ数は終わりません
     enum empty = false;
 
-    // Peek at the first element
+    // 先頭の要素を取得
     int front() const @property
     {
         return a;
     }
 
-    // Remove the first element
+    // 先頭の要素を削除
     void popFront()
     {
         auto t = a;
@@ -176,22 +174,22 @@ void main()
     import std.algorithm.iteration :
         filter, sum;
 
-    // Select the first 10 fibonacci numbers
+    // フィボナッチ数最初の10項を選択
     auto fib10 = fib.take(10);
     writeln("Fib 10: ", fib10);
 
-    // Except the first five
+    // 最初の5項を除く
     auto fib5 = fib10.drop(5);
     writeln("Fib 5: ", fib5);
 
-    // Select the even subset
+    // 偶数の部分集合を選択Select the even subset
     auto fibEven = fib5.filter!(x => x % 2);
     writeln("FibEven : ", fibEven);
 
-    // Sum of all elements
+    // 全要素を合計
     writeln("Sum of FibEven: ", fibEven.sum);
 
-    // Usually this is summarized as:
+    // 通常このようにまとめられます:
     fib.take(10)
          .drop(5)
          .filter!(x => x % 2)
