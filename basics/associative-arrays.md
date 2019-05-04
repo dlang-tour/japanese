@@ -1,38 +1,34 @@
-# Associative Arrays
+# 連想配列
 
-D has built-in *associative arrays* also known as hash maps.
-An associative array with a key type of `string` and a value type
-of `int` is declared as follows:
+Dにはハッシュマップとしても知られる**連想配列**が組み込みで存在します。
+キーの型が`string`で値の方が`int`である連想配列は下記のように宣言されます:
 
     int[string] arr;
 
-The value can be accessed by its key and thus be set:
+値はそのキーによってアクセスでき、したがって設定できます:
 
     arr["key1"] = 10;
 
-To test whether a key is located in the associative array, the
-`in` expression can be used:
+キーが連想配列内にあるかどうかをテストするのに、`in`式が使えます:
 
     if ("key1" in arr)
         writeln("Yes");
 
-The `in` expression returns a pointer to the value if it
-can be found or a `null` pointer otherwise. Thus existence check
-and writes can be conveniently combined:
+`in`式は値が見つかった時はそのポインタを、そうでなければ`null`ポインタを返します。
+したがって存在チェックと書き込みは便利に組み合わせることができます:
 
     if (auto val = "key1" in arr)
         *val = 20;
 
-Access to a key which doesn't exist yields a `RangeError`
-that immediately aborts the application. For a safe access
-with a default value, `get(key, defaultValue)` can be used.
+存在しないキーへのアクセスは即座にアプリケーションを停止させる
+`RangeError`を発生させます。デフォルト値による安全なアクセスには、
+`get(key, defaultValue)`が使えます。
 
-AA's have the `.length` property like arrays and provide
-a `.remove(val)` member to remove entries by their key.
-It is left as an exercise to the reader to explore
-the special `.byKey` and `.byValue` ranges.
+連想配列は配列のような`.length`プロパティを持ち、キーによって項目を
+削除する`.remove(val)`メンバを持ちます。
+特殊な`.byKey`と`.byValue`レンジを探索することは読者への練習問題とします。
 
-### In-depth
+### 掘り下げる
 
 - [Associative arrays in _Programming in D_](http://ddili.org/ders/d.en/aa.html)
 - [Associative arrays specification](https://dlang.org/spec/hash-map.html)
@@ -51,8 +47,7 @@ void main()
 {
     string text = "Rock D with D";
 
-    // Iterate over all words and count
-    // each word once
+    // 全単語を反復処理しカウント
     int[string] words;
     text.toLower()
         .splitter(" ")
@@ -62,22 +57,21 @@ void main()
         writefln("key: %s, value: %d",
                        key, value);
 
-    // `.keys` and .values` return arrays
+    // `.keys` と .values` は配列を返します
     writeln("Words: ", words.keys);
 
-    // `.byKey`, `.byValue` and `.byKeyValue`
-    // return lazy, iteratable ranges
+    // `.byKey`、 `.byValue`、 `.byKeyValue`
+    // は遅延評価される反復可能なレンジを返します
     writeln("# Words: ", words.byValue.sum);
 
-    // A new associative array can be created
-    // with `assocArray` by passing a
-    // range of key/value tuples;
+    // 連想配列は`assocArray`に
+    // キー・バリュータプルの
+    // レンジを渡すことで作れます
     auto array = ['a', 'a', 'a', 'b', 'b',
                   'c', 'd', 'e', 'e'];
 
-    // `.group` groups consecutively equivalent
-    // elements into a single tuple of the
-    // element and the number of its repetitions
+    // `.group`は連続した等価な要素を1つの要素と
+    // その繰り返し回数のタプルにまとめます
     auto keyValue = array.group;
     writeln("Key/Value range: ", keyValue);
     writeln("Associative array: ",
