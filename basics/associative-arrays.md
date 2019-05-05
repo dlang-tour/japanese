@@ -1,6 +1,6 @@
 # 連想配列
 
-Dにはハッシュマップとしても知られる組み込みの**連想配列**があります。
+Dにはハッシュマップとしても知られる**連想配列**が組み込みで存在します。
 キーの型が`string`で値の方が`int`である連想配列は下記のように宣言されます:
 
     int[string] arr;
@@ -37,44 +37,44 @@ Dにはハッシュマップとしても知られる組み込みの**連想配�
 ## {SourceCode}
 
 ```d
-import std.stdio : writeln;
-
-/**
-与えられたテキストを単語で分割し
-それぞれの単語数をマップした連想配列を返します。
-
-Params:
-    text = 分割されるテキスト
-*/
-int[string] wordCount(string text)
-{
-    // 関数splitterは入力をlazyにレンジに分割します
-    import std.algorithm.iteration : splitter;
-    import std.string : toLower;
-
-    // 単語でインデックスされ個数を返します
-    int[string] words;
-
-    foreach(word; splitter(text.toLower(), " "))
-    {
-        // 単語が見つかったら単語数をインクリメントします。
-        // 整数はデフォルトで0です。
-        words[word]++;
-    }
-
-    return words;
-}
+import std.array : assocArray;
+import std.algorithm.iteration: each, group,
+    splitter, sum;
+import std.string: toLower;
+import std.stdio : writefln, writeln;
 
 void main()
 {
-    string text = "D is a lot of fun";
+    string text = "Rock D with D";
 
-    auto wc = wordCount(text);
-    writeln("Word counts: ", wc);
+    // 全単語を反復処理しカウント
+    int[string] words;
+    text.toLower()
+        .splitter(" ")
+        .each!(w => words[w]++);
 
-    // 反復処理可能:
-    // byKey, byValue, byKeyValue
-    foreach (word; wc.byValue)
-        writeln(word);
+    foreach (key, value; words)
+        writefln("key: %s, value: %d",
+                       key, value);
+
+    // `.keys` と .values` は配列を返します
+    writeln("Words: ", words.keys);
+
+    // `.byKey`、 `.byValue`、 `.byKeyValue`
+    // は遅延評価される反復可能なレンジを返します
+    writeln("# Words: ", words.byValue.sum);
+
+    // 連想配列は`assocArray`に
+    // キー・バリュータプルの
+    // レンジを渡すことで作れます
+    auto array = ['a', 'a', 'a', 'b', 'b',
+                  'c', 'd', 'e', 'e'];
+
+    // `.group`は連続した等価な要素を1つの要素と
+    // その繰り返し回数のタプルにまとめます
+    auto keyValue = array.group;
+    writeln("Key/Value range: ", keyValue);
+    writeln("Associative array: ",
+             keyValue.assocArray);
 }
 ```
