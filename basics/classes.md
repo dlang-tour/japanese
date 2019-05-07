@@ -1,57 +1,64 @@
-# クラス
+# Classes
 
-DはJavaやC++のようなクラスとインターフェースのサポートを提供します。
+D provides support for classes and interfaces like in Java or C++.
 
-任意の`class`型は[`Object`](https://dlang.org/phobos/object.html)を暗黙的に継承します。
+Any `class` type inherits from [`Object`](https://dlang.org/phobos/object.html) implicitly.
 
-    class Foo { } // Objectを基にしている
-    class Bar: Foo { } // BarはFooでもある
+    class Foo { } // inherits from Object
+    class Bar : Foo { } // Bar is a Foo too
 
-Dのクラスは一般的に`new`を使いヒープ上にインスタンス化されます:
+Classes in D are generally instantiated on the heap using `new`:
 
     auto bar = new Bar;
 
-クラスオブジェクトは常に参照型であり、`struct`とは異なり値としてコピーされません。
+Class objects are always reference types and unlike `struct` aren't
+copied by value.
 
-    Bar bar = foo; // barはfooを指す
+    Bar bar = foo; // bar points to foo
 
-ガベージコレクタはオブジェクトへの参照が存在しなくなった時にメモリを開放します。
+The garbage collector will make sure the memory is freed
+when no references to an object exist anymore.
 
-### 継承
+### Inheritance
 
-基底クラスのメンバ関数がオーバーライドされた時、キーワード`override`を使ってそれを示さなければなりません。
-これは関数の意図的でないオーバーライドを防止します。
+If a member function of a base class is overridden, the keyword
+`override` must be used to indicate that. This prevents unintentional
+overriding of functions.
 
-    class Bar: Foo {
+    class Bar : Foo {
         override functionFromFoo() {}
     }
 
-Dでは、クラスはクラスからのみ継承できます。
+In D, classes can only inherit from one class.
 
-### Finalとabstractメンバ関数
+### Final and abstract member functions
 
-- それをオーバーライドすることを禁止するために、基底クラス内で`final`とマークできます
-- それをオーバーライドすることを強制するために、関数を基底クラスに`abstract`として宣言できます
-- それをインスタンス化させないために、クラス全体を`abstract`として宣言できます
-- `super(..)`は基底コンストラクタを明示的に呼び出すのに使えます
+- A function can be marked `final` in a base class to disallow overriding
+it
+- A function can be declared as `abstract` to force derived classes to override
+it
+- A whole class can be declared as `abstract` to make sure
+that it isn't instantiated
+- `super(..)` can be used to explicitly call the base constructor
 
-### 同一性のチェック
+### Checking for identity
 
-クラスオブジェクトにおいて、`==`と`!=`演算子はオブジェクトの内容を比較します。
-したがって、`null`は内容を持たないため、`null`との比較は不正です。
-`is`演算子は同一性(アイデンティティ)を比較します。非同一性の比較には、`e1 !is e2`を使います。
+For class objects, the `==` and `!=` operators compare the contents of the objects.
+Therefore, comparing against `null` is invalid, as `null` has no contents.
+The `is` compares for identity. To compare for nonidentity, use `e1 !is e2`.
 
 ```d
 MyClass c;
-if (c == null)  // エラー
+if (c == null)  // error
     ...
 if (c is null)  // ok
     ...
 ```
 
-`struct`オブジェクトではすべてのビットが比較され、その他のオペランドの型において、同一性は等価性と同じです。
+For `struct` objects all bits are compared,
+for other operand types, identity is the same as equality.
 
-### 掘り下げる
+### In-depth
 
 - [Classes in _Programming in D_](http://ddili.org/ders/d.en/class.html)
 - [Inheritance in _Programming in D_](http://ddili.org/ders/d.en/inheritance.html)
@@ -64,51 +71,52 @@ if (c is null)  // ok
 import std.stdio : writeln;
 
 /*
-なんにでも使える手のこんだ型です...
+Fancy type which can be used for
+anything...
 */
 class Any {
-    // protectedは継承したクラスからのみ
-    // 見ることができます
+    // protected is just seen by inheriting
+    // classes
     protected string type;
 
     this(string type) {
         this.type = type;
     }
 
-    // ところで、publicは暗黙的です
+    // public is implicit by the way
     final string getType() {
         return type;
     }
 
-    // これは実装される必要があります!
+    // This needs to be implemented!
     abstract string convertToString();
 }
 
-class Integer: Any {
-    // Integerにしか見ることができません
+class Integer : Any {
+    // just seen by Integer
     private {
         int number;
     }
 
-    // コンストラクタ
+    // constructor
     this(int number) {
-        // 基底クラスのコンストラクタを呼ぶ
+        // call base class constructor
         super("integer");
         this.number = number;
     }
 
-    // これは暗黙的です。そして保護レベルを
-    // 指定する別の方法です
+    // This is implicit. And another way
+    // to specify the protection level
     public:
 
     override string convertToString() {
         import std.conv : to;
-        // 変換の十徳ナイフです
+        // The swiss army knife of conversion.
         return to!string(number);
     }
 }
 
-class Float: Any {
+class Float : Any {
     private float number;
 
     this(float number) {
@@ -118,7 +126,7 @@ class Float: Any {
 
     override string convertToString() {
         import std.string : format;
-        // 精度をコントロールします
+        // We want to control precision
         return format("%.1f", number);
     }
 }
@@ -128,7 +136,7 @@ void main()
     Any[] anys = [
         new Integer(10),
         new Float(3.1415f)
-        ];
+    ];
 
     foreach (any; anys) {
         writeln("any's type = ", any.getType());
