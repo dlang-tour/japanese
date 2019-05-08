@@ -1,70 +1,80 @@
-# デリゲート
+# Delegates
 
-### 引数としての関数
+### Functions as arguments
 
-関数は他の関数の引数にもなれます:
+A function can also be a parameter to another function:
 
     void doSomething(int function(int, int) doer) {
-        // 渡された関数を呼ぶ
+        // call passed function
         doer(5,5);
     }
 
-    doSomething(add); // ここでグローバル関数`add`を使う
-                      // addは2つのintの引数をもつ必要があります
+    doSomething(&add); // use global function `add` here
+                       // add must have 2 int parameters
 
-そして`doer`は他の普通の関数のように呼びだされます。
+`doer` can then be called like any other normal function.
 
-### 文脈のあるローカル関数
+### Local functions with context
 
-上記のサンプルは、グローバル関数へのポインタである`function`型を使っています。
-メンバ関数またはローカル関数が参照され次第、`delegate`は使用されなければなりません。
-それは関数ポインタに加えてその文脈 - または**それを作った関数(enclosure)** - の
-情報を含むもので、したがって他の言語では**クロージャ**とも呼ばれます。
-例えばクラスのメンバ関数を指す`delegate`はクラスオブジェクトのポインタを含みます。
-ネストした関数によって作られた`delegate`は代わりに囲まれた文脈へのリンクを含みます。
-しかし、それがメモリ安全のために必要ならば、Dコンパイラは自動的にヒープ上に
-文脈のコピーを作ることもあり、そのときデリゲートはこのヒープ領域へリンクします。
+The above example uses the `function` type which is
+a pointer to a global function. As soon as a member
+function or a local function is referenced, `delegate`'s
+have to be used. It's a function pointer
+that additionally contains information about its
+context - or *enclosure*, thus also called **closure**
+in other languages. For example a `delegate`
+that points to a member function of a class also includes
+the pointer to the class object. A `delegate` created by
+a nested function includes a link to the enclosing context
+instead. However, the D compiler may automatically make a copy of
+the context on the heap if it is necessary for memory safety -
+then a delegate will link to this heap area.
 
     void foo() {
         void local() {
             writeln("local");
         }
-        auto f = &local; // fはdelegate()型
+        auto f = &local; // f is of type delegate()
     }
 
-`delegate`をとる同様の関数`doSomething`はこのようになります:
+The same function `doSomething` taking a `delegate`
+would look like this:
 
     void doSomething(int delegate(int,int) doer);
 
-`delegate`と`function`オブジェクトは混ざることができません。しかし標準関数
+`delegate` and `function` objects cannot be mixed. But the
+standard function
 [`std.functional.toDelegate`](https://dlang.org/phobos/std_functional.html#.toDelegate)
-は`function`を`delegate`に変換します。
+converts a `function` to a `delegate`.
 
-### 無名関数とラムダ
+### Anonymous functions & Lambdas
 
-関数を変数として保持して他の関数に渡すことができるため、それらに独自の名前を与えて定義するのは面倒です。
-従ってDは名無し関数と1行の**ラムダ**が使えます。
+As functions can be saved as variables and passed to other functions,
+it is laborious to give them their own name and to define them. Hence D allows
+nameless functions and one-line _lambdas_.
 
     auto f = (int lhs, int rhs) {
         return lhs + rhs;
     };
-    auto f = (int lhs, int rhs) => lhs + rhs; // ラムダ - 内部で上のように変換されます
+    auto f = (int lhs, int rhs) => lhs + rhs; // Lambda - internally converted to the above
 
-テンプレート引数からDの標準関数の機能部品として文字列を渡すこともできます。
-例えば畳み込み(folding。reducerとしても知られる)を定義する便利な方法を提供します:
+It is also possible to pass-in strings as template arguments to functional parts
+of D's standard library. For example they offer a convenient way
+to define a folding (aka reducer):
 
     [1, 2, 3].reduce!`a + b`; // 6
 
-文字列関数は**1つまたは2つ**の引数のみが可能で、その時1番目に`a`、2番目の引数に`b`を使います。
+String functions are only possible for _one or two_ arguments and then use `a`
+as first and `b` as second argument.
 
-### 掘り下げる
+### In-depth
 
 - [Delegate specification](https://dlang.org/spec/function.html#closures)
 
 ## {SourceCode}
 
 ```d
-import std.stdio;
+import std.stdio : writeln;
 
 enum IntOps {
     add = 0,
@@ -74,20 +84,22 @@ enum IntOps {
 }
 
 /**
-数学の計算を提供します
+Provides a math calculuation
 Params:
-    op = 選択された演算機能
-Returns: 演算を行うデリゲート
+    op = selected math operation
+Returns: delegate which does a math operation
 */
 auto getMathOperation(IntOps op)
 {
-    // 4つの数学的操作のための4つのラムダ関数を定義します
+    // Define 4 lambda functions for
+    // 4 different mathematical operations
     auto add = (int lhs, int rhs) => lhs + rhs;
     auto sub = (int lhs, int rhs) => lhs - rhs;
     auto mul = (int lhs, int rhs) => lhs * rhs;
     auto div = (int lhs, int rhs) => lhs / rhs;
 
-    // switchがすべてのケースをカバーするようにできます。
+    // we can ensure that the switch covers
+    // all cases
     final switch (op) {
         case IntOps.add:
             return add;
@@ -109,7 +121,8 @@ void main()
     writeln("The type of func is ",
         typeof(func).stringof, "!");
 
-    // すべての私達の仕事を行うデリゲートfuncを実行します!
+    // run the delegate func which does all the
+    // real work for us!
     writeln("result: ", func(a, b));
 }
 ```
