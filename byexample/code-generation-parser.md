@@ -1,8 +1,7 @@
-# Code generation (Parser)
+# コード生成(パーサ)
 
-In this example, a configuration parser is generated at compile-time.
-Let's assume our program has a couple of configuration options,
-summarized in a settings `struct`:
+この例では設定パーサをコンパイル時に生成します。
+プログラムが2つの設定項目を持ち、設定`struct`に集約されているとしましょう:
 
 ```d
 struct Config
@@ -12,44 +11,38 @@ struct Config
 }
 ```
 
-While writing a parser for this struct, wouldn't be difficult, we would have to
-constantly update the parser, whenever we modify the `Config` object.
-Hence, we are interested in writing a generic `parse` function that can
-read arbitrary configuration options. For simplicity, `parse` will accept
-a very simple format of `key1=value1,key2=value2` configuration options, but the same technique
-can be used for any arbitrary configuration format. For many popular
-configuration format, of course, readers already exist on the [DUB registry](https://code.dlang.org).
+この構造体に対するパーサーを書くのは難しいことではないですが、
+`Config`オブジェクトが変更されるたびにパーサーを更新しなければならないでしょう。
+なので、任意の設定項目を読み込めるジェネリックな`parse`関数を書いてみたいです。
+簡単のために`parse`は`key1=value1,key2=value2`という非常に単純な書式の設定項目を受け付けることにしますが、
+同様の手法が任意の設定フォーマットに利用できます。
+もちろん多くの有名な設定フォーマットのためのリーダが[DUBレジストリ](https://code.dlang.org)には存在します。
 
-Reading the configuration
+設定を読む
 -------------------------
 
-Let's assume the user has "name=dlang,port=8080" as a configuration string.
-We then directly split the configuration options by comma and call `parse` with each
-individual configuration setting.
-After all configuration options have been parsed, the entire configuration
-object is printed.
+"name=dlang,port=8080"がユーザの設定文字列だとしましょう。
+そして設定項目をコンマで分割し、各設定に対して`parse`を呼び出します。
+すべての設定項目がパースされた後、設定オブジェクト全体が印字されます。
 
-Parse
+パース
 -----
 
-`parse` is where the real magic happens, but first we split the given configuration option
-(e.g. "name=dlang") by "=" into key ("name") and value ("dlang").
-The switch statement is executed with the parsed key, but the interesting bit is that
-the switch cases have been statically generated. `c.tupleof` returns a list of all members
-in the `(idx, name)` format. The compiler detects that the `c.tupleof` is known at compile-time
-and will unroll the foreach loop at compile-time.
-Hence, `Conf.tupleof[idx].stringof` will yield the individual members of the struct object
-and generate a case statement for each member.
-Equally, while being in the static loop, the individual members can be accessed by their index:
-`c.tupleof[idx]` and thus we can assign the respective member the parsed value from the given
-configuration string. Moreover, `dropOne` is necessary, because the splitted range still
-points at the key and thus `droOne.front` will return the second element.
-Furthermore, `to!(typeof(field))` will do the actual parsing of the input string
-to the respective type of the member of the configuration struct.
-Finally, as the foreach loop is unrolled at compile-time a `break` would stop this loop.
-However, after a configuration option has been successfully parsed, we don't want to jump
-to the next case in the switch statement and thus a labeled break is used to break out the
-switch statement.
+`parse`で素敵な処理が実際に行われる場所ですが、まずは与えられた設定項目(例: "name=dlang")
+を"="でキー("name")と値("dlang")に分割します。
+switch文はパースしたキーに対して実行されますが、興味深いのはswitch caseが静的に生成されることです。
+`c.tupleof`はすべてのメンバのリストを`(idx, name)`という形式で返します。
+コンパイラは`c.tupleof`がコンパイル時にわかることを検出し、コンパイル時にforeachループを展開します。
+したがって、`Conf.tupleof[idx].stringof`は構造体オブジェクトの各メンバを返し、
+各メンバに対してcase文を生成します。
+同様に、静的ループの中では各メンバに`c.tupleof[idx]`のようにインデックスでアクセスできます。
+なので、個々のメンバに設定文字列からパースした値を代入できます。
+さらに、分割されたレンジはキーを指しているため`dropOne`が必要で、
+`droOne.front`は2番めの要素を返します。
+さらに、`to!(typeof(field))`は入力文字列の設定構造体のメンバの個々の型へのパースを行います。
+最後に、foreachループはコンパイル時に展開され`break`がループを停止します。
+しかし、設定項目がパースされた後にはswitch文の次のケースにジャンプしたくないため、
+ラベル付されたbreakはswitch文の外に脱出するために使われます。
 
 
 ## {SourceCode}
@@ -65,7 +58,7 @@ struct Config
 void main()
 {
     Config conf;
-    // use the generated parser for each entry
+    // 生成されたパーサを各エントリに使用
     "runs=1,port=2,name=hello"
         .splitter(",")
         .each!(e => conf.parse(e));
