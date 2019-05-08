@@ -1,12 +1,13 @@
-# 例外
+# Exceptions
 
-このガイドはユーザ`Exceptions`についてのもののみです - システム`Errors`は
-通常致命的で、キャッチすべき**ではありません**。
+This guide is only about User-`Exceptions` - System-`Errors` are usually fatal
+and should __never__ be caught.
 
-### 例外をキャッチする
+### Catching Exceptions
 
-例外の一般的な例は、無効の可能性があるユーザの入力を確認することです。
-例外が投げられると、スタックは最初にマッチする例外ハンドラが見つかるまで巻き戻されます。
+A common case for exceptions is to validate potentially invalid user input.
+Once an exception is thrown, the stack will be unwound until the first matching exception
+handler is found.
 
 ```d
 try
@@ -19,8 +20,8 @@ catch (FileException e)
 }
 ```
 
-複数の`catch`ブロックや、エラーが起きたかどうかに関係なく実行される`finally`ブロックを持つことができます。
-例外は`throw`によって投げられます。
+It's possible to have multiple `catch` blocks and a `finally` block that is executed
+regardless of whether an error occurred. Exceptions are thrown with `throw`.
 
 ```d
 try
@@ -41,11 +42,12 @@ finally
 }
 ```
 
-[スコープガード](gems/scope-guards)が通常`try-finally`パターンの良い手法であることを覚えておいてください。
+Remember that the [scope guard](gems/scope-guards) is usually a better solution to the `try-finally`
+pattern.
 
-### カスタム例外
+### Custom exceptions
 
-`Exception`から簡単に継承ができ、カスタム例外を作ることができます:
+One can easily inherit from `Exception` and create custom exceptions:
 
 ```d
 class UserNotFoundException : Exception
@@ -57,39 +59,46 @@ class UserNotFoundException : Exception
 throw new UserNotFoundException("D-Man is on vacation");
 ```
 
-### `nothrow`で安全な世界へ
+### Enter a safe world with `nothrow`
 
-Dコンパイラは関数が壊滅的副作用を引き起こさないことを確実にできます。
-そのような関数は`nothrow`キーワードで注釈することができます。
-`nothrow`関数内でDコンパイラは例外を投げることを静的に禁止します。
+The D compiler can ensure that a function can't cause catastrophic side-effects.
+Such functions can be annotated with the `nothrow` keyword. The D compiler
+statically forbids throwing exceptions in `nothrow` functions.
 
 ```d
 bool lessThan(int a, int b) nothrow
 {
-    writeln("unsafe world"); // 出力は例外を投げる可能性があり、従ってこれは禁止です。
+    writeln("unsafe world"); // output can throw exceptions, thus this is forbidden
     return a < b;
 }
 ```
 
-コンパイラはテンプレート化されたコードの属性を割り出すことができることに注意してください。
+Please note that the compiler is able to infer attributes for templated code
+automatically.
 
 ### std.exception
 
-リリースモードでコンパイルされた時に契約が削除されたとしてユーザ入力の契約プログラミングを回避することは重要です。
-便宜上`std.exception`は`enforce`を提供し、これは`assert`のように使いますが
-`AssertError`の代わりに`Exceptions`を投げるものです。
+It is important to avoid `assert` and the soon to be introduced
+[contract programming](gems/contract-programming)
+for user-input as `assert` and contracts
+are removed when compiled in release mode. For convenience
+[`std.exception`](https://dlang.org/phobos/std_exception.html) provides
+[`enforce`](https://dlang.org/phobos/std_exception.html#enforce)
+that can be used like `assert`, but throws `Exception`s
+instead of an `AssertError`.
 
 ```d
 import std.exception : enforce;
 float magic = 1_000_000_000;
 enforce(magic + 42 - magic == 42, "Floating-point math is fun");
 
-// カスタム例外を投げる
+// throw custom exceptions
 enforce!StringException('a' != 'A', "Case-sensitive algorithm");
 ```
 
-しかし`std.exception`はこれだけではありません。たとえばエラーが
-致命的でないかもしれない時、それを`collect`することをオプトインできます:
+However there's more in `std.exception`. For example when the error might not be
+fatal, one can opt-in to
+[collect](https://dlang.org/phobos/std_exception.html#collectException) it:
 
 ```d
 import std.exception : collectException;
@@ -98,9 +107,9 @@ if (e)
     writeln("The dangerous operation failed with ", e);
 ```
 
-テスト内で例外が投げられるかどうかテストするためには、`assertThrown`を使います。
+To test whether an exception is thrown in tests, use [`assertThrown`](https://dlang.org/phobos/std_exception.html#assertThrown).
 
-### 掘り下げる
+### In-depth
 
 - [Exception Safety in D](https://dlang.org/exception-safe.html)
 - [std.exception](https://dlang.org/phobos/std_exception.html)
@@ -121,13 +130,13 @@ void main()
     }
     catch (FileException e)
     {
-		writeln("Message:\n", e.msg);
-		writeln("File: ", e.file);
-		writeln("Line: ", e.line);
-		writeln("Stack trace:\n", e.info);
+        writeln("Message:\n", e.msg);
+        writeln("File: ", e.file);
+        writeln("Line: ", e.line);
+        writeln("Stack trace:\n", e.info);
 
-		// デフォルトのフォーマットも使えます
-		// writeln(e);
+        // Default formatting could be used too
+        // writeln(e);
     }
 }
 ```
