@@ -7,4 +7,5 @@ ordering:
 - gems
 - multithreading
 - vibed
+- byexample
 - dub
