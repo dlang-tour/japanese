@@ -4,8 +4,8 @@ DはJavaやC++のようなクラスとインターフェースのサポートを
 
 任意の`class`型は[`Object`](https://dlang.org/phobos/object.html)を暗黙的に継承します。
 
-    class Foo { } // Objectを基にしている
-    class Bar: Foo { } // BarはFooでもある
+    class Foo { } // Objectから継承
+    class Bar : Foo { } // BarはFooでもある
 
 Dのクラスは一般的に`new`を使いヒープ上にインスタンス化されます:
 
@@ -20,19 +20,19 @@ Dのクラスは一般的に`new`を使いヒープ上にインスタンス化�
 ### 継承
 
 基底クラスのメンバ関数がオーバーライドされた時、キーワード`override`を使ってそれを示さなければなりません。
-これは関数の意図的でないオーバーライドを防止します。
+これは関数の意図しないオーバーライドを防止します。
 
-    class Bar: Foo {
+    class Bar : Foo {
         override functionFromFoo() {}
     }
 
-Dでは、クラスはクラスからのみ継承できます。
+Dでは、クラスはクラスを1つだけ継承できます。
 
-### Finalとabstractメンバ関数
+### Finalと抽象メンバ関数
 
 - それをオーバーライドすることを禁止するために、基底クラス内で`final`とマークできます
-- それをオーバーライドすることを強制するために、関数を基底クラスに`abstract`として宣言できます
-- それをインスタンス化させないために、クラス全体を`abstract`として宣言できます
+- それを派生クラスでオーバーライドすることを強制するために、関数を`abstract`として宣言できます
+- それをインスタンス化されないことを確かにするために、クラス全体を`abstract`として宣言できます
 - `super(..)`は基底コンストラクタを明示的に呼び出すのに使えます
 
 ### 同一性のチェック
@@ -64,7 +64,7 @@ if (c is null)  // ok
 import std.stdio : writeln;
 
 /*
-なんにでも使える手のこんだ型です...
+なんにでも使える豪勢な型です
 */
 class Any {
     // protectedは継承したクラスからのみ
@@ -75,12 +75,12 @@ class Any {
         this.type = type;
     }
 
-    // ところで、publicは暗黙的です
+    // ちなみに、publicは暗黙的です
     final string getType() {
         return type;
     }
 
-    // これは実装される必要があります!
+    // これは抽象メンバ関数のため、別途実装される必要があります!
     abstract string convertToString();
 }
 
@@ -108,7 +108,7 @@ class Integer: Any {
     }
 }
 
-class Float: Any {
+class Float : Any {
     private float number;
 
     this(float number) {
