@@ -5,7 +5,7 @@
 
 ### 例外をキャッチする
 
-例外の一般的な例は、無効の可能性があるユーザの入力を確認することです。
+例外の一般的な例は、無効である可能性のあるユーザの入力を確認することです。
 例外が投げられると、スタックは最初にマッチする例外ハンドラが見つかるまで巻き戻されます。
 
 ```d
@@ -59,7 +59,7 @@ throw new UserNotFoundException("D-Man is on vacation");
 
 ### `nothrow`で安全な世界へ
 
-Dコンパイラは関数が壊滅的副作用を引き起こさないことを確実にできます。
+Dコンパイラは関数が壊滅的副作用を引き起こさないことを保証できます。
 そのような関数は`nothrow`キーワードで注釈することができます。
 `nothrow`関数内でDコンパイラは例外を投げることを静的に禁止します。
 
@@ -75,10 +75,10 @@ bool lessThan(int a, int b) nothrow
 
 ### std.exception
 
-`assert`を使ってユーザーの入力にこの後紹介される
+ユーザー入力に対する`assert`による
 [契約プログラミング](gems/contract-programming)
-を行うとリリースモードでコンパイルするときに削除されてしまうため、
-`assert`の使用は避けなければなりません。
+を避けることは重要です。
+リリースモードでのコンパイル時に契約は除去されてしまいます。
 利便性のために[`std.exception`](https://dlang.org/phobos/std_exception.html)
 は[`enforce`](https://dlang.org/phobos/std_exception.html#enforce)を提供しており、
 これは`assert`のように使えますが、`AssertError`のかわりに`Exception`を投げます。
@@ -92,7 +92,7 @@ enforce(magic + 42 - magic == 42, "Floating-point math is fun");
 enforce!StringException('a' != 'A', "Case-sensitive algorithm");
 ```
 
-しかし`std.exception`にあるのははこれだけではありません。たとえばエラーが
+しかし`std.exception`にあるのははこれだけではありません。例えばエラーが
 致命的でないかもしれない時、それを`collect`することをオプトインできます:
 
 ```d
