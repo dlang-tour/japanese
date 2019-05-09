@@ -19,7 +19,7 @@ Dは`interface`という、技術的には`class`に似ていますが、
     }
 
     auto dog = new Dog;
-    Animal animal = dog; // インターフェースへの明示的なキャスト
+    Animal animal = dog; // インターフェースへの暗黙的なキャスト
     animal.makeNoise();
 
 `class`が実装できる`interface`の数は無制限ですが、継承は**1つの**基底クラスからのみできます。
@@ -27,7 +27,7 @@ Dは`interface`という、技術的には`class`に似ていますが、
 ### NVI (non virtual interface) パターン
 
 [NVIパターン](https://en.wikipedia.org/wiki/Non-virtual_interface_pattern)
-は共通したインターフェースで _非 virtual_ メソッドを許可します。
+は共通したインターフェースに対して _非 virtual_ メソッドを許可します。
 それによって、このパターンは共通した実行パターンに対する違反を防ぎます。
 Dでは`interface`において`final`(つまりオーバーライド禁止)関数を定義できるようにすることでNVIパターンを実現します。
 これにより`interface`における他の関数のオーバーライドによる、特殊化した振る舞いのカスタマイズが可能になります。
