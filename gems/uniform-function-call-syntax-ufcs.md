@@ -1,42 +1,37 @@
-# Uniform Function Call Syntax (UFCS)
+# 統一関数呼び出し構文 (UFCS)
 
-**UFCS** is a key feature of D and enables code reusability
-and scalability through well-defined encapsulation.
+**UFCS**はDの重要な機能で、明確なカプセル化によりコードに
+再利用性とスケーラビリティを与えます。
 
-UFCS allows that any call to a free function
-`fun(a)` can be written as member function call `a.fun()`.
+UFCSにより`a`に属していない関数の呼び出し`fun(a)`をメンバ関数の呼び出し
+`a.fun()`として書くことができます。
 
-If `a.fun()` is seen by the compiler and the type doesn't
-have a member function called `fun()`, it tries to find a
-global functions whose first parameter matches that of `a`.
+コンパイラが`a.fun()`を見て、その型が`fun()`と呼ばれるメンバ関数を
+持たない時、最初の引数が`a`の型にマッチするグローバル関数を探します。
 
-This feature is especially useful when chaining complex
-function calls. Instead of writing
+この機能は複雑な関数呼び出しを連鎖させる時に特に便利です。こう書く代わりに
 
     foo(bar(a))
 
-It is possible to write
+こう書くことができます。
 
     a.bar().foo()
 
-Moreover in D it is not necessary to use parenthesis for functions
-without arguments, which means that _any_ function can be used
-like a property:
+加えて、Dでは引数のない関数に括弧を使う必要はなく、
+これは**任意の**関数をプロパティのように使えるということを意味します:
 
     import std.uni : toLower;
     "D rocks".toLower; // "d rocks"
 
-UFCS is especially important when dealing with
-*ranges* where several algorithms can be put
-together to perform complex operations, still allowing
-to write clear and manageable code.
+UFCSは複雑な操作を行うために複数のアルゴリズムを組み合わせて**レンジ**
+に対応する時に特に重要で、明確で管理しやすいコードを実現します。
 
     import std.algorithm : group;
     import std.range : chain, retro, front, dropOne;
     [1, 2].chain([3, 4]).retro; // 4, 3, 2, 1
     [1, 1, 2, 2, 2].group.dropOne.front; // tuple(2, 3u)
 
-### In-depth
+### 掘り下げる
 
 - [UFCS in _Programming in D_](http://ddili.org/ders/d.en/ufcs.html)
 - [_Uniform Function Call Syntax_](http://www.drdobbs.com/cpp/uniform-function-call-syntax/232700394) by Walter Bright
@@ -53,12 +48,12 @@ void main()
 {
     "Hello, %s".writefln("World");
 
-    10.iota // returns numbers from 0 to 9
-      // filter for even numbers
+    10.iota // 0から9までの数値を返す
+      // 偶数をフィルタする
       .filter!(a => a % 2 == 0)
-      .writeln(); // writes them to stdout
+      .writeln(); // 標準出力に書き出す
 
-    // Traditional style:
+    // 伝統的スタイル:
     writeln(filter!(a => a % 2 == 0)
                    (iota(10)));
 }
