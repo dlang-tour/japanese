@@ -49,7 +49,7 @@ import std.stdio : writeln;
 
 Params:
     x = 平方根にされる数値
-    
+
 Returns: xの平方根
 */
 auto sqrt(T)(T x) {
