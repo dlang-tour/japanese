@@ -1,53 +1,57 @@
-# ユニットテスト
+# Unittesting
 
-テストは、安定した、バグのないアプリケーションを確実にする素晴らしい方法です。
-それはインタラクティブなドキュメントとしての役割をはたし、
-機能を破壊してしまうことを恐れずにコードを修正することを可能にします。
-Dは言語の機能の一部のブロックとして、便利でネイティブな
-`unittest`の構文を提供します。ソースコードの機能をテストするために、
-Dのモジュールのどこでも`unittest`ブロックを使えます。
+Tests are an excellent way to ensure stable, bug-free applications.
+They serve as an interactive documentation and allow to modify
+code without fear to break functionality. D provides a convenient
+and native syntax for `unittest` block as part of the D language.
+Anywhere in a D module `unittest` blocks can be used to test
+functionality of the source code.
 
-    // マイ関数のためのブロック
+    // Block for my function
     unittest
     {
         assert(myAbs(-1) == 1);
         assert(myAbs(1)  == 1);
     }
 
-これは必要に応じて直接的に
-[テスト駆動開発](https://en.wikipedia.org/wiki/Test-driven_development)
-を可能にします。
+This allows straightforward [Test-driven development](https://en.wikipedia.org/wiki/Test-driven_development)
+on demand.
 
-### `unittest`ブロックの実行
+### Run & execute `unittest` blocks
 
-`unittest`ブロックはコマンドラインフラグ`-unittest`がDMDコンパイラに渡された時に
-コンパイルされ実行される任意のコードを含むことができます。DUBにも`dub test`コマンドによって
-ユニットテストをコンパイル、実行する機能があります。
+`unittest` blocks can contain arbitrary code which is just
+compiled in and run when the command line flag `-unittest`
+is passed to the DMD compiler. DUB also features compiling
+and running unittest through the `dub test` command.
 
-### `assert`によるサンプルの検証
+### Verify examples with `assert`
 
-典型的な`unittest`は与えられた関数の機能をテストする`assert`式を含みます。
-`unittest`ブロックは典型的にはソースのトップレベルか、
-クラスや構造体にある関数の定義の近くに置かれます。
+Typically `unittest`s contain `assert` expressions that test
+the functionality of a given function. `unittest` blocks
+are typically located near the definition of a function
+which might be at the top level of the source, or even
+within classes or structs.
 
-### コードカバレッジの増加
+### Increasing code coverage
 
-ユニットテストは堅牢なアプリケーションを作るための強力な武器です。
-テストによってプログラムがどれくらいカバーされているかをチェックする
-一般的な測定法は、**コードカバレッジ**です。それは存在するコードの行に対する実行された行の比率です。
-DMDコンパイラは`-cov`と付け加えることで簡単にコードカバレッジレポートを生成することを可能にします。
-すべてのモジュールの詳細な統計が含まれる`.lst`ファイルが生成されます。
+Unittest are a powerful weapon to ensure bullet-proof applications.
+A common measurement to check how much of a program
+is being covered by tests, is the _code coverage_.
+It is the ratio of executed versus existing lines of code.
+The DMD compiler allows to easily generate code coverage reports
+by adding `-cov`. For every module a `.lst` file, which contains
+detailed statistics, will be generated.
 
-コンパイラはテンプレート化されたコードの属性を自動的に推論することができるため、
-テストされたコードのためにそのような属性を確保するために注釈付けされたユニットテストを追加することは
-一般的なパターンです:
+As the compiler is able to infer attributes for templated code
+automatically, it is a common pattern to add annotated unittests
+to ensure such attributes for the tested code:
 
-    unittest @safe @nogc nothrow pure
+    @safe @nogc nothrow pure unittest
     {
         assert(myAbs() == 1);
     }
 
-### 掘り下げる
+### In-depth
 
 - [Unit Testing in _Programming in D_](http://ddili.org/ders/d.en/unit_testing.html)
 - [Unittesting in D](https://dlang.org/spec/unittest.html)
@@ -66,10 +70,10 @@ struct Vector3 {
         return x*rhs.x + y*rhs.y + z*rhs.z;
     }
 
-    // これは正しいです!
+    // That's okay!
     unittest {
         assert(Vector3(1,0,0).dot(
-          Vector3(0,1,0) == 0);
+          Vector3(0,1,0)) == 0);
     }
 
     string toString() const {
@@ -78,7 +82,7 @@ struct Vector3 {
           x, y, z);
     }
 
-    // ……そしてこれも!
+    // .. and that too!
     unittest {
         assert(Vector3(1,0,0).toString() ==
           "x:1.0 y:0.0 z:0.0");
@@ -93,16 +97,18 @@ void main()
 }
 
 /*
-または他の場所も。
-ノーマルモードでは何もコンパイルされず、単に無視されます。
-実際にあなたのモジュールをテストするためにはローカルに
-dub test を実行するか
-dmd -unittestでコンパイルしてください。
+Or just somewhere else.
+Nothing is compiled in and just
+ignored in normal mode. Run dub test
+locally or compile with dmd -unittest
+to actually test your modules.
 */
 unittest {
+    import std.math : isNaN;
     Vector3 vec;
-    // 型の初期値を返す特殊な組み込みプロパティ
-    // .init です。
-    assert(vec.x == double.init);
+    // .init a special built-in property that
+    // returns the initial value of type,
+    // a NaN for floating points values.
+    assert(vec.x.init.isNaN);
 }
 ```
