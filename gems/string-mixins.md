@@ -14,8 +14,7 @@
 のような印象的なライブラリを書くことを可能にします。
 
 ### 掘り下げる
-
-- [Mixins in D](https://dlang.org/spec/template-mixin.html)
+- [String Mixins in D](https://dlang.org/spec/expression.html#mixin_expressions)
 
 ## {SourceCode}
 
