@@ -35,7 +35,7 @@
 
 `generate` - 関数を取り各反復処理でそれを呼びレンジを生成します、たとえば:
 
-    alias RandomRange = generate!(x => uniform(1, 1000));
+    alias RandomRange = generate!(() => uniform(1, 1000));
 
 `cycle` - 与えられた入力のレンジを永遠に繰り返すレンジを返します。
 
