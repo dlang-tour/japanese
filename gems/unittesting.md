@@ -1,57 +1,53 @@
-# Unittesting
+# ユニットテスト
 
-Tests are an excellent way to ensure stable, bug-free applications.
-They serve as an interactive documentation and allow to modify
-code without fear to break functionality. D provides a convenient
-and native syntax for `unittest` block as part of the D language.
-Anywhere in a D module `unittest` blocks can be used to test
-functionality of the source code.
+テストは、安定した、バグのないアプリケーションを確実にする素晴らしい方法です。
+それはインタラクティブなドキュメントとしての役割をはたし、
+機能を破壊してしまうことを恐れずにコードを修正することを可能にします。
+Dは言語機能の一部として、便利でネイティブな
+`unittest`ブロック構文を提供します。ソースコードの機能をテストするために、
+Dのモジュールのどこでも`unittest`ブロックを使えます。
 
-    // Block for my function
+    // 自作関数のためのブロック
     unittest
     {
         assert(myAbs(-1) == 1);
         assert(myAbs(1)  == 1);
     }
 
-This allows straightforward [Test-driven development](https://en.wikipedia.org/wiki/Test-driven_development)
-on demand.
+これは直接的に
+[テスト駆動開発](https://en.wikipedia.org/wiki/Test-driven_development)
+の需要に応えます。
 
-### Run & execute `unittest` blocks
+### `unittest`ブロックの実行
 
-`unittest` blocks can contain arbitrary code which is just
-compiled in and run when the command line flag `-unittest`
-is passed to the DMD compiler. DUB also features compiling
-and running unittest through the `dub test` command.
+`unittest`ブロックはコマンドラインフラグ`-unittest`がDMDコンパイラに渡された時に
+コンパイルされ実行される任意のコードを含むことができます。DUBにも`dub test`コマンドによって
+ユニットテストをコンパイル、実行する機能があります。
 
-### Verify examples with `assert`
+### `assert`によるサンプルの検証
 
-Typically `unittest`s contain `assert` expressions that test
-the functionality of a given function. `unittest` blocks
-are typically located near the definition of a function
-which might be at the top level of the source, or even
-within classes or structs.
+典型的な`unittest`は与えられた関数の機能をテストする`assert`式を含みます。
+`unittest`ブロックは典型的にはソースのトップレベルか、
+クラスや構造体にある関数の定義の近くに置かれます。
 
-### Increasing code coverage
+### コードカバレッジの増加
 
-Unittest are a powerful weapon to ensure bullet-proof applications.
-A common measurement to check how much of a program
-is being covered by tests, is the _code coverage_.
-It is the ratio of executed versus existing lines of code.
-The DMD compiler allows to easily generate code coverage reports
-by adding `-cov`. For every module a `.lst` file, which contains
-detailed statistics, will be generated.
+ユニットテストは堅牢なアプリケーションを作るための強力な武器です。
+テストによってプログラムがどれくらいカバーされているかをチェックする
+一般的な測定法は、**コードカバレッジ**です。それは存在するコードの行に対する実行された行の比率です。
+DMDコンパイラでは`-cov`と付け加えることで簡単にコードカバレッジレポートの生成ができます。
+すべてのモジュールの詳細な統計が含まれる`.lst`ファイルが生成されます。
 
-As the compiler is able to infer attributes for templated code
-automatically, it is a common pattern to add annotated unittests
-to ensure such attributes for the tested code:
+コンパイラはテンプレート化されたコードの属性を自動的に推論することができるため、
+テストされたコードのためにそのような属性を確保するために注釈付けされたユニットテストを追加することは
+一般的なパターンです:
 
     @safe @nogc nothrow pure unittest
     {
         assert(myAbs() == 1);
     }
 
-### In-depth
+### 掘り下げる
 
 - [Unit Testing in _Programming in D_](http://ddili.org/ders/d.en/unit_testing.html)
 - [Unittesting in D](https://dlang.org/spec/unittest.html)
@@ -70,7 +66,7 @@ struct Vector3 {
         return x*rhs.x + y*rhs.y + z*rhs.z;
     }
 
-    // That's okay!
+    // これは正しいです!
     unittest {
         assert(Vector3(1,0,0).dot(
           Vector3(0,1,0)) == 0);
@@ -82,7 +78,7 @@ struct Vector3 {
           x, y, z);
     }
 
-    // .. and that too!
+    // ……そしてこれも!
     unittest {
         assert(Vector3(1,0,0).toString() ==
           "x:1.0 y:0.0 z:0.0");
@@ -97,18 +93,18 @@ void main()
 }
 
 /*
-Or just somewhere else.
-Nothing is compiled in and just
-ignored in normal mode. Run dub test
-locally or compile with dmd -unittest
-to actually test your modules.
+また他の場所も。
+ノーマルモードでは何もコンパイルされず、単に無視されます。
+実際にあなたのモジュールをテストするためにはローカルで
+dub test を実行するか
+dmd -unittestでコンパイルしてください。
 */
 unittest {
     import std.math : isNaN;
     Vector3 vec;
-    // .init a special built-in property that
-    // returns the initial value of type,
-    // a NaN for floating points values.
+    // 型の初期値、浮動小数点数の場合は
+    // NaNを返す特殊な組み込みプロパティ
+    // .init です。
     assert(vec.x.init.isNaN);
 }
 ```
