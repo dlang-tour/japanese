@@ -12,20 +12,17 @@
 
 ```d
 /+dub.sdl:
-dependency "mir-random" version="~>1.0"
+dependency "mir-random" version="~>2.2"
 +/
 import std.range, std.stdio;
 
 import mir.random;
-import mir.random.variable: NormalVariable;
-import mir.random.algorithm: range;
+import mir.random.variable: normalVar;
+import mir.random.algorithm: randomSlice;
 
 void main()
 {
-    auto sample = NormalVariable!double(0, 1)
-        .range
-        .take(10)
-        .array;
+    auto sample = normalVar.randomSlice(10);
 
     // sampleからランダムな要素を出力します
     sample[$.randIndex].writeln;
