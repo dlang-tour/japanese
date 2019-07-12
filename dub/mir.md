@@ -20,12 +20,12 @@
 
 ```d
 /+dub.sdl:
-dependency "mir" version="~>2.0"
+dependency "mir" version="~>3.0"
 +/
 import std.stdio;
 import mir.combinatorics;
 void main(string[] args)
 {
-    writeln([1, 2].combinations);
+    writeln([1, 2].combinations(2));
 }
 ```
