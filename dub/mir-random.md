@@ -12,7 +12,7 @@
 
 ```d
 /+dub.sdl:
-dependency "mir-random" version="~>2.0"
+dependency "mir-random" version="~>2.2"
 +/
 import std.range, std.stdio;
 
@@ -22,9 +22,7 @@ import mir.random.algorithm: randomSlice;
 
 void main()
 {
-    auto sample = normalVar
-        .randomSlice(10)
-        .array;
+    auto sample = normalVar.randomSlice(10);
 
     // sampleからランダムな要素を出力します
     sample[$.randIndex].writeln;
