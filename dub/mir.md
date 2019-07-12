@@ -26,6 +26,6 @@ import std.stdio;
 import mir.combinatorics;
 void main(string[] args)
 {
-    writeln([1, 2].combinations);
+    writeln([1, 2].combinations(2));
 }
 ```
