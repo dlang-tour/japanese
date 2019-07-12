@@ -14,7 +14,7 @@ LinuxやWindowsでは、バックエンドとして [OpenBLAS](http://www.openbl
  - [Mir Random API](http://docs.algorithm.dlang.io)
  - [Mir API](http://docs.mir.dlang.io)
 
-## {SourceCode}
+## {SourceCode:incomplete}
 
 ```d
 /+dub.sdl:

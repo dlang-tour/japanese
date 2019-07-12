@@ -10,7 +10,7 @@ addons:
   apt:
     packages:
     - libevent-dev
-    - libopenblas-dev
+
 script:
   - git clone https://github.com/stonemaster/dlang-tour ../tour
   - mkdir -p ../tour/public/content/lang
