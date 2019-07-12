@@ -9,8 +9,8 @@
         doer(5,5);
     }
 
-    doSomething(add); // ここでグローバル関数`add`を使う
-                      // addは2つのintの引数をもつ必要があります
+    doSomething(&add); // ここでグローバル関数`add`を使う
+                      // addはintの引数を2つもつ必要があります
 
 そして`doer`は他の普通の関数のように呼びだされます。
 
@@ -64,7 +64,7 @@
 ## {SourceCode}
 
 ```d
-import std.stdio;
+import std.stdio : writeln;
 
 enum IntOps {
     add = 0,
@@ -109,7 +109,7 @@ void main()
     writeln("The type of func is ",
         typeof(func).stringof, "!");
 
-    // すべての私達の仕事を行うデリゲートfuncを実行します!
+    // すべての仕事を行うデリゲートfuncを実行します!
     writeln("result: ", func(a, b));
 }
 ```
