@@ -19,6 +19,8 @@ vibe.dプロジェクトを作る最も簡単な方法は`dub`をインストー
 こちらのテンプレートのように**vibe.d**指定で新しいプロジェクトを作ることです:
 
     dub init <project-name> -t vibe.d
+    cd <project-name>
+    dub
 
 `dub`はvibe.dをダウンロードしあなたのvibe.dベースのプロジェクトを利用可能にするでしょう。
 
