@@ -41,7 +41,7 @@ import std.concurrency : spawn, thisTid;
 void worker(bool firstTime)
 {
     import std.stdio : writeln;
-    // theStaticは現在のスレッドでのみグローバルです。
+    // threadStateは現在のスレッドでのみグローバルです。
     // 他のスレッドはアクセスできません。
     // なお、これは最初にその行が実行された時
     // のみ初期化されます。
