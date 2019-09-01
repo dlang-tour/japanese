@@ -93,7 +93,7 @@ struct Date {
         date = シリアライズされる文字列
         
     Returns: Dateオブジェクト。
-    /*
+    */
     void fromString(string date)
     in {
         assert(date.length == 10);
@@ -112,7 +112,7 @@ struct Date {
     YYYY-MM-DDの形へDateオブジェクトをシリアライズします
 
     Returns: Dateの文字列表現
-    /*
+    */
     string toString() const
     out (result) {
         import std.algorithm: all, count,
