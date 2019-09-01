@@ -103,17 +103,17 @@ void worker(Tid parentId)
 
 void main()
 {
-    Tid threads[];
+    Tid[] threads;
     // 小さな10個のワーカースレッドを生成。
     for (size_t i = 0; i < 10; ++i) {
         threads ~= spawn(&worker, thisTid);
     }
 
     // 奇数のスレッドは数値を、偶数のスレッドは文字列を取得します!
-    foreach(int idx, ref tid; threads) {
+    foreach(idx, ref tid; threads) {
         import std.string : format;
-        if (idx  % 2)
-            send(tid, NumberMessage(idx));
+        if (idx % 2)
+            send(tid, NumberMessage(cast(int)idx));
         else
             send(tid, format("T=%d", idx));
     }
