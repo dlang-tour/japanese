@@ -112,10 +112,13 @@ void main()
     // 奇数のスレッドは数値を、偶数のスレッドは文字列を取得します!
     foreach(idx, ref tid; threads) {
         import std.string : format;
-        if (idx % 2)
-            send(tid, NumberMessage(cast(int)idx));
-        else
+        import std.conv : to;
+        if (idx % 2) {
+            int num = idx.to!int;
+            send(tid, NumberMessage(num));
+        } else {
             send(tid, format("T=%d", idx));
+        }
     }
 
     // そしてすべてのスレッドはキャンセルメッセージを受け取ります!
