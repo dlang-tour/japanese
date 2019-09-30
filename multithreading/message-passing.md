@@ -103,19 +103,22 @@ void worker(Tid parentId)
 
 void main()
 {
-    Tid threads[];
+    Tid[] threads;
     // 小さな10個のワーカースレッドを生成。
     for (size_t i = 0; i < 10; ++i) {
         threads ~= spawn(&worker, thisTid);
     }
 
     // 奇数のスレッドは数値を、偶数のスレッドは文字列を取得します!
-    foreach(int idx, ref tid; threads) {
+    foreach(idx, ref tid; threads) {
         import std.string : format;
-        if (idx  % 2)
-            send(tid, NumberMessage(idx));
-        else
+        import std.conv : to;
+        if (idx % 2) {
+            int num = idx.to!int;
+            send(tid, NumberMessage(num));
+        } else {
             send(tid, format("T=%d", idx));
+        }
     }
 
     // そしてすべてのスレッドはキャンセルメッセージを受け取ります!
