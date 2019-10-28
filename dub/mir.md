@@ -20,7 +20,7 @@
 
 ```d
 /+dub.sdl:
-dependency "mir" version="~>3.0"
+dependency "mir" version="~>3.2"
 +/
 import std.stdio;
 import mir.combinatorics;
