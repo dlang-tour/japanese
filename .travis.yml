@@ -1,11 +1,19 @@
-dist: trusty
+dist: xenial
+
 language: d
+
+git:
+  depth: 1
+  quiet: true
+
 d:
   - dmd
   - ldc
+
 branches:
   only:
     - master
+
 addons:
   apt:
     packages:
