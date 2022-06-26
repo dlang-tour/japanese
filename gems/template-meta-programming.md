@@ -81,7 +81,7 @@ import std.string : format;
 import std.stdio : writeln;
 
 /*
-数値、整数または浮動少数点数
+数値、整数または浮動小数点数
 でのみ動作するベクトルです。
 */
 struct Vector3(T)
