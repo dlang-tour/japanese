@@ -86,7 +86,8 @@ class WebService
         // ヘッダ情報<li>タグをリクエストの
         // ヘッダのプロパティを調べて生成します
         string[] headers;
-        foreach(key, value; req.headers.byKeyValue()) {
+        foreach(key, value;
+            req.headers.byKeyValue()) {
             headers ~=
                 "<li>%s: %s</li>"
                 .format(key, value);
